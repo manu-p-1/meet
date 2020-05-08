@@ -10,7 +10,11 @@ marqeta = "*"
 flask = "*"
 flask-wtf = "*"
 flask-mysql = "*"
-flask-mail = "*"
+flask-sqlalchemy = "*"
+mysqlclient = "*"
+
+[scripts]
+server = "./start.sh"
 
 [requires]
 python_version = "3.7"
