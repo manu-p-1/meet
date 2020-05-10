@@ -1,0 +1,97 @@
+body{
+    background: linear-gradient(-45deg, #2e1667, #36106e, #3491da, #6047dc );
+	background-size: 400% 400%;
+	-webkit-animation: gradientBG 15s ease infinite;
+	        animation: gradientBG 15s ease infinite;
+}
+
+@-webkit-keyframes gradientBG {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+@keyframes gradientBG {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+@media (max-width: 576px) {
+
+    #mainContent {
+        width: 100%;
+    }
+
+    #acctContainer {
+        width: auto !important;
+        max-width: -moz-available; /* WebKit-based browsers will ignore this. */
+        max-width: -webkit-fill-available; /* Mozilla-based browsers will ignore this. */
+        max-width: fill-available;
+    }
+
+    #acctContainer > #acctCard {
+        width: auto !important;
+    }
+}
+
+#mainContent {
+    position: relative !important;
+    display: flex;
+    min-height: 100%;
+    min-height: -moz-available; /* WebKit-based browsers will ignore this. */
+    min-height: -webkit-fill-available; /* Mozilla-based browsers will ignore this. */
+    min-height: fill-available;
+}
+
+#acctContainer {
+    width: 576px !important;
+
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.md-form .form-control {
+    margin-bottom: 0;
+}
+
+.md-form.md-outline {
+    margin-top: 0.5rem !important;
+}
+
+.custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
+    background: linear-gradient(40deg, #45cafc, #303f9f) !important;
+}
+
+#footSep {
+    transform: rotate(90deg);
+    width: 50px;
+}
+
+@media (max-width: 768px) {
+    #footSep {
+        display: none !important;
+    }
+
+    .txt2 {
+        display: block;
+    }
+
+    #forgotLink {
+        margin-bottom: 5px;
+    }
+}
