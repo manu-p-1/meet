@@ -11,3 +11,6 @@
 .history/
 
 .env
+
+
+static/dist
