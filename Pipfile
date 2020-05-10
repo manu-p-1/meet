@@ -12,6 +12,9 @@ flask-wtf = "*"
 flask-mysql = "*"
 flask-sqlalchemy = "*"
 mysqlclient = "*"
+flask-assets = "*"
+jsmin = "*"
+cssmin = "*"
 
 [scripts]
 server = "./start.sh"
