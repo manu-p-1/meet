@@ -1,0 +1,2 @@
+static/libs/* linguist-vendored
+*.sql linguist-language=sql
