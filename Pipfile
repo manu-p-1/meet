@@ -15,6 +15,7 @@ mysqlclient = "*"
 flask-assets = "*"
 jsmin = "*"
 cssmin = "*"
+closure = "*"
 
 [scripts]
 server = "./start.sh"
