@@ -13,6 +13,9 @@ trap_ctrlc ()
     echo "Killing...$f_pid"
     kill "$f_pid"
 
+    #cleanup the dist folder
+    rm -r static/dist/*
+
     # Allow the user to see the message, so sleep for 4 seconds
     echo "Exiting In: "
     for i in 2 1
@@ -23,10 +26,10 @@ trap_ctrlc ()
     exit
 }
 
-printf "BASH SCRIPT FOR NILE\n
+printf "BASH SCRIPT FOR MRC\n
 VERSION 1.0.0\n
 AUTHOR: MANU\n
-DESCRIPTION: This is a bash script for initiating Flask and Nile. Make sure that you have
+DESCRIPTION: This is a bash script for initiating Flask and MRC. Make sure that you have
 MySQL installed locally on your machine. The server.py file requires a username and password.
 This script checks if you have them as global environment variables. If not, the script will add
 it locally. If your environment variables don't seem to be registering, restart your IDE or terminal."
@@ -49,11 +52,11 @@ if [[ -z "${DB_PASS}" ]]; then
   eval "export DB_PASS=$pwd"
 fi
 
-if [[ ! -z "`mysql -qfsBe "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME='niledb'" 2>&1`" ]];
+if [[ ! -z "`mysql -qfsBe "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME='mrcdb'" 2>&1`" ]];
 then
-  echo "INFO: niledb registered"
+  echo "INFO: mrcdb registered"
 else
-  echo "ERROR: niledb could not be found on the MySQL instance"
+  echo "ERROR: mrcdb could not be found on the MySQL instance"
   cancel
 fi
 
@@ -72,7 +75,7 @@ then
 fi
 
 if [[ -z "${DB}" ]]; then
-  eval "export DB=niledb"
+  eval "export DB=mrcdb"
   echo "exported DB"
 fi
 
@@ -80,7 +83,6 @@ if [[ -z "${DB_HOST}" ]]; then
   eval "export DB_HOST=localhost"
   echo "exported DB_HOST"
 fi
-
 
 verAsInt=${version//[\.]/}
 
