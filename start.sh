@@ -15,6 +15,7 @@ trap_ctrlc ()
 
     #cleanup the dist folder
     rm -r static/dist/*
+    rm -r static/.webassets-cache/*
 
     # Allow the user to see the message, so sleep for 4 seconds
     echo "Exiting In: "
