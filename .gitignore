@@ -15,3 +15,5 @@
 
 
 static/dist
+
+static/.webassets-cache

@@ -3,10 +3,12 @@ from flaskext.mysql import MySQL
 from flask_sqlalchemy import SQLAlchemy
 from flask_assets import Environment
 from mrc_bundles import bundles
+from flask_wtf.csrf import CSRFProtect
 import secrets
 
 mysql = MySQL()
 db = SQLAlchemy()
+csrf = CSRFProtect()
 
 def create_server(config):
     app = Flask(__name__)
@@ -23,6 +25,7 @@ def create_server(config):
         # initialize extensions
         mysql.init_app(app)
         db = SQLAlchemy(app)
+        csrf = CSRFProtect(app)
         db.create_all()
 
         #secret_key generation
@@ -34,7 +37,7 @@ def create_server(config):
         # if you reformat this code, the imports go up resulting in
         # circular importing which breaks the blueprint architecture
 
-        from routes.common import routes as common_routes
+        from modules.routes.common import routes as common_routes
         # from routes.user import routes as user_routes
         # from routes.admin import routes as admin_routes
         # from routes.api import routes as api_routes
