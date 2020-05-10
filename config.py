@@ -1,5 +1,5 @@
 import os
-
+from urllib.parse import quote_plus
 
 '''
 Configuration settings to be used on localhost.
@@ -17,8 +17,12 @@ class DevelopmentConfig:
     MYSQL_DATABASE_DB = os.environ.get('DB')
     MYSQL_DATABASE_HOST = os.environ.get('DB_HOST')
 
-    SQLALCHEMY_DATABASE_URI = os.environ.get('ALCHEMY_URI')
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    if os.environ.get("ALCHEMY_URI") is None:
+        os.environ['ALCHEMY_URI'] = f"mysql://{MYSQL_DATABASE_USER}:%s@host/database" % quote_plus(MYSQL_DATABASE_PASSWORD)
+
+SQLALCHEMY_DATABASE_URI = os.environ.get('ALCHEMY_URI')
+SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 '''
@@ -31,5 +35,5 @@ class ProductionConfig:
     #MySQL setup
     MYSQL_DATABASE_USER = os.environ['DB_USER']
     MYSQL_DATABASE_PASSWORD = os.environ['DB_PASS']
-    MYSQL_DATABASE_DB = 'niledb' #CHANGE TO PA DB
-    MYSQL_DATABASE_HOST = 'localhost' #CHANGE TO PA DB URL
+    MYSQL_DATABASE_DB = os.environ.get('DB')
+    MYSQL_DATABASE_HOST = os.environ.get('DB_HOST')
