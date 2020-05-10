@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block base_title %}Login{% endblock %}
+
+{% block base_head %}
+    {{ super() }}
+    {% assets "common_css" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}">
+    {% endassets %}
+    <link rel="stylesheet" href="/static/libs/mdb/css/mdb.css">
+    <script type="text/javascript" src="/static/libs/mdb/js/mdb.js"></script>
+{% endblock %}
+
+
+{% block main %}
+    <div id="preContentScreen">
+        <div class="container" id="acctContainer">
+            <div class="shadow-lg card p-4" id="acctCard">
+                <div class="card-body">
+                    <header style="text-align: center;">
+                        <h3 class="card-title mb-5 primary">MRC Dashboard Login</h3>
+                    </header>
+{#                    {% with invalid_login = get_flashed_messages() %}#}
+{#                        {% if invalid_login %}#}
+{##}
+{#                            <p class="flashes text-center" style="color: red;">#}
+{#                                {% for msg in invalid_login %}#}
+{#                                    {{ msg }}#}
+{#                                {% endfor %}#}
+{#                            </p>#}
+{#                        {% endif %}#}
+{#                    {% endwith %}#}
+                    <form method="POST" action="" id="loginForm">
+                        <div class="form-group md-form md-outline">
+                            <label for="userEmail">Enter Email</label>
+                            <input type="email" class="form-control" id="userEmail" aria-describedby="emailHelp"
+                                   name="userEmail">
+                            <small id="emailHelp" class="form-text text-muted"><i>We'll never share your email with
+                                anyone
+                                else.</i></small>
+                        </div>
+                        <div class="form-group md-form md-outline">
+                            <label for="userPassword">Enter Password</label>
+                            <input type="password" class="form-control" id="userPassword"
+                                   name="userPassword">
+                        </div>
+
+                        <button type="submit" class="btn btn-grey btn-lg btn-block" id="loginBtn">Login</button>
+                        <div class="custom-control custom-checkbox mt-3">
+                            <input type="checkbox" class="custom-control-input" id="rememberMe" name="rememberMe">
+                            <label class="custom-control-label complement-light" for="rememberMe">Keep me logged
+                                in</label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% assets "common_js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+
+{% endblock %}
