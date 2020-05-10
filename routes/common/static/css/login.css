@@ -36,9 +36,7 @@ body{
 
     #acctContainer {
         width: auto !important;
-        max-width: -moz-available; /* WebKit-based browsers will ignore this. */
-        max-width: -webkit-fill-available; /* Mozilla-based browsers will ignore this. */
-        max-width: fill-available;
+        max-width: calc(100vw);
     }
 
     #acctContainer > #acctCard {
@@ -49,12 +47,8 @@ body{
 #mainContent {
     position: relative !important;
     display: flex;
-    min-height: 100%;
-    min-height: -moz-available; /* WebKit-based browsers will ignore this. */
-    min-height: -webkit-fill-available; /* Mozilla-based browsers will ignore this. */
-    min-height: fill-available;
+    min-height: calc(100vh);
 }
-
 #acctContainer {
     width: 576px !important;
 
