@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block base_head %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="Marqeta Hackathon Project">
+        <meta name="author" content="Manu Puduvalli | Samuel Yuen | William Vega | Yi-jian Ma Ma">
+        <title>{% block base_title %}{% endblock %} - MRC</title>
+
+        {% include 'static_links.html' %}
+
+        {% assets "base_css" %}
+            <link rel="stylesheet" href="{{ ASSET_URL }}">
+        {% endassets %}
+
+        {% assets "base_js" %}
+            <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+        {% endassets %}
+
+    {% endblock %}
+</head>
+<body class="our-color">
+
+<!-- Page Content -->
+<div class="footer-sep main-content-container" id="mainContent">
+    {% block main %}
+    {% endblock %}
+</div>
+<footer class="page-footer font-small bg-dark pt-4">
+    <div class="container text-md-left main-footer-content">
+        <div class="row">
+            <div class="col-md-6 mx-auto pr-0">
+                <div class="text-center right-border title-holder">
+                    <h5 class="text-uppercase primary-md"
+                        style="letter-spacing: 4px;"><a href="INSERTLINKHERESAM!!!">MRC</a></h5>
+                    <hr class="blue darken-3 accent-2 mt-0 d-inline-block text-left mx-auto mb-4" style="width: 100px;">
+                </div>
+                <div class="footer-explanation right-border" style="border-right: 1px solid lightgray; ">
+                    <h5 class="text-center complement-roboto-bold">Thanks for visiting our site.</h5>
+                    <p>
+                        <strong>Disclaimer! This site is not real.</strong> It was made
+                        to demonstrate the Marqeta® platform's Python SDK.</p>
+                    <p class="legal" style="font-size: smaller"><em>Legal Stuff Here!
+                    </em>
+                    </p>
+                    <p class="text-center">Our talented team includes:<br></p>
+                    <div class="text-center">
+                        <strong>Manu Puduvalli, Samuel Yuen, William Vega, Yi-jian Ma Ma</strong>
+                    </div>
+                    <br>
+                    <div id="applicationStackGroup" class="text-center">
+                        <p>Our application stack includes:</p>
+                        <ul class="list-unstyled d-inline-block text-left">
+                            <li><i class="fab fa-bootstrap mr-2 mb-3 fa-lg"></i> Bootstrap Framework</li>
+                            <li><i class="fab fa-mdb mr-2 mb-3 fa-lg"></i>MDBootstrap Framework</li>
+                            <li><i class="fab fa-python mr-2 mb-3 fa-lg"></i>Flask + Python</li>
+                            <li><i class="fas fa-database mr-2 mb-3 fa-lg"></i>MySQL</li>
+                            <li><i class="fab fa-js mr-2 mb-3 fa-lg"></i>JavaScript/JQuery</li>
+                            <li><i class="fas fa-running mr-2 mb-3 fa-lg"></i>Agile + Scrum</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <hr class="clearfix w-100 d-md-none">
+            <div class="col-md-6 text-center mx-auto left-border">
+                <div class="text-center">
+                    <h5 class="text-uppercase primary-md font-weight-normal"
+                        style="letter-spacing: 3px;">Relevant Links</h5>
+                    <hr class="blue darken-3 accent-2 mt-0 d-inline-block text-left mx-auto mb-5" style="width: 100px;">
+                </div>
+                <div class="row" style="font-size: large">
+                    <div class="col-md-6">
+                        <ul class="list-unstyled text-center rel-links">
+                            <li class="mb-5">
+                                <strong><a href="https://github.com/manu-p-1/mrc" target="_blank">MRC Source
+                                    Repository<i class="fab fa-github fa-lg ml-2"></i></a></strong>
+                            </li>
+
+                            <li class="mb-5">
+                                <a href="https://github.com/ssyuen/" target="_blank">Samuel Yuen <i
+                                        class="fab fa-github fa-lg ml-2"></i></a>
+                            </li>
+
+                            <li class="mb-5">
+                                <a href="https://github.com/manu-p-1/" target="_blank">Manu Puduvalli <i
+                                        class="fab fa-github fa-lg ml-2"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-unstyled text-center rel-links">
+                            <li class="mb-5">
+                                <a href="https://github.com/williamvega" target="_blank">William Vega<i
+                                        class="fab fa-github fa-lg ml-2"></i></a>
+                            </li>
+
+                            <li class="mb-5">
+                                <a href="https://github.com/yijianma007" target="_blank">Yi-jian Ma Ma<i
+                                        class="fab fa-github fa-lg ml-2"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <hr class="clearfix w-100 d-md-none">
+        </div>
+    </div>
+    <div class="footer-copyright text-center py-3 mt-4">© 2020 Copyright:
+        <a href="https://www.nilebookstore.com/">INSERTLINKHERESAM!!!</a>
+    </div>
+</footer>
+<script>
+    var ctr = 0, cp = 0;
+    $(function () {
+        let c = $("footer");
+        c.on("click", function () {
+            ++ctr % 2 == 0 && cp + 3 === ctr ? (c.css("background", ""), cp = ctr) : ctr % 3 == 0 && 0 !== ctr && (c.css("background", "linear-gradient(40deg, #222e6f, #215c76)"), cp = ctr), 3 === ctr && $('<p class="text-center complement">You found the river gradient. Nice work!</p>').insertAfter(".easter-egg")
+        })
+    });
+</script>
+</body>
+</html>
