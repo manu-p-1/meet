@@ -31,19 +31,15 @@
 {#                    {% endwith %}#}
                     <form method="POST" action="" id="loginForm">
                         <div class="form-group md-form md-outline">
-                            {{ form.email }}
-                            {{ form.password }}
-                            <!-- <label for="userEmail">Enter Email</label>
-                            <input type="email" class="form-control" id="userEmail" aria-describedby="emailHelp"
-                                   name="userEmail"> -->
+                            {{ form.email.label }}
+                            {{ form.email(class_="form-control") }}
                             <small id="emailHelp" class="form-text text-muted"><i>We'll never share your email with
                                 anyone
                                 else.</i></small>
                         </div>
                         <div class="form-group md-form md-outline">
-                            <label for="userPassword">Enter Password</label>
-                            <input type="password" class="form-control" id="userPassword"
-                                   name="userPassword">
+                                {{ form.password.label }}
+                                {{ form.password(class_="form-control") }}
                         </div>
 
                         <button type="submit" class="btn btn-grey btn-lg btn-block" id="loginBtn">Login</button>
