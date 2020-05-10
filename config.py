@@ -21,8 +21,8 @@ class DevelopmentConfig:
     if os.environ.get("ALCHEMY_URI") is None:
         os.environ['ALCHEMY_URI'] = f"mysql://{MYSQL_DATABASE_USER}:%s@host/database" % quote_plus(MYSQL_DATABASE_PASSWORD)
 
-SQLALCHEMY_DATABASE_URI = os.environ.get('ALCHEMY_URI')
-SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_DATABASE_URI = os.environ.get('ALCHEMY_URI')
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 '''

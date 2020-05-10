@@ -31,9 +31,11 @@
 {#                    {% endwith %}#}
                     <form method="POST" action="" id="loginForm">
                         <div class="form-group md-form md-outline">
-                            <label for="userEmail">Enter Email</label>
+                            {{ form.email }}
+                            {{ form.password }}
+                            <!-- <label for="userEmail">Enter Email</label>
                             <input type="email" class="form-control" id="userEmail" aria-describedby="emailHelp"
-                                   name="userEmail">
+                                   name="userEmail"> -->
                             <small id="emailHelp" class="form-text text-muted"><i>We'll never share your email with
                                 anyone
                                 else.</i></small>
