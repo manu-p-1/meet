@@ -1,2 +1,9 @@
 static/libs/* linguist-vendored
+modules/routes/user/static/css/extras.1.1.0.min.css linguist-vendored
+modules/routes/user/static/css/shards-dashboards.1.1.0.css linguist-vendored
+
+modules/routes/user/static/js/extras.1.1.0.min.js linguist-vendored
+modules/routes/user/static/js/shards.js linguist-vendored
+modules/routes/user/static/js/shards-dashboards.1.1.0.js linguist-vendored
+
 *.sql linguist-language=sql
