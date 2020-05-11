@@ -5,5 +5,9 @@ user_bp = Blueprint('user_bp', __name__,
 
 
 @user_bp.route('/overview/', methods=['GET'])
-def login(ctx=None):
+def overview(ctx=None):
     return render_template('overview/dash_overview_partial.html')
+
+@user_bp.route('/create_plan/', methods=['GET'])
+def create_plan():
+    return render_template('create_plan/create_plan_partial.html')
