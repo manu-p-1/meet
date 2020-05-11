@@ -49,5 +49,10 @@ bundles = {
     "dash_overview_js": Bundle('user_bp/js/overview/*.js',
                         filters=closure,
                         output=f'dist/dash/overview/{gen_uuid()}.js'),
+
+
+    "dash_create_plan_js": Bundle('user_bp/js/create_plan/*.js',
+                        filters=closure,
+                        output=f'dist/dash/create_plan/{gen_uuid()}.js')
 }
 
