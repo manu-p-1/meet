@@ -10,7 +10,7 @@
 }(this, (function () { 'use strict';
 
 if (typeof Chart === 'undefined') {
-  throw new Error('Shards Dashboard requires the Chart.js library in order to function properly.');
+  throw new Error('Shards Dashboard requires the Chart.min.js library in order to function properly.');
 }
 
 window.ShardsDashboards = window.ShardsDashboards ? window.ShardsDashboards : {};
@@ -22,7 +22,7 @@ $.extend($.easing, {
 });
 
 /**
- * Chart.js - Line Chart with Vertical Line
+ * Chart.min.js - Line Chart with Vertical Line
  */
 Chart.defaults.LineWithLine = Chart.defaults.line;
 Chart.controllers.LineWithLine = Chart.controllers.line.extend({

@@ -21,7 +21,7 @@
  * 
  *   Contact: office@mdbootstrap.com
  * 
- *   Attribution: Animate CSS, Twitter Bootstrap, Materialize CSS, Normalize CSS, Waves JS, WOW JS, Toastr, Chart.js, jquery.easing.js, velocity.min.js, chart.js, wow.js, scrolling-navbar.js, waves.js, forms-free.js, enhanced-modals.js, treeview.js
+ *   Attribution: Animate CSS, Twitter Bootstrap, Materialize CSS, Normalize CSS, Waves JS, WOW JS, Toastr, Chart.min.js, jquery.easing.js, velocity.min.js, chart.js, wow.js, scrolling-navbar.js, waves.js, forms-free.js, enhanced-modals.js, treeview.js
  */
 ! function(t) {
     var e = {};
@@ -3049,11 +3049,11 @@
             })(t)
         }
         /*!
-         * Chart.js
+         * Chart.min.js
          * http://chartjs.org/
          * Version: 2.7.3
          *
-         * Copyright 2018 Chart.js Contributors
+         * Copyright 2018 Chart.min.js Contributors
          * Released under the MIT license
          * https://github.com/chartjs/Chart.js/blob/master/LICENSE.md
          */
@@ -8087,7 +8087,7 @@
                         _enabled: "undefined" != typeof window && "undefined" != typeof document,
                         initialize: function() {
                             var t, e, n, r = "from{opacity:0.99}to{opacity:1}";
-                            e = "@-webkit-keyframes " + s + "{" + r + "}@keyframes " + s + "{" + r + "}." + a + "{-webkit-animation:" + s + " 0.001s;animation:" + s + " 0.001s;}", n = (t = this)._style || document.createElement("style"), t._style || (t._style = n, e = "/* Chart.js */\n" + e, n.setAttribute("type", "text/css"), document.getElementsByTagName("head")[0].appendChild(n)), n.appendChild(document.createTextNode(e))
+                            e = "@-webkit-keyframes " + s + "{" + r + "}@keyframes " + s + "{" + r + "}." + a + "{-webkit-animation:" + s + " 0.001s;animation:" + s + " 0.001s;}", n = (t = this)._style || document.createElement("style"), t._style || (t._style = n, e = "/* Chart.min.js */\n" + e, n.setAttribute("type", "text/css"), document.getElementsByTagName("head")[0].appendChild(n)), n.appendChild(document.createTextNode(e))
                         },
                         acquireContext: function(t, e) {
                             "string" == typeof t ? t = document.getElementById(t) : t.length && (t = t[0]), t && t.canvas && (t = t.canvas);
@@ -9455,7 +9455,7 @@
                     e.exports = function() {
                         var t = a.extend({
                             initialize: function() {
-                                if (!r) throw new Error("Chart.js - Moment.js could not be found! You must include it before Chart.js to use the time scale. Download at https://momentjs.com");
+                                if (!r) throw new Error("Chart.min.js - Moment.js could not be found! You must include it before Chart.min.js to use the time scale. Download at https://momentjs.com");
                                 this.mergeTicksOptions(), a.prototype.initialize.call(this)
                             },
                             update: function() {
@@ -9728,7 +9728,7 @@
         /*!
          * chartjs-plugin-datalabels v0.7.0
          * https://chartjs-plugin-datalabels.netlify.com
-         * (c) 2019 Chart.js Contributors
+         * (c) 2019 Chart.min.js Contributors
          * Released under the MIT license
          */
         e = void 0, r = function(t) {

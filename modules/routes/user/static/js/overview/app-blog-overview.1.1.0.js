@@ -81,7 +81,7 @@
             ticks: {
               display: false,
               // Avoid getting the graph line cut of at the top of the canvas.
-              // Chart.js bug link: https://github.com/chartjs/Chart.js/issues/4790
+              // Chart.min.js bug link: https://github.com/chartjs/Chart.js/issues/4790
               suggestedMax: max
             }
           }],

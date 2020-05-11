@@ -17,28 +17,30 @@ print(type(closure), file=stderr)
 bundles = {
 
     'base_js': Bundle('js/util/*.js',
-                        filters=closure,
-                        output=f'dist/{gen_uuid()}.js'),
-
-
-    'base_css': Bundle('css/*.css',
-                         filters='cssmin',
-                         output=f'dist/{gen_uuid()}.css'),
-
-
-    'common_js': Bundle('common_bp/js/*.js',
                       filters=closure,
                       output=f'dist/{gen_uuid()}.js'),
 
 
-    'common_css': Bundle('common_bp/css/*.css',
-                        filters='cssmin',
-                        output=f'dist/{gen_uuid()}.css'),
+    'base_css': Bundle('css/*.css',
+                       filters='cssmin',
+                       output=f'dist/{gen_uuid()}.css'),
 
 
-    'dash_js': Bundle('user_bp/js/extras.1.1.0.min.js', 'user_bp/js/shards-dashboards.1.1.0.js',
+    'common_js': Bundle('common_bp/js/*.js',
                         filters=closure,
-                        output=f'dist/dash/{gen_uuid()}.js'),
+                        output=f'dist/{gen_uuid()}.js'),
+
+
+    'common_css': Bundle('common_bp/css/*.css',
+                         filters='cssmin',
+                         output=f'dist/{gen_uuid()}.css'),
+
+
+    'dash_js': Bundle('user_bp/js/extras.1.1.0.min.js',
+                      'user_bp/js/shards-dashboards.1.1.0.js',
+                      'user_bp/js/shards.js',
+                      filters=closure,
+                      output=f'dist/dash/{gen_uuid()}.js'),
 
 
     "dash_css": Bundle('user_bp/css/*.css',
@@ -47,12 +49,11 @@ bundles = {
 
 
     "dash_overview_js": Bundle('user_bp/js/overview/*.js',
-                        filters=closure,
-                        output=f'dist/dash/overview/{gen_uuid()}.js'),
+                               filters=closure,
+                               output=f'dist/dash/overview/{gen_uuid()}.js'),
 
 
     "dash_create_plan_js": Bundle('user_bp/js/create_plan/*.js',
-                        filters=closure,
-                        output=f'dist/dash/create_plan/{gen_uuid()}.js')
+                                  filters=closure,
+                                  output=f'dist/dash/create_plan/{gen_uuid()}.js')
 }
-
