@@ -16,6 +16,7 @@ flask-assets = "*"
 jsmin = "*"
 cssmin = "*"
 closure = "*"
+packaging = "*"
 
 [scripts]
 server = "./start.sh"
