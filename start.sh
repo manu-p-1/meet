@@ -4,7 +4,7 @@ trap "trap_ctrlc" 2
 
 cancel(){
   read -r -p "Press ENTER to EXIT"
-  exit
+  exit 1
 }
 
 trap_ctrlc ()
@@ -24,7 +24,7 @@ trap_ctrlc ()
        echo "$i... "
        sleep 1
     done
-    exit
+    exit 0
 }
 
 printf "BASH SCRIPT FOR MRC\n
@@ -42,32 +42,21 @@ printf "\n\n"
 echo "Hello $(whoami)"
 
 if [[ -z "${DB_USER}" ]]; then
-  read -r -p "Enter Your MySQL Username: "  uname
-  eval "export DB_USER=$uname"
+  read -r -p "Enter Your MySQL username: "  uname
+  export DB_USER=$uname
+  echo "exported DB_USER"
 fi
 
 
 if [[ -z "${DB_PASS}" ]]; then
-  read -s -r -p "Enter Your MySQL Password: "  pwd
-  printf "\n"
-  eval "export DB_PASS=$pwd"
+  read -s -r -p "Enter Your MySQL password: "  pwd
+  export DB_PASS=$pwd
+  echo "exported DB_PASS"
 fi
-
-if [[ ! -z "`mysql -qfsBe "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME='mrcdb'" 2>&1`" ]];
-then
-  echo "INFO: mrcdb registered"
-else
-  echo "ERROR: mrcdb could not be found on the MySQL instance"
-  cancel
-fi
-
-printf "==ALL SQL CHECKS PASSED==\n"
 
 #Using an actual python script in case people have python 2 on their computer too.
 version=$(python -c 'import sys; print("".join(map(str, sys.version_info[:3])))')
 re='^[0-9]+$'
-printf "==ALL PYTHON CHECKS PASSED==\n\n"
-
 
 if [[ -z "$version" || $version =~ re ]];
 then
@@ -75,23 +64,30 @@ then
     cancel
 fi
 
+printf "\n==ALL PYTHON CHECKS PASSED==\n\n"
+
 if [[ -z "${DB}" ]]; then
-  eval "export DB=mrcdb"
+  export DB=mrcdb
   echo "exported DB"
 fi
 
 if [[ -z "${DB_HOST}" ]]; then
-  eval "export DB_HOST=localhost"
+  export DB_HOST=localhost
   echo "exported DB_HOST"
 fi
 
-verAsInt=${version//[\.]/}
-
-if ! [[ $verAsInt -ge 375 ]];
-then
-  echo "PYTHON VERSION IS $version BUT REQUIRES 3.7.5 OR HIGHER"
-  cancel
+if [[ -z "${MRC_APP_TOKEN}" ]]; then
+  read -r -p "Enter Your Marqeta app token: "  app_token
+  export MRC_APP_TOKEN=$app_token
+  echo "exported MRC_APP_TOKEN"
 fi
+
+if [[ -z "${MRC_ACCESS_TOKEN}" ]]; then
+  read -r -p "Enter Your Marqeta access token: "  access_token
+  export MRC_ACCESS_TOKEN=$access_token
+  echo "exported MRC_ACCESS_TOKEN"
+fi
+
 
 # DEBUG TRUE - FLASK RESTARTS FOR EVERY CHANGE :)
 export FLASK_DEBUG=1
