@@ -17,6 +17,7 @@ jsmin = "*"
 cssmin = "*"
 closure = "*"
 packaging = "*"
+sqlacodegen = "*"
 
 [scripts]
 server = "./start.sh"
