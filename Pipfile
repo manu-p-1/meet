@@ -17,6 +17,7 @@ jsmin = "*"
 cssmin = "*"
 closure = "*"
 packaging = "*"
+faker = "*"
 
 [scripts]
 server = "./start.sh"
