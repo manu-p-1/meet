@@ -1,15 +1,41 @@
 from server import db
+from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy.dialects.mysql import VARCHAR
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True, nullable=False)
-    email = db.Column(db.String(120), index=True, unique=True, nullable=False)
-    password = db.Column(db.String(128), nullable=False)
-    firstname = db.Column(db.String(120), nullable=False)
-    lastname = db.Column(db.String(120), nullable=False)
-    
+Base = declarative_base()
+metadata = Base.metadata
 
-    def __repr__(self):
-        return f'<User {self.username}'
+
+class DepartmentLookup(db.Model):
+    __tablename__ = 'department_lookup'
+
+    id = Column(Integer, primary_key=True)
+    department = Column(String(50), nullable=False, unique=True)
+
+
+class TitleLookup(db.Model):
+    __tablename__ = 'title_lookup'
+
+    id = Column(Integer, primary_key=True)
+    title = Column(String(45), nullable=False, unique=True)
+
+
+class Employee(db.Model):
+    __tablename__ = 'employee'
+
+    id = Column(Integer, primary_key=True)
+    employeeID = Column(String(200), nullable=False, unique=True)
+    email = Column(VARCHAR(255), nullable=False, unique=True)
+    _pass = Column('pass', VARCHAR(128), nullable=False)
+    firstname = Column(VARCHAR(45), nullable=False)
+    lastname = Column(VARCHAR(45), nullable=False)
+    user_dept_FK = Column(ForeignKey('department_lookup.id'), nullable=False, index=True)
+    user_title_FK = Column(ForeignKey('title_lookup.id'), nullable=False, index=True)
+
+    department_lookup = relationship('DepartmentLookup')
+    title_lookup = relationship('TitleLookup')
 
 
 db.create_all()

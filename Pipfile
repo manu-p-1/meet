@@ -18,6 +18,7 @@ cssmin = "*"
 closure = "*"
 packaging = "*"
 faker = "*"
+sqlacodegen = "*"
 
 [scripts]
 server = "./start.sh"
