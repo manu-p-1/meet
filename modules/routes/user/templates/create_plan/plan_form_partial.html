@@ -46,11 +46,36 @@
                 <label class="text-muted additional-employee-input-label">Employee <span
                         class="employeeCount">1</span></label>
                 <div class="input-container">
-                    {{ form.employeesOptional(id=False) }}
+                    {{ form.employeesOptional(id=False, required=False) }}
                     <span class="removeNewEmployeeInput material-icons">remove_circle</span>
                 </div>
             </div>
         </div>
         <span id="addNewEmployeeInput" class="material-icons">add_circle</span>
+    </div>
+    <div class="custom-control custom-toggle custom-toggle-sm mb-3">
+        {{ form.controlToggle }}
+        {{ form.controlToggle.label(class_="custom-control-label") }}
+    </div>
+    <div id="fundControls" class="d-none">
+        <small class="text-muted font-italic ml-1">Velocity Controls</small>
+        <div class="card-specific">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    {{ form.controlName(required=False) }}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ form.controlWindow(required=False) }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    {{ form.amountLimit(required=False) }}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ form.usageLimit(required=False) }}
+                </div>
+            </div>
+        </div>
     </div>
 </form>
