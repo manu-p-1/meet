@@ -68,6 +68,8 @@ $(function () {
     $(document).on("click", ".removeNewEmployeeInput", function (e) {
         if (newEmployeeCount > 2) {
             removeNewEmployee(e);
+        } else {
+            indivUserToggle.trigger("click");
         }
     });
 
