@@ -8,21 +8,21 @@ Base = declarative_base()
 metadata = Base.metadata
 
 
-class DepartmentLookup(db.model):
+class DepartmentLookup(db.Model):
     __tablename__ = 'department_lookup'
 
     id = Column(Integer, primary_key=True)
     department = Column(String(50), nullable=False, unique=True)
 
 
-class TitleLookup(db.model):
+class TitleLookup(db.Model):
     __tablename__ = 'title_lookup'
 
     id = Column(Integer, primary_key=True)
     title = Column(String(45), nullable=False, unique=True)
 
 
-class Employee(db.model):
+class Employee(db.Model):
     __tablename__ = 'employee'
 
     id = Column(Integer, primary_key=True)
