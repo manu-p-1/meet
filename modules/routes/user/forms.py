@@ -1,10 +1,10 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, IntegerField, TextAreaField, SelectField, BooleanField
-from wtforms.validators import InputRequired, Length, AnyOf, NumberRange, ValidationError, Required
+from wtforms import StringField, IntegerField, TextAreaField, SelectField, BooleanField
+from wtforms.validators import InputRequired, NumberRange, ValidationError, DataRequired
 from sys import stderr
 
 
-class RequiredIf(Required):
+class RequiredIf(DataRequired):
 
     def __init__(self, other_field_name, *args, **kwargs):
         self.other_field_name = other_field_name
