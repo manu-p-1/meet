@@ -27,15 +27,7 @@ $(function () {
     let fundIndivEmployeeDiv = $("#employeeIDBoundary");
 
     indivUserToggle.on("click", function () {
-        if (fundIndivEmployeeDiv.hasClass("d-none")) {
-            indivUserToggle.attr("checked", "checked");
-            fundIndivEmployeeDiv.removeClass("d-none");
-            fundIndivEmployeeDiv.children("input").attr("required")
-        } else {
-            indivUserToggle.removeAttr("checked", "checked");
-            fundIndivEmployeeDiv.addClass("d-none");
-            fundIndivEmployeeDiv.children("input").removeAttr("required");
-        }
+        toggleDiv(indivUserToggle, fundIndivEmployeeDiv);
     });
 
     //For adding employees
@@ -83,6 +75,26 @@ $(function () {
         }
         $(closestGroup).remove();
         newEmployeeCount--;
+    }
+
+    //For the veolocity controls toggle
+    let velocityControlsToggle = $("#controlToggle");
+    let velocityControlsDiv = $("#fundControls");
+
+    velocityControlsToggle.on("click", function () {
+        toggleDiv(velocityControlsToggle, velocityControlsDiv);
+    });
+
+    function toggleDiv(toggler, divElement) {
+        if (divElement.hasClass("d-none")) {
+            toggler.attr("checked", "checked");
+            divElement.removeClass("d-none");
+            divElement.find("input").attr("required")
+        } else {
+            toggler.removeAttr("checked", "checked");
+            divElement.addClass("d-none");
+            divElement.find("input").removeAttr("required");
+        }
     }
 });
 
