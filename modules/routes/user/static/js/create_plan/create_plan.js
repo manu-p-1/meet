@@ -49,9 +49,9 @@ $(function () {
             let lastChild = $("#employeeIDBoundaryRow").children(":last-child");
             let template =
                 `<div class="form-group col-md-3">
-                <label for="employee${newEmployeeCount}" class="text-muted additional-employee-input-label">Employee <span class="employeeCount">${newEmployeeCount}</span></label>
+                <label class="text-muted additional-employee-input-label">Employee <span class="employeeCount">${newEmployeeCount}</span></label>
                 <div class="input-container">
-                    <input id="employee${newEmployeeCount}" class="employeeIDInput form-control" placeholder="Enter Employee ID" required>
+                    <input class="employeeIDInput form-control position-relative" name="employeeOptions" placeholder="Enter Employee ID" required>
                     <span class="removeNewEmployeeInput material-icons">remove_circle</span>
                 </div>
             </div>`;
