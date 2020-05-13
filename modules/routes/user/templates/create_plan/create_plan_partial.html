@@ -4,11 +4,20 @@
 {% block base_head %}
     {{ super() }}
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <link href="/static/libs/daterangepicker/daterangepicker.css" rel="stylesheet">
+    <script src="/static/libs/daterangepicker/moment.min.js"></script>
+    <script src="/static/libs/daterangepicker/daterangepicker.min.js"></script>
+
+    {% assets "dash_create_plan_css" %}
+        <link rel="stylesheet" id="main-stylesheet" href="{{ ASSET_URL }}">
+    {% endassets %}
+
 {% endblock %}
 
 {% block dashboard_main %}
-
+    {% include 'create_plan/alert_partial.html' %}
     <div class="main-content-container container-fluid px-4">
+
         <!-- Page Header -->
         <div class="page-header row no-gutters py-4">
             <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
@@ -22,9 +31,7 @@
                 <!-- Add New Post Form -->
                 <div class="card card-small mb-3">
                     <div class="card-body">
-                        <form class="add-new-post">
-                            <p>Form here</p>
-                        </form>
+                        {% include 'create_plan/plan_form_partial.html' %}
                     </div>
                 </div>
                 <!-- / Add New Post Form -->
@@ -124,4 +131,5 @@
     {% assets "dash_create_plan_js" %}
         <script src="{{ ASSET_URL }}"></script>
     {% endassets %}
+
 {% endblock dashboard_main %}
