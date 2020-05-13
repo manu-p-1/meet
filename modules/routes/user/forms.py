@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, TextAreaField, SelectField, BooleanField
 from wtforms.validators import InputRequired, NumberRange, ValidationError, DataRequired
+from wtforms.widgets.html5 import NumberInput
 from sys import stderr
 
 
@@ -49,7 +50,8 @@ class CreatePlanForm(FlaskForm):
     fundingAmount = IntegerField('Funding Amount', validators=[InputRequired(), NumberRange(min=100.00)],
                                  render_kw={"placeholder": "Funding Amount",
                                             "class": "form-control",
-                                            "min": 100.00})
+                                            "min": 100.00},
+                                 widget=NumberInput())
 
     planJustification = StringField('Plan Justification', validators=[InputRequired()],
                                     render_kw={"placeholder": "Plan Justification (e.g. Travel, Equipment, Party)",
@@ -113,10 +115,12 @@ class CreatePlanForm(FlaskForm):
     amountLimit = IntegerField('Amount Limit', validators=[RequiredIf('controlToggle'), NumberRange(min=0.00)],
                                render_kw={"placeholder": "Amount Limit",
                                           "class": "form-control",
-                                          "min": 0.00})
+                                          "min": 0.00},
+                               widget=NumberInput())
 
     usageLimit = IntegerField('Usage Limit', validators=[RequiredIf('controlToggle'), NumberRange(min=0, max=100)],
                               render_kw={"placeholder": "Usage Limit",
                                          "class": "form-control",
                                          "min": 0,
-                                         "max": 100})
+                                         "max": 100},
+                              widget=NumberInput())
