@@ -1,18 +1,19 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, IntegerField, TextAreaField, SelectField, BooleanField
-from wtforms.validators import InputRequired, Length, AnyOf, NumberRange, ValidationError
+from wtforms.validators import InputRequired, Length, AnyOf, NumberRange, ValidationError, Required
 from sys import stderr
 
 
-class RequiredIf(InputRequired):
+class RequiredIf(Required):
 
     def __init__(self, other_field_name, *args, **kwargs):
         self.other_field_name = other_field_name
+        print(other_field_name, file=stderr)
         super(RequiredIf, self).__init__(*args, **kwargs)
 
     def __call__(self, form, field):
         other_field = form._fields.get(self.other_field_name)
-
+        print(other_field, file=stderr)
         if other_field.data is None:
             raise Exception('no field named "%s" in form' % self.other_field_name)
         if bool(other_field.data):
@@ -79,7 +80,7 @@ class CreatePlanForm(FlaskForm):
                            render_kw={"class": "form-control"},
                            default='')
 
-    fundIndivEmployeesToggle = BooleanField('Transfer funds to individual', validators=[InputRequired()],
+    fundIndivEmployeesToggle = BooleanField('Transfer funds to individual', default=False,
                                             render_kw={"class": "custom-control-input"})
 
     employeesOptional = StringField('Employees Optional',
@@ -89,3 +90,33 @@ class CreatePlanForm(FlaskForm):
                                     ],
                                     render_kw={"class": "employeeIDInput form-control position-relative",
                                                "placeholder": "Enter Employee ID"})
+
+    controlToggle = BooleanField('Add Velocity Controls', default=False,
+                                 render_kw={"class": "custom-control-input"})
+
+    controlName = StringField('Control Name', validators=[RequiredIf('controlToggle')],
+                              render_kw={"class": "form-control",
+                                         "placeholder": "Enter a Control Name"})
+
+    controlWindow = SelectField('Control Window', validators=[RequiredIf('controlToggle')],
+                                choices=[
+                                    ('', 'Select a Control Time Period'),
+                                    ('day', 'DAY'),
+                                    ('week', 'WEEK'),
+                                    ('month', 'MONTH'),
+                                    ('lifetime', 'LIFETIME'),
+                                    ('transaction', 'TRANSACTION')
+                                ],
+                                render_kw={"class": "form-control"},
+                                default='')
+
+    amountLimit = IntegerField('Amount Limit', validators=[RequiredIf('controlToggle'), NumberRange(min=0.00)],
+                               render_kw={"placeholder": "Amount Limit",
+                                          "class": "form-control",
+                                          "min": 0.00})
+
+    usageLimit = IntegerField('Usage Limit', validators=[RequiredIf('controlToggle'), NumberRange(min=0, max=100)],
+                              render_kw={"placeholder": "Usage Limit",
+                                         "class": "form-control",
+                                         "min": 0,
+                                         "max": 100})
