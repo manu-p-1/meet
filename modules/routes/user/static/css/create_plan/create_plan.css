@@ -1,0 +1,35 @@
+
+.additional-employee-input-label {
+    font-size: 0.8rem !important;
+}
+
+.card-specific {
+    border: solid 1px lightgray;
+    border-radius: 10px;
+    padding: 20px 20px 0 20px;
+    margin-bottom: 20px
+}
+
+#employeeIDBoundary {
+    position: relative;
+}
+
+#addNewEmployeeInput {
+    position: absolute;
+    bottom: 3px;
+    right: 3px;
+    cursor: pointer;
+    color: green;
+}
+
+.removeNewEmployeeInput {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: firebrick;
+}
+
+#employeeIDBoundary .input-container input {
+    padding-right: 30px !important;
+}
