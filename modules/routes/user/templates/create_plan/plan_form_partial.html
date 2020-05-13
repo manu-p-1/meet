@@ -7,8 +7,8 @@
         <div class="input-group-prepend">
             <span class="input-group-text" id="basic-addon1">$</span>
         </div>
-        <input type="text" class="form-control" placeholder="Funding Amount" aria-label="Funding Amount"
-               aria-describedby="basic-addon1" min="0.00"></div>
+        <input type="number" class="form-control" placeholder="Funding Amount" aria-label="Funding Amount"
+               aria-describedby="basic-addon1" min="100.00" max="9999.99"></div>
     <div class="form-group">
         <input type="text" class="form-control" placeholder="Plan Justification (e.g. Travel, Equipment, Party)"
                aria-label="Plan Justification"
@@ -34,16 +34,16 @@
     <div class="form-row">
         <div class="form-group col-md-6">
             <label for="sourceFund" class="d-none"></label>
-            <select id="sourceFund" class="form-control w-100">
+            <select id="sourceFund" class="form-control w-100" required>
                 <option value="" disabled selected>Source Fund Department</option>
-                <option value="United States">Professional Services</option>
+                <option value="Professional Services">Professional Services</option>
             </select>
         </div>
         <div class="form-group col-md-6">
             <label for="destinationFund" class="d-none"></label>
-            <select id="destinationFund" class="form-control">
+            <select id="destinationFund" class="form-control" required>
                 <option value="" disabled selected>Destination Fund Department</option>
-                <option value="United States">Professional Services</option>
+                <option value="Accounting">Professional Services</option>
             </select>
         </div>
     </div>
