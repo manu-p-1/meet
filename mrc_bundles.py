@@ -20,37 +20,34 @@ bundles = {
                       filters=closure,
                       output=f'dist/{gen_uuid()}.js'),
 
-
     'base_css': Bundle('css/*.css',
                        filters='cssmin',
                        output=f'dist/{gen_uuid()}.css'),
-
 
     'common_js': Bundle('common_bp/js/*.js',
                         filters=closure,
                         output=f'dist/{gen_uuid()}.js'),
 
-
     'common_css': Bundle('common_bp/css/*.css',
                          filters='cssmin',
                          output=f'dist/{gen_uuid()}.css'),
-
 
     'dash_js': Bundle('user_bp/js/shards-dashboards.1.1.0.js',
                       'user_bp/js/shards.js',
                       filters=closure,
                       output=f'dist/dash/{gen_uuid()}.js'),
 
-
     "dash_css": Bundle('user_bp/css/*.css',
                        filters='cssmin',
                        output=f'dist/dash/{gen_uuid()}.css'),
-
 
     "dash_overview_js": Bundle('user_bp/js/overview/*.js',
                                filters=closure,
                                output=f'dist/dash/overview/{gen_uuid()}.js'),
 
+    "dash_create_plan_css": Bundle('user_bp/css/create_plan/*.css',
+                                   filters='cssmin',
+                                   output=f'dist/dash/create_plan/{gen_uuid()}.css'),
 
     "dash_create_plan_js": Bundle('user_bp/js/create_plan/*.js',
                                   filters=closure,
