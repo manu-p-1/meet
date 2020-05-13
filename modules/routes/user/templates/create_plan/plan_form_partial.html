@@ -1,0 +1,69 @@
+<form id="#newPlanForm">
+    <div class="form-group">
+        <input id="planName" type="text" class="form-control" placeholder="Plan Name" aria-label="Plane Name"
+               aria-describedby="basic-addon1" required>
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">$</span>
+        </div>
+        <input type="text" class="form-control" placeholder="Funding Amount" aria-label="Funding Amount"
+               aria-describedby="basic-addon1" min="0.00"></div>
+    <div class="form-group">
+        <input type="text" class="form-control" placeholder="Plan Justification (e.g. Travel, Equipment, Party)"
+               aria-label="Plan Justification"
+               aria-describedby="basic-addon1" required>
+    </div>
+    <div class="form-group">
+        <label class="d-none" for="justificationTextarea"></label>
+        <textarea id="justificationTextarea" type="text" class="form-control" placeholder="Description" maxlength="500"
+                  rows="4" required></textarea>
+    </div>
+    <div class="form-group">
+        <div id="blog-overview-date-range" class="input-group" style="">
+            <label for="activeRange" class="d-none"></label>
+            <input id="activeRange" type="text" name="datetimes" class="form-control"
+                   placeholder="Start and End Date/Times">
+            <span class="input-group-append">
+                <span class="input-group-text">
+                    <i class="material-icons"></i>
+                </span>
+            </span>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="sourceFund" class="d-none"></label>
+            <select id="sourceFund" class="form-control w-100">
+                <option value="" disabled selected>Source Fund Department</option>
+                <option value="United States">Professional Services</option>
+            </select>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="destinationFund" class="d-none"></label>
+            <select id="destinationFund" class="form-control">
+                <option value="" disabled selected>Destination Fund Department</option>
+                <option value="United States">Professional Services</option>
+            </select>
+        </div>
+    </div>
+    <div class="custom-control custom-toggle custom-toggle-sm mb-3">
+        <input type="checkbox" id="fundIndivEmployeesToggle" name="customToggle2" class="custom-control-input">
+        <label class="custom-control-label" for="fundIndivEmployeesToggle">Transfer funds to individual
+            employees</label>
+    </div>
+    <div id="employeeIDBoundary" class="card-specific d-none">
+        <div class="form-row mb-3" id="employeeIDBoundaryRow">
+            <div class="form-group col-md-3">
+                <label for="employee1" class="text-muted additional-employee-input-label">Employee <span
+                        class="employeeCount">1</span></label>
+                <div class="input-container">
+                    <input id="employee1" class="employeeIDInput form-control position-relative"
+                           placeholder="Enter Employee ID" required>
+                    <span class="removeNewEmployeeInput material-icons">remove_circle</span>
+                </div>
+            </div>
+        </div>
+        <span id="addNewEmployeeInput" class="material-icons">add_circle</span>
+    </div>
+</form>
