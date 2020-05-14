@@ -38,4 +38,5 @@ class Employee(db.Model):
     title_lookup = relationship('TitleLookup')
 
 
+db.drop_all()
 db.create_all()

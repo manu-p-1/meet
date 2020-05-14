@@ -27,9 +27,10 @@ Each user will have their own MarqetaClient instance.
 
 
 class MarqetaClient:
-    def __init__(self):
+    def __init__(self,db):
         # Fake data generator
         self.fake = Faker()
+        self.db = db
 
         # Marqeta Client
         client_payload = {
@@ -191,8 +192,8 @@ class MarqetaClient:
 # FOR EACH DEPARTMENT/ACCOUNT HOLDER GROUP, CREATE A RANDOM AMOUNT OF USERS FOR EACH GROUP WHOSE PARENTS ARE THE BUSINESS
 
 if __name__ == '__main__':
-    client = MarqetaClient()
+    # client = MarqetaClient()
     # client.print_businesses()
     # client.print_clients()
-    client.print_ah_groups()
+    # client.print_ah_groups()
 

@@ -10,7 +10,7 @@ import secrets
 mysql = MySQL()
 db = SQLAlchemy()
 csrf = CSRFProtect()
-client = MarqetaClient()
+client = MarqetaClient(db)
 
 def create_server(config):
     app = Flask(__name__)
