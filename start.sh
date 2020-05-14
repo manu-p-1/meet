@@ -89,13 +89,13 @@ if [[ -z "${MRC_ACCESS_TOKEN}" ]]; then
 fi
 
 if [[ -z "${MY_ACCESS}" ]]; then
-  export MY_ACCESS="abf01008-65c8-4e4b-b950-c30634f37f2f"
+  export MY_ACCESS=abf01008-65c8-4e4b-b950-c30634f37f2f
   echo "exported MY_ACCESS"
 fi
 
 if [[ -z "${MY_APP}" ]]; then
-  export MY_APP="2ef6b1d8-5a92-4884-9cf6-ae04d02b8fa5"
-  echo "exported MRC_ACCESS_TOKEN"
+  export MY_APP=2ef6b1d8-5a92-4884-9cf6-ae04d02b8fa5
+  echo "exported MY_APP"
 fi
 
 
