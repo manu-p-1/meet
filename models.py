@@ -23,6 +23,11 @@ class Manager(db.Model):
     email = Column(VARCHAR(255), nullable=False, unique=True)
     _pass = Column('pass', VARCHAR(128), nullable=False)
 
+    def check_password(self,password):
+        if self._pass == password:
+            return True
+        return False
+
 class Employee(db.Model):
     __tablename__ = 'employee'
 
