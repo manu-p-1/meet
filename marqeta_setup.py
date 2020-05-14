@@ -49,16 +49,17 @@ class MarqetaClient():
         self.BUSINESS_TOKEN = ''.join(
             re.findall('([A-Z])', self.BUSINESS_NAME))
 
+        self.TOKEN_COUNTER = 0
         self.DEPT_TOKEN_COUNTER = 0
         self.AH_GROUP_TOKEN_COUNTER = 0
         self.EMPLOYEE_TOKEN_COUNTER = 0
 
         self.FUNDING_PAYLOAD = {'name': self.BUSINESS_NAME + ' Program Funding',
                                 'active': True,
-                                'token': BUSINESS_TOKEN + '_FUNDING'
+                                'token': self.BUSINESS_TOKEN + '_FUNDING'
                                 }
 
-        self.BUSINESS_PAYLOAD = {'token': BUSINESS_TOKEN + str(self.TOKEN_COUNTER),
+        self.BUSINESS_PAYLOAD = {'token': self.BUSINESS_TOKEN + str(self.TOKEN_COUNTER),
                                  'business_name_dba': self.BUSINESS_NAME,
                                  'general_business_description': self.fake.catch_phrase()
                                  }
