@@ -29,8 +29,10 @@ def create_server(config):
         db = SQLAlchemy(app)
         csrf = CSRFProtect(app)
         
+        
 
         from models import DepartmentLookup,Employee,Manager
+
         for i,dept in enumerate(client.departments):
             db.session.add(DepartmentLookup(token=dept.token,
                                             department=client.DEPARTMENT_LIST[i]))
