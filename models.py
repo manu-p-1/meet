@@ -12,31 +12,27 @@ class DepartmentLookup(db.Model):
     __tablename__ = 'department_lookup'
 
     id = Column(Integer, primary_key=True)
+    token = Column(String(200),nullable=False,unique=True)
     department = Column(String(50), nullable=False, unique=True)
 
 
-class TitleLookup(db.Model):
-    __tablename__ = 'title_lookup'
+class Manager(db.Model):
+    __tablename__ = 'manager'
 
     id = Column(Integer, primary_key=True)
-    title = Column(String(45), nullable=False, unique=True)
-
+    email = Column(VARCHAR(255), nullable=False, unique=True)
+    _pass = Column('pass', VARCHAR(128), nullable=False)
 
 class Employee(db.Model):
     __tablename__ = 'employee'
 
     id = Column(Integer, primary_key=True)
-    employeeID = Column(String(200), nullable=False, unique=True)
-    email = Column(VARCHAR(255), nullable=False, unique=True)
-    _pass = Column('pass', VARCHAR(128), nullable=False)
+    token = Column(String(200), nullable=False, unique=True)
     firstname = Column(VARCHAR(45), nullable=False)
     lastname = Column(VARCHAR(45), nullable=False)
-    user_dept_FK = Column(ForeignKey('department_lookup.id'), nullable=False, index=True)
-    user_title_FK = Column(ForeignKey('title_lookup.id'), nullable=False, index=True)
+    user_dept_FK = Column(ForeignKey('department_lookup.token'), nullable=False, index=True)
 
     department_lookup = relationship('DepartmentLookup')
-    title_lookup = relationship('TitleLookup')
-
 
 db.drop_all()
 db.create_all()

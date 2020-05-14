@@ -10,7 +10,7 @@ import secrets
 mysql = MySQL()
 db = SQLAlchemy()
 csrf = CSRFProtect()
-client = MarqetaClient(db)
+client = MarqetaClient()
 
 def create_server(config):
     app = Flask(__name__)
@@ -28,8 +28,20 @@ def create_server(config):
         mysql.init_app(app)
         db = SQLAlchemy(app)
         csrf = CSRFProtect(app)
-        db.create_all()
+        
 
+        from models import DepartmentLookup,Employee,Manager
+        for dept in client.departments:
+            db.session.add(DepartmentLookup(token=dept.token,
+                                            department=dept.business_name_dba))
+
+        for e in client.employees:
+            db.session.add(Employee(token=e.token, firstname=e.first_name,
+                                    lastname=e.last_name, user_dept_FK=e.parent_token))
+
+        db.session.add(Manager(email='mrc@hack.com',_pass='root'))
+        db.session.commit()
+        
         #secret_key generation
         app.secret_key = secrets.token_urlsafe(256)
 

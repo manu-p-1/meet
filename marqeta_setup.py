@@ -27,10 +27,9 @@ Each user will have their own MarqetaClient instance.
 
 
 class MarqetaClient:
-    def __init__(self,db):
+    def __init__(self):
         # Fake data generator
         self.fake = Faker()
-        self.db = db
 
         # Marqeta Client
         client_payload = {
@@ -65,14 +64,13 @@ class MarqetaClient:
                                  'general_business_description': self.fake.catch_phrase()
                                  }
 
-
         self.funding_source = []
         self.business = []
         self.departments = []
         self.ah_groups = []
         self.employees = []
 
-        # self.setup()
+        self.setup()
 
     def setup(self):
         self.funding_source = self.create_program_funding_source(
@@ -81,7 +79,7 @@ class MarqetaClient:
         self.business = self.create_business(self.BUSINESS_PAYLOAD)
 
         self.fund(float(random.randint(100_000, 1_000_000)),
-                  gpa_type='business', fund_source_token=self.funding_source.token,dest_token=self.business.token)
+                  gpa_type='business', fund_source_token=self.funding_source.token, dest_token=self.business.token)
 
         self.departments = [self.create_department(
             dept) for dept in self.DEPARTMENT_LIST]
@@ -90,7 +88,8 @@ class MarqetaClient:
             dept) for dept in self.DEPARTMENT_LIST]
 
         for i, dept in enumerate(self.departments):
-            self.generate_employee_data(12, self.departments[i].token, self.ah_groups[i].token)
+            self.generate_employee_data(
+                12, self.departments[i].token, self.ah_groups[i].token)
 
     # HIERARCHY
     # CREATE PROGRAM FUNDING SOURCE
@@ -103,7 +102,7 @@ class MarqetaClient:
         return self.client.businesses.create(business)
 
     # MAKE GPA ORDER TO BUSINESS
-    def fund(self, amount: float, gpa_type: str, fund_source_token: str,dest_token: str, currency_code: str = 'USD'):
+    def fund(self, amount: float, gpa_type: str, fund_source_token: str, dest_token: str, currency_code: str = 'USD'):
         payload = {'token': self.BUSINESS_TOKEN + '_GPA_TOKEN',
                    gpa_type + '_token': dest_token,
                    'funding_source_token': fund_source_token,
@@ -117,7 +116,7 @@ class MarqetaClient:
         dept_payload = {'token': self.BUSINESS_TOKEN + '_' + department + str(self.DEPT_TOKEN_COUNTER),
                         'business_name_dba': self.BUSINESS_TOKEN + '_' + department,
                         }
-        print(f'dept_payload: {dept_payload}')
+        # print(f'dept_payload: {dept_payload}')
         self.DEPT_TOKEN_COUNTER += 1
         return self.client.businesses.create(dept_payload)
 
@@ -128,7 +127,7 @@ class MarqetaClient:
             'token': self.BUSINESS_TOKEN + '_' + department + '_AH_GROUP' + str(self.AH_GROUP_TOKEN_COUNTER),
             'name': self.BUSINESS_TOKEN + '_' + department + '_AH_GROUP'
         }
-        print(f'ah_group_payload: {ah_group_payload}')
+        # print(f'ah_group_payload: {ah_group_payload}')
         self.AH_GROUP_TOKEN_COUNTER += 1
         return self.client.account_holder_groups.create(ah_group_payload)
 
@@ -149,6 +148,7 @@ class MarqetaClient:
             self.EMPLOYEE_TOKEN_COUNTER += 1
             self.employees.append(self.create_employee(e_payload))
 
+
     # EXPORT BUSINESS DATA AS JSON OR JUST SUBMIT DIRECTLY TO MARQETA API
 
     def print_businesses(self, clt=None):
@@ -162,7 +162,7 @@ class MarqetaClient:
         v(clt.__str__()) if clt is not None else [
             v(u.__str__()) for u in self.client.businesses.stream()]
 
-    def print_clients(self,clt=None):
+    def print_clients(self, clt=None):
 
         def v(i: str):
             print(json.dumps(json.loads(i), indent=4))
@@ -170,9 +170,10 @@ class MarqetaClient:
             # print(client.balances.find_for_user_or_business(token))
         # If you provide a client, it'll print the info, otherwise print all clients
 
-        v(clt.__str__()) if clt is not None else [v(u.__str__()) for u in self.client.users.stream()]
+        v(clt.__str__()) if clt is not None else [
+            v(u.__str__()) for u in self.client.users.stream()]
 
-    def print_ah_groups(self,clt=None):
+    def print_ah_groups(self, clt=None):
 
         def v(i: str):
             print(json.dumps(json.loads(i), indent=4))
@@ -180,9 +181,8 @@ class MarqetaClient:
             # print(client.balances.find_for_user_or_business(token))
         # If you provide a client, it'll print the info, otherwise print all clients
 
-        v(clt.__str__()) if clt is not None else [v(u.__str__()) for u in self.client.account_holder_groups.stream()]
-
-    
+        v(clt.__str__()) if clt is not None else [
+            v(u.__str__()) for u in self.client.account_holder_groups.stream()]
 
     # def print_hierarchy(self):
 
@@ -190,10 +190,9 @@ class MarqetaClient:
 # ESTABLISH THE DEPARTMENTS AS CONSTANTS/ACCOUNT HOLDER GROUPS
 
 # FOR EACH DEPARTMENT/ACCOUNT HOLDER GROUP, CREATE A RANDOM AMOUNT OF USERS FOR EACH GROUP WHOSE PARENTS ARE THE BUSINESS
-
 if __name__ == '__main__':
+    pass
     # client = MarqetaClient()
     # client.print_businesses()
     # client.print_clients()
     # client.print_ah_groups()
-
