@@ -18,8 +18,8 @@ def login(ctx=None):
 
 @common_bp.route('/')
 def landing_page():
-    for dept in ['IT','ACCOUNTING','MARKETING','HUMAN RESOURCES','PRODUCTION','RESEARCH','SECURITY','LOGISTICS']:
-        x = DepartmentLookup(department=dept)
-        db.session.add(x)
-        db.session.commit()
+    # for dept in ['IT','ACCOUNTING','MARKETING','HUMAN RESOURCES','PRODUCTION','RESEARCH','SECURITY','LOGISTICS']:
+    #     x = DepartmentLookup(department=dept)
+    #     db.session.add(x)
+    #     db.session.commit()
     return redirect(url_for('common_bp.login'))
