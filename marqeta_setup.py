@@ -41,20 +41,22 @@ class MarqetaClient():
         self.DEPARTMENTS = ['IT', 'ACCOUNTING', 'MARKETING', 'HUMAN RESOURCES', 'PRODUCTION', 'RESEARCH', 'SECURITY',
                     'LOGISTICS']
         self.BUSINESS_NAME = self.fake.company()
-        self.BUSINESS_TOKEN = ''.join(re.findall('([A-Z])', BUSINESS_NAME))
+        self.BUSINESS_TOKEN = ''.join(re.findall('([A-Z])', self.BUSINESS_NAME))
+        
         self.TOKEN_COUNTER = 0
 
-        self.FUNDING_PAYLOAD = {'name': BUSINESS_NAME + ' Program Funding',
+
+        self.FUNDING_PAYLOAD = {'name': self.BUSINESS_NAME + ' Program Funding',
                         'active': True,
                         'token': BUSINESS_TOKEN + '_FUNDING'
                         }
 
-        self.BUSINESS_PAYLOAD = {'token': BUSINESS_TOKEN + str(TOKEN_COUNTER),
-                            'business_name_dba': BUSINESS_NAME,
+        self.BUSINESS_PAYLOAD = {'token': BUSINESS_TOKEN + str(self.TOKEN_COUNTER),
+                            'business_name_dba': self.BUSINESS_NAME,
                             'general_business_description': self.fake.catch_phrase()
                             }
 
-        self.BUSINESS_GPA_PAYLOAD = {'token': BUSINESS_TOKEN + '_GPA_TOKEN',
+        self.BUSINESS_GPA_PAYLOAD = {'token': self.BUSINESS_TOKEN + '_GPA_TOKEN',
                                 'business_token': '',
                                 'amount': ''
                                 }
@@ -75,7 +77,7 @@ class MarqetaClient():
 
     # MAKE GPA ORDER TO BUSINESS
     def fund(self, amount: float, gpa_type: str, dest_token: str, currency_code: str = 'USD'):
-        payload = {'token': BUSINESS_TOKEN + '_GPA_TOKEN',
+        payload = {'token': self.BUSINESS_TOKEN + '_GPA_TOKEN',
                    gpa_type + '_token': dest_token,
                    'amount': amount,
                    'currency_code': currency_code
@@ -85,29 +87,30 @@ class MarqetaClient():
     # CREATE DEPARTMENT USERS (BUSINESSES)
     def create_department(self, department: list = []):
         for d in department:
-            DEPARTMENT_PAYLOAD = {'token': BUSINESS_TOKEN + '_' + d + str(TOKEN_COUNTER),
-                                  'business_name_dba': BUSINESS_TOKEN + '_' + d,
+            self.DEPARTMENT_PAYLOAD = {'token': self.BUSINESS_TOKEN + '_' + d + str(self.TOKEN_COUNTER),
+                                  'business_name_dba': self.BUSINESS_TOKEN + '_' + d,
                                   }
-            self.client.businesses.create(DEPARTMENT_PAYLOAD)
+            self.client.businesses.create(self.DEPARTMENT_PAYLOAD)
 
     # CREATE ACCOUNT HOLDER GROUPS FOR EACH DEPARTMENT
     # WITH APPROPRIATE CONFIG
     def create_ah_group(self, department: list = []):
         for d in department:
-            AH_GROUP_PAYLOAD = {'token': BUSINESS_TOKEN + '_' + d + 'AH_GROUP' + str(TOKEN_COUNTER),
-                                'name': BUSINESS_TOKEN + '_' + d + 'AH_GROUP'
+            self.AH_GROUP_PAYLOAD = {'token': self.BUSINESS_TOKEN + '_' + d + 'AH_GROUP' + str(self.TOKEN_COUNTER),
+                                'name': self.BUSINESS_TOKEN + '_' + d + 'AH_GROUP'
                                 }
-            self.client.businesses.create(AH_GROUP_PAYLOAD)
+            self.client.businesses.create(self.AH_GROUP_PAYLOAD)
 
         # CREATE USERS OF EACH DEPARTMENT WITH PARENT BEING THE DEPARTMENT USER TOKEN AND HAVING ACH TOKEN
     def create_employee(self, employee: list = []):
         for e in employee:
             self.client.users.create(e)
+    
     def generate_employee_data(self, n: int, user_token: str, parent_token: str):
         return [
-            {"token": str(BUSINESS_TOKEN + 1),
-             "first_name": fake.first_name(),
-             "last_nane": fake.last_name(),
+            {"token": str(self.BUSINESS_TOKEN + 1),
+             "first_name": self.fake.first_name(),
+             "last_nane": self.fake.last_name(),
              "parent_token": parent_token,
              "account_holder_group_token": None
              }
