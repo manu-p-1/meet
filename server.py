@@ -4,11 +4,13 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_assets import Environment
 from mrc_bundles import bundles
 from flask_wtf.csrf import CSRFProtect
+from marqeta_setup import MarqetaClient
 import secrets
 
 mysql = MySQL()
 db = SQLAlchemy()
 csrf = CSRFProtect()
+client = MarqetaClient()
 
 def create_server(config):
     app = Flask(__name__)
