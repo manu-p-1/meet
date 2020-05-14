@@ -31,9 +31,9 @@ def create_server(config):
         
 
         from models import DepartmentLookup,Employee,Manager
-        for dept in client.departments:
+        for i,dept in enumerate(client.departments):
             db.session.add(DepartmentLookup(token=dept.token,
-                                            department=dept.business_name_dba))
+                                            department=client.DEPARTMENT_LIST[i]))
 
         for e in client.employees:
             db.session.add(Employee(token=e.token, firstname=e.first_name,

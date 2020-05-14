@@ -1,4 +1,6 @@
 from flask import Blueprint, render_template, request, jsonify, redirect, flash, session, url_for
+from server import db
+import json
 
 util_bp = Blueprint('util_bp', __name__,
                     template_folder='templates', static_folder='static')
@@ -27,4 +29,9 @@ def overview(ctx=None):
             ]
         }
     """
+
+    dept = request.args.get('department')
+    
+
+
     return render_template('overview/dash_overview_partial.html')
