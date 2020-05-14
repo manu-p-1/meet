@@ -5,7 +5,6 @@ import json
 import random
 import os
 
-
 '''
 HIERARCHY
 
@@ -27,8 +26,8 @@ Each user will have their own MarqetaClient instance.
 '''
 
 
-class MarqetaClient():
-    def init(self):
+class MarqetaClient:
+    def __init__(self):
         # Fake data generator
         self.fake = Faker()
 
@@ -43,7 +42,8 @@ class MarqetaClient():
                              client_payload['access_token'], client_payload['timeout'])
 
         # Constants
-        self.DEPARTMENT_LIST = ['IT', 'ACCOUNTING', 'MARKETING', 'HUMAN RESOURCES', 'PRODUCTION', 'RESEARCH', 'SECURITY',
+        self.DEPARTMENT_LIST = ['IT', 'ACCOUNTING', 'MARKETING', 'HUMAN RESOURCES', 'PRODUCTION', 'RESEARCH',
+                                'SECURITY',
                                 'LOGISTICS']
         self.BUSINESS_NAME = self.fake.company()
         self.BUSINESS_TOKEN = ''.join(
@@ -55,10 +55,10 @@ class MarqetaClient():
 
         self.FUNDING_PAYLOAD = {'name': self.BUSINESS_NAME + ' Program Funding',
                                 'active': True,
-                                'token': BUSINESS_TOKEN + '_FUNDING'
+                                'token': self.BUSINESS_TOKEN + '_FUNDING'
                                 }
 
-        self.BUSINESS_PAYLOAD = {'token': BUSINESS_TOKEN + str(self.TOKEN_COUNTER),
+        self.BUSINESS_PAYLOAD = {'token': self.BUSINESS_TOKEN + str(self.TOKEN_COUNTER),
                                  'business_name_dba': self.BUSINESS_NAME,
                                  'general_business_description': self.fake.catch_phrase()
                                  }
@@ -89,12 +89,8 @@ class MarqetaClient():
         self.ah_groups = [self.create_ah_group(
             dept) for dept in self.DEPARTMENT_LIST]
 
-        for i,dept in enumerate(self.departments):
-            self.generate_employee_data(12,self.departments[i].token,self.ah_groups[i].token)
-        
-
-
-        
+        for i, dept in enumerate(self.departments):
+            self.generate_employee_data(12, self.departments[i].token, self.ah_groups[i].token)
 
     # HIERARCHY
     # CREATE PROGRAM FUNDING SOURCE
@@ -117,27 +113,29 @@ class MarqetaClient():
 
     # CREATE DEPARTMENT USERS (BUSINESSES)
     def create_department(self, department):
-        DEPARTMENT_PAYLOAD = {'token': self.BUSINESS_TOKEN + '_' + department + str(self.DEPT_TOKEN_COUNTER),
-                              'business_name_dba': self.BUSINESS_TOKEN + '_' + department,
-                              }
+        dept_payload = {'token': self.BUSINESS_TOKEN + '_' + department + str(self.DEPT_TOKEN_COUNTER),
+                        'business_name_dba': self.BUSINESS_TOKEN + '_' + department,
+                        }
         self.DEPT_TOKEN_COUNTER += 1
-        return self.client.businesses.create(DEPARTMENT_PAYLOAD)
+        return self.client.businesses.create(dept_payload)
 
     # CREATE ACCOUNT HOLDER GROUPS FOR EACH DEPARTMENT
     # WITH APPROPRIATE CONFIG
     def create_ah_group(self, department):
-        AH_GROUP_PAYLOAD = {'token': self.BUSINESS_TOKEN + '_' + department + 'AH_GROUP' + str(self.AH_GROUP_TOKEN_COUNTER),
-                            'name': self.BUSINESS_TOKEN + '_' + department + 'AH_GROUP'
-                            }
+        ah_group_payload = {
+            'token': self.BUSINESS_TOKEN + '_' + department + 'AH_GROUP' + str(self.AH_GROUP_TOKEN_COUNTER),
+            'name': self.BUSINESS_TOKEN + '_' + department + 'AH_GROUP'
+        }
         self.AH_GROUP_TOKEN_COUNTER += 1
-        return self.client.businesses.create(AH_GROUP_PAYLOAD)
+        return self.client.businesses.create(ah_group_payload)
 
         # CREATE USERS OF EACH DEPARTMENT WITH PARENT BEING THE DEPARTMENT USER TOKEN AND HAVING ACH TOKEN
+
     def create_employee(self, employee):
         return self.client.users.create(employee)
 
     def generate_employee_data(self, n: int, parent_token: str, ah_group_token: str):
-        for count in n:
+        for count in range(n):
             e_payload = {
                 "token": self.BUSINESS_TOKEN + '_e' + str(self.EMPLOYEE_TOKEN_COUNTER),
                 "first_name": self.fake.first_name(),
@@ -147,8 +145,6 @@ class MarqetaClient():
             }
             self.EMPLOYEE_TOKEN_COUNTER += 1
             self.employees.append(self.create_employee(e_payload))
-
-
 
     # EXPORT BUSINESS DATA AS JSON OR JUST SUBMIT DIRECTLY TO MARQETA API
 
@@ -162,7 +158,6 @@ class MarqetaClient():
 
         v(clt.__str__()) if clt is not None else [
             v(u.__str__()) for u in self.client.businesses.stream()]
-
 
 # ESTABLISH THE DEPARTMENTS AS CONSTANTS/ACCOUNT HOLDER GROUPS
 
