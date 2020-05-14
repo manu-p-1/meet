@@ -16,7 +16,7 @@
 
 #addNewEmployeeInput {
     position: absolute;
-    bottom: 3px;
+    top: 3px;
     right: 3px;
     cursor: pointer;
     color: green;
@@ -32,4 +32,9 @@
 
 #employeeIDBoundary .input-container input {
     padding-right: 30px !important;
+}
+
+.pre-input-label {
+    font-size: smaller !important;
+    font-weight: lighter !important;
 }
