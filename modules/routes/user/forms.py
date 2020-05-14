@@ -1,73 +1,37 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, TextAreaField, SelectField, BooleanField
-from wtforms.validators import InputRequired, NumberRange, ValidationError, DataRequired
+from wtforms import StringField, IntegerField, TextAreaField, SelectField, BooleanField, SubmitField, DecimalField, \
+    FieldList
+from wtforms.validators import InputRequired, NumberRange
 from wtforms.widgets.html5 import NumberInput
-from sys import stderr
-
-
-class RequiredIf(DataRequired):
-
-    def __init__(self, other_field_name, *args, **kwargs):
-        self.other_field_name = other_field_name
-        print(other_field_name, file=stderr)
-        super(RequiredIf, self).__init__(*args, **kwargs)
-
-    def __call__(self, form, field):
-        other_field = form._fields.get(self.other_field_name)
-        print(other_field, file=stderr)
-        if other_field.data is None:
-            raise Exception('no field named "%s" in form' % self.other_field_name)
-        if bool(other_field.data):
-            super(RequiredIf, self).__call__(form, field)
-
-
-class Unique(object):
-    def __init__(self, message=None):
-        if not message:
-            message = 'Duplicate field values are not allowed.'
-        self.message = message
-
-    def __call__(self, form, field: []):
-        print(field, file=stderr)
-        no = self.has_dup(field)
-        if no:
-            raise ValidationError(self.message)
-
-    def has_dup(self, list_):
-        seen = set()
-        for x in list_:
-            if x.data in seen:
-                return True
-            seen.add(x.data)
-        return False
+from modules.routes.user.custom_validators import RequiredIf, Unique, DateRange
 
 
 class CreatePlanForm(FlaskForm):
-    planName = StringField("Form Plan", validators=[InputRequired()],
+    planName = StringField("Plan Name", validators=[InputRequired()],
                            render_kw={"placeholder": "Plan Name",
                                       "class": "form-control"})
 
-    fundingAmount = IntegerField('Funding Amount', validators=[InputRequired(), NumberRange(min=100.00)],
+    fundingAmount = DecimalField('Funding Amount', validators=[InputRequired(), NumberRange(min=100.00)],
                                  render_kw={"placeholder": "Funding Amount",
-                                            "class": "form-control",
-                                            "min": 100.00},
+                                            "class": "form-control"},
                                  widget=NumberInput())
 
-    planJustification = StringField('Plan Justification', validators=[InputRequired()],
-                                    render_kw={"placeholder": "Plan Justification (e.g. Travel, Equipment, Party)",
+    planJustification = StringField('Plan Justification (e.g. Travel, Equipment, Party)', validators=[InputRequired()],
+                                    render_kw={"placeholder": "Plan Justification",
                                                "class": "form-control"})
 
-    description = TextAreaField('Description', validators=[InputRequired()],
+    description = TextAreaField('Description (max 500 chars.)',
+                                validators=[InputRequired()],
                                 render_kw={"rows": 4,
                                            "maxlength": 500,
                                            "placeholder": "Description",
                                            "class": "form-control"})
 
-    activeRange = StringField('Start and End Date/Times', validators=[InputRequired()],
-                              render_kw={"placeholder": "Start and End Date/Times",
-                                         "class": "form-control"})
+    dateRange = StringField('Start and End Date/Times', validators=[InputRequired(), DateRange()],
+                            render_kw={"placeholder": "Start and End Date/Times",
+                                       "class": "form-control"})
 
-    sourceFund = SelectField('Source Fund', validators=[InputRequired()],
+    sourceFund = SelectField('Fund Source', validators=[InputRequired()],
                              choices=[
                                  ('', 'Destination Fund Department'),
                                  ('Professional Services', 'Professional Services')
@@ -75,7 +39,7 @@ class CreatePlanForm(FlaskForm):
                              render_kw={"class": "form-control"},
                              default='')
 
-    destFund = SelectField('Source Fund', validators=[InputRequired()],
+    destFund = SelectField('Fund Destination', validators=[InputRequired()],
                            choices=[
                                ('Professional Services', 'Professional Services')
                            ],
@@ -85,13 +49,15 @@ class CreatePlanForm(FlaskForm):
     fundIndivEmployeesToggle = BooleanField('Transfer funds to individual', default=False,
                                             render_kw={"class": "custom-control-input"})
 
-    employeesOptional = StringField('Employees Optional',
-                                    validators=[
-                                        RequiredIf('fundIndivEmployeesToggle'),
-                                        Unique()
-                                    ],
-                                    render_kw={"class": "employeeIDInput form-control position-relative",
-                                               "placeholder": "Enter Employee ID"})
+    employeesOptional = FieldList(StringField('employeesOptional',
+                                              validators=[
+                                                  RequiredIf('fundIndivEmployeesToggle'),
+                                              ],
+                                              render_kw={"class": "employeeIDInput form-control position-relative",
+                                                         "placeholder": "Enter Employee ID"}),
+                                  validators=[Unique(object_name="employee id's")],
+                                  min_entries=1,
+                                  max_entries=12)
 
     controlToggle = BooleanField('Add Velocity Controls', default=False,
                                  render_kw={"class": "custom-control-input"})
@@ -112,15 +78,16 @@ class CreatePlanForm(FlaskForm):
                                 render_kw={"class": "form-control"},
                                 default='')
 
-    amountLimit = IntegerField('Amount Limit', validators=[RequiredIf('controlToggle'), NumberRange(min=0.00)],
+    amountLimit = DecimalField('Amount Limit', validators=[RequiredIf('controlToggle'), NumberRange(min=0.00)],
                                render_kw={"placeholder": "Amount Limit",
                                           "class": "form-control",
-                                          "min": 0.00},
+                                          },
                                widget=NumberInput())
 
     usageLimit = IntegerField('Usage Limit', validators=[RequiredIf('controlToggle'), NumberRange(min=0, max=100)],
                               render_kw={"placeholder": "Usage Limit",
                                          "class": "form-control",
-                                         "min": 0,
-                                         "max": 100},
+                                         },
                               widget=NumberInput())
+
+    createPlanButton = SubmitField("Create Plan", render_kw={"class": "btn btn-primary btn-block"})

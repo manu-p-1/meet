@@ -41,12 +41,14 @@ def create_server(config):
 
         from modules.routes.common import routes as common_routes
         from modules.routes.user import routes as user_routes
+        from modules.routes.utils import routes as util_routes
         # from routes.admin import routes as admin_routes
         # from routes.api import routes as api_routes
         # from routes.errors.routes import page_not_found,logic_error
 
         app.register_blueprint(common_routes.common_bp)
         app.register_blueprint(user_routes.user_bp, url_prefix="/user")
+        app.register_blueprint(util_routes.util_bp, url_prefix="/util")
         # app.register_blueprint(admin_routes.admin_bp, url_prefix="/admin")
         # app.register_blueprint(api_routes.api_bp,url_prefix="/api")
 
