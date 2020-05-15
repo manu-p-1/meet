@@ -7,7 +7,7 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 metadata = Base.metadata
 
-db.drop_all()
+
 class DepartmentLookup(db.Model):
     __tablename__ = 'department_lookup'
 
@@ -68,5 +68,5 @@ class PlanUser(db.Model):
 
 
 
-
+db.drop_all()
 db.create_all()
