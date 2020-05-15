@@ -4,6 +4,7 @@ import re
 import json
 import random
 import os
+import secrets
 
 '''
 HIERARCHY
@@ -47,7 +48,7 @@ class MarqetaClient:
                                 'LOGISTICS']
         self.BUSINESS_NAME = self.fake.company()
         self.BUSINESS_TOKEN = ''.join(
-            re.findall('([A-Z])', self.BUSINESS_NAME))
+            re.findall('([A-Z])', self.BUSINESS_NAME)) + '_' + secrets.token_urlsafe(5)[0:6] + '_'
 
         self.TOKEN_COUNTER = 0
         self.DEPT_TOKEN_COUNTER = 0
@@ -147,7 +148,6 @@ class MarqetaClient:
             }
             self.EMPLOYEE_TOKEN_COUNTER += 1
             self.employees.append(self.create_employee(e_payload))
-
 
     # EXPORT BUSINESS DATA AS JSON OR JUST SUBMIT DIRECTLY TO MARQETA API
 
