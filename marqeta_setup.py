@@ -44,8 +44,8 @@ class MarqetaClient:
 
         # Constants
         self.DEPARTMENT_LIST = ['IT', 'AC', 'MK', 'HR', 'PD', 'RD',
-                                'SCE',
-                                'LOG']
+                                'SC',
+                                'LG']
         self.BUSINESS_NAME = self.fake.company()
         self.BUSINESS_TOKEN = ''.join(
             re.findall('([A-Z])', self.BUSINESS_NAME)) + '_' + secrets.token_urlsafe(5)[0:6] + '_'

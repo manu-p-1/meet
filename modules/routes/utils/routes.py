@@ -33,7 +33,7 @@ def overview(ctx=None):
 
     dept = request.args.get('department')
     name = request.args.get('term')
-    dept_token = DepartmentLookup.query.filter_by(department='AC').first()
+    dept_token = DepartmentLookup.query.filter_by(department=dept).first()
     employee = Employee.query.filter_by(user_dept_FK=dept_token.token)
 
 
