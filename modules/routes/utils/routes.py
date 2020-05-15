@@ -31,7 +31,7 @@ def overview(ctx=None):
         }
     """
 
-    dept = request.args.get('department')
+    dept = request.args.get('department')[:2]
     name = request.args.get('term')
     dept_token = DepartmentLookup.query.filter_by(department=dept).first()
     employee = Employee.query.filter_by(user_dept_FK=dept_token.token)
