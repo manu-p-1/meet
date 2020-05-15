@@ -34,6 +34,9 @@ class DevelopmentConfig:
 
     SQLALCHEMY_DATABASE_URI = os.environ.get('ALCHEMY_URI')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        "pool_size": 300
+    }
 
 
 '''
