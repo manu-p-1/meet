@@ -38,8 +38,8 @@ def create_server(config):
                                             department=client.DEPARTMENT_LIST[i]))
 
         for e in client.employees:
-            db.session.add(Employee(token=e.token, firstname=e.first_name,
-                                    lastname=e.last_name, user_dept_FK=e.parent_token))
+            db.session.add(Employee(token=e.token, first_name=e.first_name,
+                                    last_name=e.last_name, user_dept_FK=e.parent_token))
 
         db.session.add(Manager(email='mrc@hack.com',_pass='root'))
         db.session.commit()

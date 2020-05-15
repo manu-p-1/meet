@@ -7,7 +7,7 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 metadata = Base.metadata
 
-
+db.drop_all()
 class DepartmentLookup(db.Model):
     __tablename__ = 'department_lookup'
 
@@ -56,17 +56,17 @@ class Plan(db.Model):
     amount_limit = Column(Float)
     usage_limit = Column(Integer)
 
-class UserPlan(db.Model):
-    __tablename__ = 'user_plan'
+class PlanUser(db.Model):
+    __tablename__ = 'plan_user'
 
-    up_plan_FK = Column(ForeignKey('user.id'),nullable=False,index=True)
-    up_user_FK = Column(ForeignKey('plan.id'),nullable=False,index=True)
+    user_FK = Column(ForeignKey('employee.id'),primary_key=True,nullable=False)
+    plan_FK = Column(ForeignKey('plan.id'),primary_key=True,nullable=False)
 
-    user = relationship('Employee')
+    employee = relationship('Employee')
     plan = relationship('Plan')
 
 
 
 
-db.drop_all()
+
 db.create_all()
