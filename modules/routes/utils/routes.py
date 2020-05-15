@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, jsonify, redirect, flash, session, url_for
 from server import db
-from models import DepartmentLookup,Employee
+from models import DepartmentLookup, Employee
 import json
 
 util_bp = Blueprint('util_bp', __name__,
@@ -32,12 +32,22 @@ def overview(ctx=None):
     """
 
     dept = request.args.get('department')
-    
+    name = request.args.get('name')
+    dept_token = DepartmentLookup.query.filter_by(department=dept).first()
+    employee = None
 
-    dept_token = DepartmentLookup.query.filter_by(department='ACCOUNTING').first()
-    employee = Employee.query.filter_by(user_dept_FK=dept_token.token)
+    if ' ' in name:
+        fname = name[:name.find('')]
+        lname = name[name.find(''):]
+        employee = Employee.query.filter_by(user_dept_FK=dept_token.token).filter(
+            Employee.first_name.like(fname)).filter(Employee.last_name.like(lname))
+    else:
+        # employee = Employee.query.filter_by(user_dept_FK=dept_token.token)
+        employee = Employee.query.filter_by(user_dept_FK=dept_token.token).filter(
+            Employee.first_name.like(name)).filter(Employee.last_name.like(name))
 
-    e_payload = [{"name":e.firstname+e.lastname,"id":e.id} for e in employee]
+    e_payload = [{"name": e.firstname+e.lastname, "id": e.id}
+                 for e in employee]
 
     print(json.dumps(e_payload))
 
