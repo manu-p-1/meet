@@ -33,21 +33,23 @@ def overview(ctx=None):
 
     dept = request.args.get('department')
     name = request.args.get('name')
-    dept_token = DepartmentLookup.query.filter_by(department=dept).first()
-    employee = None
+    dept_token = DepartmentLookup.query.filter_by(department='AC').first()
+    employee = Employee.query.filter_by(user_dept_FK=dept_token.token)
 
-    if ' ' in name:
-        fname = name[:name.find('')]
-        lname = name[name.find(''):]
-        employee = Employee.query.filter_by(user_dept_FK=dept_token.token).filter(
-            Employee.first_name.like(fname)).filter(Employee.last_name.like(lname))
+
+    if name and ' ' in name:
+        fname = name[:name.find('')].lower()
+        lname = name[name.find(''):].lower()
+        e_payload = [{"name": e.first_name + ' ' + e.last_name, "id": e.id}
+                 for e in employee if fname in e.first_name.lower() and lname in e.last_name.lower()]
     else:
-        # employee = Employee.query.filter_by(user_dept_FK=dept_token.token)
-        employee = Employee.query.filter_by(user_dept_FK=dept_token.token).filter(
-            Employee.first_name.like(name)).filter(Employee.last_name.like(name))
+        name = name.lower()
+        e_payload = [{"name": e.first_name + ' ' + e.last_name, "id": e.id}
+                 for e in employee if name in e.first_name.lower() or name in e.last_name.lower()]
+        
 
-    e_payload = [{"name": e.firstname+e.lastname, "id": e.id}
-                 for e in employee]
+    # e_payload = [{"name": e.first_name+e.last_name, "id": e.id}
+    #              for e in employee]
 
     print(json.dumps(e_payload))
 
