@@ -1,7 +1,11 @@
+import sys
+
 from flask import Flask
 from flaskext.mysql import MySQL
 from flask_sqlalchemy import SQLAlchemy
 from flask_assets import Environment
+from sqlalchemy import exc
+
 from mrc_bundles import bundles
 from flask_wtf.csrf import CSRFProtect
 from marqeta_setup import MarqetaClient
@@ -12,10 +16,9 @@ db = SQLAlchemy()
 csrf = CSRFProtect()
 client = MarqetaClient()
 
+
 def create_server(config):
     app = Flask(__name__)
-
-    
 
     # update app config from file config.py
     app.config.from_object('config.DevelopmentConfig')
@@ -28,12 +31,10 @@ def create_server(config):
         mysql.init_app(app)
         db = SQLAlchemy(app)
         csrf = CSRFProtect(app)
-        
-        
 
-        from models import DepartmentLookup,Employee,Manager
+        from models import DepartmentLookup, Employee, Manager
 
-        for i,dept in enumerate(client.departments):
+        for i, dept in enumerate(client.departments):
             db.session.add(DepartmentLookup(token=dept.token,
                                             department=client.DEPARTMENT_LIST[i]))
 
@@ -41,10 +42,13 @@ def create_server(config):
             db.session.add(Employee(token=e.token, first_name=e.first_name,
                                     last_name=e.last_name, user_dept_FK=e.parent_token))
 
-        db.session.add(Manager(email='mrc@hack.com',_pass='root'))
-        db.session.commit()
-        
-        #secret_key generation
+        try:
+            db.session.add(Manager(email='mrc@hack.com', _pass='root'))
+            db.session.commit()
+        except exc.IntegrityError:
+            db.session.rollback()
+
+        # secret_key generation
         app.secret_key = secrets.token_urlsafe(256)
 
         assets = Environment(app)
@@ -70,5 +74,3 @@ def create_server(config):
         # app.register_error_handler(500,logic_error)
 
     return app
-
-
