@@ -1,3 +1,5 @@
+import json
+
 from flask import Blueprint, render_template, request, jsonify, redirect, flash, session, url_for
 from modules.routes.user.forms import CreatePlanForm
 from datetime import date
@@ -12,6 +14,7 @@ user_bp = Blueprint('user_bp', __name__,
 def overview(ctx=None):
     return render_template('overview/dash_overview_partial.html')
 
+
 @login_required(session)
 @user_bp.route('/create_plan/', methods=['GET', 'POST'])
 def create_plan():
@@ -25,8 +28,14 @@ def create_plan():
     else:
         if form.validate_on_submit():
             print("=============FORM VALIDATED SUCCESSFULLY================", file=stderr)
-            return 'True'
+            return jsonify(
+                status=True,
+                response=render_template('create_plan/alert_partial.html', status=True)
+            )
         else:
-            print(form.errors, file=stderr)
+            print(form.errors.items(), file=stderr)
             print("=============FORM VALIDATED UNSUCCESSFULLY================", file=stderr)
-            return 'False'
+            return jsonify(
+                status=False,
+                response=render_template('create_plan/alert_partial.html', form=form, status=False)
+            )
