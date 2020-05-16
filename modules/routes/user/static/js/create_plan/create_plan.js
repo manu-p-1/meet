@@ -1,4 +1,69 @@
+const registeredEmployees = {};
+
 $(function () {
+    let destFund = $("#destFund");
+    let search = $("#searchEmployee");
+    destFund.children(":first-child").prop("disabled", true);
+
+    var cache = {};
+    search.autocomplete({
+        minLength: 1,
+        source: function (request, response) {
+            const term = request.term;
+
+            if (term in cache) {
+                response(cache[term]);
+                return;
+            }
+
+            let x = $(destFund).find(":selected").val();
+            if (!x) {
+                alert("Please choose a fund destination before searching an employee");
+                search.val('');
+                destFund.focus();
+                return;
+            }
+
+            const ll = [];
+            $.getJSON(`/util/department_employees/?department=${x}`, request, function (data, status, xhr) {
+                if (data.length) {
+                    $.each(data, function (index, value) {
+                        let name = value['name'];
+                        let id = value['id'];
+
+                        let splitted = name.split(' ');
+                        let fname = splitted[0];
+                        let lname = splitted[1];
+
+                        if (fname.toLowerCase().includes(term.toLowerCase()) ||
+                            lname.toLowerCase().includes(term.toLowerCase())) {
+
+                            ll.push({name: name, id: id});
+                            cache[term] = ll;
+                        }
+                    });
+                }
+                response(ll);
+            });
+        },
+
+        select: function (event, ui) {
+            console.info(ui);
+            if (!registeredEmployees.hasOwnProperty(ui.item.id)) {
+                addNewEmployee(ui.item.name, ui.item.id);
+            }
+        },
+
+        focus: function (event, ui) {
+            $(search).val(ui.item.name);
+            return false;
+        },
+    }).autocomplete("instance")._renderItem = function (ul, item) {
+        return $("<li>")
+            .append(`<div> ${item.name} <br> ID: ${item.id} </div>`)
+            .appendTo(ul);
+    };
+
 
     //For the Description Counter
     let descriptionBox = $("#description");
@@ -12,20 +77,10 @@ $(function () {
         updateDescriptionCounter(num);
     });
 
-    function updateDescriptionCounter(value) {
-        descriptionCounter.html(`${value}/${descriptionBoxMaxLength}`);
-        if (value === descriptionBoxMaxLength) {
-            descriptionCounterHolder.addClass("text-success");
-        } else {
-            if (descriptionCounterHolder.hasClass("text-success")) {
-                descriptionCounterHolder.removeClass("text-success");
-            }
-        }
-    }
 
     //For the Date Picker
     let pickerFormat = 'MM/DD/YYYY hh:mm A';
-    let ref = $("#activeRange");
+    let ref = $("#dateRange");
 
     ref.daterangepicker({
         autoUpdateInput: false,
@@ -46,41 +101,25 @@ $(function () {
         $(this).val('');
     });
 
+
     //For the Individual Employee toggle
     let indivUserToggle = $("#fundIndivEmployeesToggle");
-    let fundIndivEmployeeDiv = $("#employeeIDBoundary");
+    let employeesOnly = $("#employeesOnly");
 
     indivUserToggle.on("click", function () {
-        toggleDiv(indivUserToggle, fundIndivEmployeeDiv);
+        if (employeesOnly.hasClass("d-none")) {
+            indivUserToggle.attr("checked", "checked");
+            employeesOnly.removeClass("d-none");
+        } else {
+            indivUserToggle.removeAttr("checked", "checked");
+            employeesOnly.addClass("d-none");
+        }
     });
 
-    //For adding employees
-    let nei = $("#addNewEmployeeInput");
-    var newEmployeeCount = 2;
+    var newEmployeeCount = 1;
 
-    nei.on("click", addNewEmployee);
-
-    function addNewEmployee() {
-        if (newEmployeeCount <= 12) {
-            let lastChild = $("#employeeIDBoundaryRow").children(":last-child");
-            let template =
-                `<div class="form-group col-md-3">
-                <label class="text-muted additional-employee-input-label">Employee <span class="employeeCount">${newEmployeeCount}</span></label>
-                <div class="input-container">
-                    <input class="employeeIDInput form-control position-relative" name="employeesOptional-${newEmployeeCount - 1}" placeholder="Enter Employee ID" type="text" required value>
-                    <span class="removeNewEmployeeInput material-icons">remove_circle</span>
-                </div>
-            </div>`;
-
-            lastChild.after(template);
-            newEmployeeCount++;
-        } else {
-            alert("Only a maximum of 12 recipients can receive funds at one time");
-        }
-    }
 
     //For Removing employees
-    let rei = $(".removeNewEmployeeInput");
     $(document).on("click", ".removeNewEmployeeInput", function (e) {
         if (newEmployeeCount > 2) {
             removeNewEmployee(e);
@@ -88,6 +127,62 @@ $(function () {
             indivUserToggle.trigger("click");
         }
     });
+
+
+    //For the velocity controls toggle
+    let velocityControlsToggle = $("#controlToggle");
+    let velocityControlsDiv = $("#fundControls");
+
+    velocityControlsToggle.on("click", function () {
+        toggleDiv(velocityControlsToggle, velocityControlsDiv);
+    });
+
+
+    /* THIS PART IS FOR SUBMITTING THE FORM */
+    $("#newPlanForm").on("submit", function (e) {
+        let answer = confirm("Are you sure you would like to create this plan? Some parts may be unmodifiable.");
+        if (!answer) {
+            return false;
+        }
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+
+        const form = $(this);
+        const url = form.attr('action');
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: form.serialize(), // serializes the form's elements.
+            success: function (data) {
+                let alertdiv = $(".alert");
+                if (alertdiv.length) {
+                    alertdiv.replaceWith(data['response']);
+                } else {
+                    $(".main-content-container").before(data['response']);
+                }
+
+                if (data['status'] === true) {
+                    $("#newPlanForm")[0].reset();
+                }
+                window.scrollTo(0, 0);
+            },
+            error: function (data) {
+                alert("Your request could not be processed at this time. Please wait and try again later.");
+            }
+        });
+    });
+
+
+    function updateDescriptionCounter(value) {
+        descriptionCounter.html(`${value}/${descriptionBoxMaxLength}`);
+        if (value === descriptionBoxMaxLength) {
+            descriptionCounterHolder.addClass("text-success");
+        } else {
+            if (descriptionCounterHolder.hasClass("text-success")) {
+                descriptionCounterHolder.removeClass("text-success");
+            }
+        }
+    }
 
     function removeNewEmployee(e) {
         let closestGroup = $(e.target).closest(".form-group");
@@ -101,14 +196,6 @@ $(function () {
         newEmployeeCount--;
     }
 
-    //For the velocity controls toggle
-    let velocityControlsToggle = $("#controlToggle");
-    let velocityControlsDiv = $("#fundControls");
-
-    velocityControlsToggle.on("click", function () {
-        toggleDiv(velocityControlsToggle, velocityControlsDiv);
-    });
-
     function toggleDiv(toggler, divElement) {
         if (divElement.hasClass("d-none")) {
             toggler.attr("checked", "checked");
@@ -121,29 +208,27 @@ $(function () {
         }
     }
 
-    /* THIS PART IS FOR SUBMITTING THE FORM */
-    $("#newPlanForm").on("submit", function (e) {
-        let answer = confirm("Are you sure you would like to create this plan? Some parts may be unmodifiable.");
-        if (!answer) {
-            return false;
-        }
-        e.preventDefault(); // avoid to execute the actual submit of the form.
 
-        var form = $(this);
-        var url = form.attr('action');
-        console.log(form.serialize());
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: form.serialize(), // serializes the form's elements.
-            success: function (data) {
-                alert(data);
-            },
-            error: function (data) {
-                alert(data);
-            }
-        });
-    })
+    function addNewEmployee(name, id) {
+        if (newEmployeeCount <= 12) {
+            let bound = $("#employeeIDBoundaryRow");
+            let template =
+                `<div class="form-group col-md-3">
+                <label class="text-muted additional-employee-input-label">Employee <span class="employeeCount">${newEmployeeCount}</span></label>
+                <div class="input-container">
+                    <textarea class="employeeIDInput form-control position-relative" mrc_id="${id}" name="employeesOptional-${newEmployeeCount - 1}" type="text" readonly rows="2">NAME: ${name}&#13;&#10;ID: ${id}
+                    </textarea>
+                    <span class="removeNewEmployeeInput material-icons">remove_circle</span>
+                </div>
+            </div>`;
+
+            bound.append(template);
+            registeredEmployees[id] = name;
+            newEmployeeCount++;
+        } else {
+            alert("Only a maximum of 12 recipients can receive funds at one time");
+        }
+    }
 });
 
 
