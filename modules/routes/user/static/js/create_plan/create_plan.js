@@ -1,6 +1,7 @@
 const registeredEmployees = {};
 
 $(function () {
+    let form = $("#newPlanForm");
     let loading = $("#employeesLoadingIcon");
     loading.hide();
     let destFund = $("#destFund");
@@ -87,27 +88,8 @@ $(function () {
 
 
     //For the Date Picker
-    let pickerFormat = 'MM/DD/YYYY hh:mm A';
-    let ref = $("#dateRange");
-
-    ref.daterangepicker({
-        autoUpdateInput: false,
-        timePicker: true,
-        startDate: moment().startOf('minute'),
-        minDate: moment().startOf('minute'),
-        endDate: moment().startOf('hour').add(32, 'hour'),
-        maxDate: moment().startOf('year').add(5, 'year'),
-        locale: {
-            format: pickerFormat
-        }
-    });
-    ref.on('apply.daterangepicker', function (ev, picker) {
-        $(this).val(picker.startDate.format(pickerFormat) + ' - ' + picker.endDate.format(pickerFormat));
-    });
-
-    ref.on('cancel.daterangepicker', function (ev, picker) {
-        $(this).val('');
-    });
+    createDatePicker($("#startDate"));
+    createDatePicker($("#endDate"));
 
 
     //For the Individual Employee toggle
@@ -124,16 +106,23 @@ $(function () {
         }
     });
 
-    var newEmployeeCount = 1;
+    var newEmployeeCount = 0;
 
 
     //For Removing employees
     $(document).on("click", ".removeNewEmployeeInput", function (e) {
-        if (newEmployeeCount > 2) {
-            removeNewEmployee(e);
-        } else {
+        removeNewEmployee(e);
+        if (newEmployeeCount === 0) {
             indivUserToggle.trigger("click");
         }
+    });
+
+    //For the end date toggle
+    let endDateToggle = $("#endDateToggle");
+    let endDateGroup = $("#endDateGroup");
+
+    endDateToggle.on("click", function () {
+        toggleDiv(endDateToggle, endDateGroup);
     });
 
 
@@ -147,7 +136,7 @@ $(function () {
 
 
     /* THIS PART IS FOR SUBMITTING THE FORM */
-    $("#newPlanForm").on("submit", function (e) {
+    form.on("submit", function (e) {
         let answer = confirm("Are you sure you would like to create this plan? Some parts may be unmodifiable.");
         if (!answer) {
             return false;
@@ -194,7 +183,8 @@ $(function () {
     }
 
     function removeNewEmployee(e) {
-        let closestGroup = $(e.target).closest(".form-group");
+        let textArea = $(e.target).prev(".employeeIDInput");
+        let closestGroup = $(textArea).closest(".form-group");
         let after = $(closestGroup).nextAll().find("label.additional-employee-input-label > .employeeCount");
 
         for (let labelNum of after) {
@@ -202,6 +192,7 @@ $(function () {
             x.html(parseInt(x.html()) - 1);
         }
         $(closestGroup).remove();
+        delete registeredEmployees[textArea.attr("mrc_id")];
         newEmployeeCount--;
     }
 
@@ -223,9 +214,9 @@ $(function () {
             let bound = $("#employeeIDBoundaryRow");
             let template =
                 `<div class="form-group col-md-3">
-                <label class="text-muted additional-employee-input-label">Employee <span class="employeeCount">${newEmployeeCount}</span></label>
+                <label class="text-muted additional-employee-input-label">Employee <span class="employeeCount">${newEmployeeCount + 1}</span></label>
                 <div class="input-container">
-                    <textarea class="employeeIDInput form-control position-relative" mrc_id="${id}" name="employeesOptional-${newEmployeeCount - 1}" type="text" readonly rows="2">NAME: ${name}&#13;&#10;ID: ${id}
+                    <textarea class="employeeIDInput form-control position-relative" mrc_id="${id}" name="employeesOptional-${newEmployeeCount}" type="text" readonly rows="2">NAME: ${name}&#13;&#10;ID: ${id}
                     </textarea>
                     <span class="removeNewEmployeeInput material-icons">remove_circle</span>
                 </div>
@@ -240,14 +231,49 @@ $(function () {
     }
 
     function resetForm() {
-        $("#newPlanForm")[0].reset();
+        form[0].reset();
         $("#employeeIDBoundaryRow").empty();
         if (indivUserToggle.is(":checked")) {
             indivUserToggle.trigger("click");
         }
+        if (endDateToggle.is(":checked")) {
+            endDateToggle.trigger("click");
+        }
         if (velocityControlsToggle.is(":checked")) {
             velocityControlsToggle.trigger("click");
         }
+        for (const key in registeredEmployees) {
+            delete registeredEmployees[key];
+        }
+    }
+
+
+    function createDatePicker(referenceSelector) {
+        let pickerFormat = 'YYYY-MM-DD HH:mm:ss';
+        referenceSelector.daterangepicker({
+            autoUpdateInput: false,
+            singleDatePicker: true,
+            showDropdowns: true,
+            timePicker: true,
+            timePicker24Hour: true,
+            timePickerSeconds: true,
+            drops: "up",
+            minDate: moment().startOf('second'),
+            maxDate: moment().startOf('year').add(5, 'year'),
+            locale: {
+                format: pickerFormat
+            }
+        }, function (start, end, label) {
+            referenceSelector.val(start);
+        });
+
+        referenceSelector.on('apply.daterangepicker', function (ev, picker) {
+            $(this).val(picker.startDate.format(pickerFormat));
+        });
+
+        referenceSelector.on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+        });
     }
 });
 
