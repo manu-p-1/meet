@@ -49,10 +49,11 @@
     </div>
     <div id="employeesOnly" class="d-none">
         <div id="employeeIDBoundary" class="card-specific">
-            <div class="form-row mb-3 ui-widget">
+            <div class="form-row mb-3 position-relative ui-widget input-and-loader">
                 <label for="searchEmployee" class="text-muted font-italic ml-1 mb-0 pre-input-label">Search and Employee
                     (First and Last Name)</label>
                 <input id="searchEmployee" type="search" class="form-control" placeholder="Enter Full Name">
+                <i class="fas fa-spinner fa-spin" id="employeesLoadingIcon"></i>
             </div>
             <div class="form-row mb-3" id="employeeIDBoundaryRow">
 
