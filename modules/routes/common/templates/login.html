@@ -17,18 +17,21 @@
             <div class="shadow-lg card p-4" id="acctCard">
                 <div class="card-body">
                     <header style="text-align: center;">
-                        <h3 class="card-title mb-5 primary">MRC Dashboard Login</h3>
+                        <img id="main-logo" class="d-inline-block align-top mr-1" style="max-width: 50px;"
+                             src="/static/images/logos/Generic%20Company%20Logo.png"
+                             alt="Vector LLC">
+                        <h3 class="card-title mb-5 primary">Vector LLC Dashboard Login</h3>
                     </header>
-{#                    {% with invalid_login = get_flashed_messages() %}#}
-{#                        {% if invalid_login %}#}
-{##}
-{#                            <p class="flashes text-center" style="color: red;">#}
-{#                                {% for msg in invalid_login %}#}
-{#                                    {{ msg }}#}
-{#                                {% endfor %}#}
-{#                            </p>#}
-{#                        {% endif %}#}
-{#                    {% endwith %}#}
+                    {#                    {% with invalid_login = get_flashed_messages() %}#}
+                    {#                        {% if invalid_login %}#}
+                    {##}
+                    {#                            <p class="flashes text-center" style="color: red;">#}
+                    {#                                {% for msg in invalid_login %}#}
+                    {#                                    {{ msg }}#}
+                    {#                                {% endfor %}#}
+                    {#                            </p>#}
+                    {#                        {% endif %}#}
+                    {#                    {% endwith %}#}
                     <form method="POST" action="" id="loginForm">
                         <div class="form-group md-form md-outline">
                             {{ form.csrf_token }}
@@ -39,8 +42,8 @@
                                 else.</i></small>
                         </div>
                         <div class="form-group md-form md-outline">
-                                {{ form.password.label }}
-                                {{ form.password(class_="form-control") }}
+                            {{ form.password.label }}
+                            {{ form.password(class_="form-control") }}
                         </div>
 
                         <button type="submit" class="btn btn-grey btn-lg btn-block" id="loginBtn">Login</button>
