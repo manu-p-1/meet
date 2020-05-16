@@ -52,3 +52,9 @@
 #description {
     resize: none
 }
+
+.fas.fa-spinner.fa-spin {
+    position: absolute;
+    right: 40px;
+    bottom: 12px;
+}
