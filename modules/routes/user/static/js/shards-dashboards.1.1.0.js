@@ -1,8 +1,3 @@
-/*!
-* Shards Dashboards v1.1.0
-* Copyright 2011-2018 DesignRevision
-* SEE LICENSE FILE
-*/
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
