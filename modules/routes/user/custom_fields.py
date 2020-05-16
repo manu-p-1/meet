@@ -14,7 +14,7 @@ class EmployeeInfoTextAreaField(TextAreaField):
 
         if self.data is not None or self.data != '':
             self.data = self.scrub(self.data)
-            print("EMPLYOEEFIELD DATA:", self.data, file=sys.stderr)
+            print("EMPLOYEE FIELD DATA:", self.data, file=sys.stderr)
 
     @classmethod
     def scrub(cls, material):
