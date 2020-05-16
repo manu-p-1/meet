@@ -4,6 +4,12 @@ function replaceBtn(btn) {
     ref.prop("disabled", true);
 }
 
+function enableBtn(btn) {
+    let ref = $(btn);
+    ref.find('i').remove();
+    ref.prop("disabled", false);
+}
+
 function serializedToObject(items) {
     var data = {};
     $(items).serializeArray().map(function (x) {
