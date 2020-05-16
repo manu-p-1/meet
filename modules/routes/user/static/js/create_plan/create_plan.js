@@ -1,6 +1,8 @@
 const registeredEmployees = {};
 
 $(function () {
+    let loading = $("#employeesLoadingIcon");
+    loading.hide();
     let destFund = $("#destFund");
     let search = $("#searchEmployee");
     destFund.children(":first-child").prop("disabled", true);
@@ -25,6 +27,8 @@ $(function () {
             }
 
             const ll = [];
+            loading.show();
+
             $.getJSON(`/util/department_employees/?department=${x}`, request, function (data, status, xhr) {
                 if (data.length) {
                     $.each(data, function (index, value) {
@@ -45,6 +49,10 @@ $(function () {
                 }
                 response(ll);
             });
+            //The sole purpose of this is to show that some kind of loading occured.
+            setTimeout(function () {
+                loading.hide()
+            }, 1000);
         },
 
         select: function (event, ui) {
@@ -148,7 +156,7 @@ $(function () {
 
         const form = $(this);
         const url = form.attr('action');
-
+        replaceBtn("#createPlanButton");
         $.ajax({
             type: "POST",
             url: url,
@@ -170,6 +178,7 @@ $(function () {
                 alert("Your request could not be processed at this time. Please wait and try again later.");
             }
         });
+        enableBtn("#createPlanButton");
     });
 
 
