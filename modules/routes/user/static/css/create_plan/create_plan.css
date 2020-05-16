@@ -24,7 +24,7 @@
 
 .removeNewEmployeeInput {
     position: absolute;
-    bottom: 10px;
+    bottom: 15px;
     right: 10px;
     cursor: pointer;
     color: firebrick;
@@ -37,4 +37,18 @@
 .pre-input-label {
     font-size: smaller !important;
     font-weight: lighter !important;
+}
+
+#destFund:first-child:disabled {
+    color: #000;
+    font-weight: bold;
+}
+
+.employeeIDInput {
+    resize: none;
+    overflow: hidden;
+}
+
+#description {
+    resize: none
 }
