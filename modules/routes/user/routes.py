@@ -9,10 +9,17 @@ from modules.decorators.utils import login_required
 user_bp = Blueprint('user_bp', __name__,
                     template_folder='templates', static_folder='static')
 
+
 @login_required(session)
 @user_bp.route('/overview/', methods=['GET'])
 def overview(ctx=None):
     return render_template('overview/dash_overview_partial.html')
+
+
+@login_required(session)
+@user_bp.route('/profile/', methods=['GET', 'POST'])
+def profile(ctx=None):
+    return render_template('profile/profile.html')
 
 
 @login_required(session)
@@ -27,6 +34,7 @@ def create_plan():
     else:
         if form.validate_on_submit():
             print(request.form, file=stderr)
+
             return jsonify(
                 status=True,
                 response=render_template('create_plan/alert_partial.html', status=True)
