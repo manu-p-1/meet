@@ -170,7 +170,7 @@ $(function () {
                 }
 
                 if (data['status'] === true) {
-                    $("#newPlanForm")[0].reset();
+                    resetForm();
                 }
                 window.scrollTo(0, 0);
             },
@@ -236,6 +236,17 @@ $(function () {
             newEmployeeCount++;
         } else {
             alert("Only a maximum of 12 recipients can receive funds at one time");
+        }
+    }
+
+    function resetForm() {
+        $("#newPlanForm")[0].reset();
+        $("#employeeIDBoundaryRow").empty();
+        if (indivUserToggle.is(":checked")) {
+            indivUserToggle.trigger("click");
+        }
+        if (velocityControlsToggle.is(":checked")) {
+            velocityControlsToggle.trigger("click");
         }
     }
 });
