@@ -7,6 +7,8 @@
     <link href="/static/libs/daterangepicker/daterangepicker.css" rel="stylesheet">
     <script src="/static/libs/daterangepicker/moment.min.js"></script>
     <script src="/static/libs/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" href="/static/libs/jqueryui/jquery-ui.css">
+    <script src="/static/libs/jqueryui/jquery-ui.min.js"></script>
 
     {% assets "dash_create_plan_css" %}
         <link rel="stylesheet" id="main-stylesheet" href="{{ ASSET_URL }}">
@@ -15,7 +17,7 @@
 {% endblock %}
 
 {% block dashboard_main %}
-    {% include 'create_plan/alert_partial.html' %}
+
     <div class="main-content-container container-fluid px-4">
 
         <!-- Page Header -->
