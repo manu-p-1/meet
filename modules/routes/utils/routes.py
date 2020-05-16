@@ -36,7 +36,6 @@ def overview(ctx=None):
     dept_token = DepartmentLookup.query.filter_by(department=dept).first()
     employee = Employee.query.filter_by(user_dept_FK=dept_token.token)
 
-
     if name and ' ' in name:
         fname = name[:name.find('')].lower()
         lname = name[name.find(''):].lower()
@@ -46,10 +45,6 @@ def overview(ctx=None):
         name = name.lower()
         e_payload = [{"name": e.first_name + ' ' + e.last_name, "id": e.id}
                  for e in employee if name in e.first_name.lower() or name in e.last_name.lower()]
-        
-
-    # e_payload = [{"name": e.first_name+e.last_name, "id": e.id}
-    #              for e in employee]
 
     print(json.dumps(e_payload))
 
