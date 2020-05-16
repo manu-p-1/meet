@@ -18,7 +18,6 @@ def overview(ctx=None):
 @login_required(session)
 @user_bp.route('/create_plan/', methods=['GET', 'POST'])
 def create_plan():
-    print("IN CREATE PLAN", file=stderr)
     current_date = date.today()
     current_date_fmt = current_date.strftime("%m/%d/%Y")
 
@@ -27,14 +26,13 @@ def create_plan():
         return render_template('create_plan/create_plan_partial.html', form=form, current_date=current_date_fmt)
     else:
         if form.validate_on_submit():
-            print("=============FORM VALIDATED SUCCESSFULLY================", file=stderr)
+            print(request.form, file=stderr)
             return jsonify(
                 status=True,
                 response=render_template('create_plan/alert_partial.html', status=True)
             )
         else:
             print(form.errors.items(), file=stderr)
-            print("=============FORM VALIDATED UNSUCCESSFULLY================", file=stderr)
             return jsonify(
                 status=False,
                 response=render_template('create_plan/alert_partial.html', form=form, status=False)
