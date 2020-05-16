@@ -1,10 +1,8 @@
-from sys import stderr
-
+import sys
+from datetime import datetime
 from wtforms import FieldList, StringField
 from wtforms.validators import Optional, DataRequired, ValidationError
-
 from modules.routes.user.custom_fields import EmployeeInfoTextAreaField
-from modules.routes.user.parsers import MRCDateRangeParser, MRCDateRangeException
 
 
 class RequiredIf(DataRequired):
@@ -88,10 +86,12 @@ class EmployeeUnique(object):
         return False
 
 
-class DateRange(object):
+class DateProper(object):
     def __init__(self, message=None):
         if not message:
-            message = f'Date range is malformed. Follow the format MM/DD/YYYY HH:MM PM - MM/DD/YYYY HH:MM AM'
+            message = f'Date range is malformed. Follow the format YYYY-MM-DD HH:MM:SS.'
+        else:
+            message = message + " Follow the format YYYY-MM-DD HH:MM:SS. Hour's are in 24-hour format."
         self.message = message
 
     def __call__(self, form, field):
@@ -100,10 +100,8 @@ class DateRange(object):
 
         if field.data is None:
             raise Exception('no field named "%s" in form' % field)
-
-        drp = MRCDateRangeParser(field.data)
-
+        print("FIELDDATA", field.data, file=sys.stderr)
         try:
-            drp.parse()
-        except MRCDateRangeException as mrcdre:
+            datetime.strptime(field.data, "%Y-%m-%d %H:%M:%S")
+        except ValueError as ve:
             raise ValidationError(self.message)
