@@ -47,49 +47,43 @@
         {{ form.fundIndivEmployeesToggle }}
         {{ form.fundIndivEmployeesToggle.label(class_="custom-control-label") }}
     </div>
-    <div id="employeeIDBoundary" class="card-specific d-none">
-        <div class="form-row mb-3">
-            <label for="searchEmployee" class="text-muted font-italic ml-1 mb-0 pre-input-label">Search and Employee
-                (First and Last Name)</label>
-            <input id="searchEmployee" type="search" class="form-control">
-        </div>
-        <div class="form-row mb-3" id="employeeIDBoundaryRow">
-            <div class="form-group col-md-3">
-                <label class="text-muted additional-employee-input-label ml-1">Employee <span
-                        class="employeeCount">1</span></label>
-                <div class="input-container">
-                    {{ form.employeesOptional[0](id=False, required=False) }}
-                    <span class="removeNewEmployeeInput material-icons">remove_circle</span>
-                </div>
+    <div id="employeesOnly" class="d-none">
+        <div id="employeeIDBoundary" class="card-specific">
+            <div class="form-row mb-3 ui-widget">
+                <label for="searchEmployee" class="text-muted font-italic ml-1 mb-0 pre-input-label">Search and Employee
+                    (First and Last Name)</label>
+                <input id="searchEmployee" type="search" class="form-control" placeholder="Enter Full Name">
+            </div>
+            <div class="form-row mb-3" id="employeeIDBoundaryRow">
+
             </div>
         </div>
-        <span id="addNewEmployeeInput" class="material-icons">add_circle</span>
-    </div>
-    <div class="custom-control custom-toggle custom-toggle-sm mb-3">
-        {{ form.controlToggle }}
-        {{ form.controlToggle.label(class_="custom-control-label") }}
-    </div>
-    <div id="fundControls" class="d-none">
-        <small class="text-muted font-italic ml-1">Velocity Controls</small>
-        <div class="card-specific">
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    {{ form.controlName.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
-                    {{ form.controlName(required=False) }}
+        <div class="custom-control custom-toggle custom-toggle-sm mb-3">
+            {{ form.controlToggle }}
+            {{ form.controlToggle.label(class_="custom-control-label") }}
+        </div>
+        <div id="fundControls" class="d-none">
+            <small class="text-muted font-italic ml-1">Velocity Controls</small>
+            <div class="card-specific">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        {{ form.controlName.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
+                        {{ form.controlName(required=False) }}
+                    </div>
+                    <div class="form-group col-md-6">
+                        {{ form.controlWindow.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
+                        {{ form.controlWindow(required=False) }}
+                    </div>
                 </div>
-                <div class="form-group col-md-6">
-                    {{ form.controlWindow.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
-                    {{ form.controlWindow(required=False) }}
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    {{ form.amountLimit.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
-                    {{ form.amountLimit(required=False) }}
-                </div>
-                <div class="form-group col-md-6">
-                    {{ form.usageLimit.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
-                    {{ form.usageLimit(required=False) }}
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        {{ form.amountLimit.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
+                        {{ form.amountLimit(required=False) }}
+                    </div>
+                    <div class="form-group col-md-6">
+                        {{ form.usageLimit.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
+                        {{ form.usageLimit(required=False) }}
+                    </div>
                 </div>
             </div>
         </div>
