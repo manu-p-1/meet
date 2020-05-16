@@ -17,7 +17,19 @@ trap_ctrlc ()
     rm -r static/dist/*
     rm -r static/.webassets-cache/*
 
-    # Allow the user to see the message, so sleep for 4 seconds
+    if [ ! -z "$(mysql -qfsBe "DROP DATABASE 'mrcdb'; CREATE SCHEMA 'mrcdb'" 2>&1)" ];
+    then
+      echo "INFO: Success"
+    else
+      echo "ERROR: mrcdb could not be found on the MySQL instance"
+      cancel
+    fi
+
+    safe_cancel
+}
+
+safe_cancel(){
+      # Allow the user to see the message, so sleep for 4 seconds
     echo "Exiting In: "
     for i in 2 1
     do
