@@ -1,4 +1,4 @@
-$("#userEmail").on("input", function (e) {
+$("#email").on("input", function (e) {
     if ($(this).val().length) {
         $(this).addClass("valid");
     } else {
@@ -6,7 +6,7 @@ $("#userEmail").on("input", function (e) {
     }
 });
 
-$("#userPassword").on("input", function (e) {
+$("#password").on("input", function (e) {
     if ($(this).val().length) {
         $(this).addClass("valid");
     } else {
