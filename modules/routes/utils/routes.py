@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, jsonify, redirect, flash, session, url_for
 import json
+from server import mysql
 
 util_bp = Blueprint('util_bp', __name__,
                     template_folder='templates', static_folder='static')
@@ -29,10 +30,18 @@ def overview(ctx=None):
         }
     """
 
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
     dept = request.args.get('department')[:2]
     name = request.args.get('term')
-    dept_token = DepartmentLookup.query.filter_by(department=dept).first()
-    employee = Employee.query.filter_by(user_dept_FK=dept_token.token)
+    query = '''SELECT token FROM department WHERE department = %s'''
+    cursor.execute(query,(dept))
+    dept_token = cursor.fetchall()[0][0]
+
+    query = '''SELECT id, first_name, last_name FROM employee WHERE user_dept_FK = %s'''
+    cursor.execute(query,(dept_token))
+    employee = cursor.fetchall()
 
     if name and ' ' in name:
         fname = name[:name.find(' ')].lower()
