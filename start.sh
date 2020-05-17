@@ -17,6 +17,8 @@ trap_ctrlc ()
     rm -r static/dist/*
     rm -r static/.webassets-cache/*
 
+    mysql -u $DB_USER -p < ./db/MRC_DROP.sql
+
     safe_cancel
 }
 
@@ -58,6 +60,7 @@ if [[ -z "${DB_PASS}" ]]; then
   echo "exported DB_PASS"
 fi
 
+mysql -u $DB_USER -p < ./db/MRC1.1.sql
 #if [[ ! -z "`mysql -qfsBe "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME='mrcdb'" 2>&1`" ]];
 #then
 #  echo "INFO: mrcdb registered"
