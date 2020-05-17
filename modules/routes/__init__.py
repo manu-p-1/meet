@@ -1,5 +1,6 @@
 from flask import session
-from models import Employee
+
+from models import Employee, Manager
 from server import client, mysql
 from sys import stderr
 
@@ -14,19 +15,23 @@ def load_values():
         VALUES (%s,%s)"""
     for i, dept in enumerate(client.departments):
         cursor.execute(query1, (dept.token, client.DEPARTMENT_LIST[i]))
-        print(dept.token + ' has been inserted.', file=stderr)
+        print(dept.token + client.DEPARTMENT_LIST[i] + ' has been inserted.', file=stderr)
 
     emp = Employee(cursor)
     for e in client.employees:
         emp.insert(e.token, e.first_name, e.last_name, e.parent_token)
+        print(e.token + 'h has been inserted.', file=stderr)
 
-    query3 = """
-        INSERT INTO manager (email,pass,first_name,last_name,title,description,manager_dept_FK)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
-        """
+    man = Manager(cursor)
     for dept in client.DEPARTMENT_LIST:
-        cursor.execute(query3, (
-            client.MANAGERS[dept]['email'], client.MANAGERS[dept]['pass'], client.MANAGERS[dept]['first_name'],
-            client.MANAGERS[dept]['last_name'], 'Sr. Division Manager', '', client.MANAGERS[dept]['manager_dept_FK']))
+        man.insert(
+            client.MANAGERS[dept]['email'],
+            client.MANAGERS[dept]['pass'],
+            client.MANAGERS[dept]['first_name'],
+            client.MANAGERS[dept]['last_name'],
+            'Sr. Division Manager',
+            '',
+            client.MANAGERS[dept]['manager_dept_FK'])
+
     session['db_init'] = True
     conn.commit()
