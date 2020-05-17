@@ -1,6 +1,8 @@
 import json
 
 from flask import Blueprint, render_template, request, jsonify, redirect, flash, session, url_for
+
+from models import Manager
 from modules.routes.user.forms import CreatePlanForm
 from datetime import date
 from sys import stderr
@@ -10,20 +12,21 @@ user_bp = Blueprint('user_bp', __name__,
                     template_folder='templates', static_folder='static')
 
 
-@login_required(session)
 @user_bp.route('/overview/', methods=['GET'])
+@login_required(session)
 def overview(ctx=None):
     return render_template('overview/dash_overview_partial.html')
 
 
-@login_required(session)
 @user_bp.route('/profile/', methods=['GET', 'POST'])
-def profile(ctx=None):
-    return render_template('profile/profile.html')
-
-
 @login_required(session)
+def profile(ctx=None):
+    manager = Manager.query.filter_by(email=session['email']).first()
+    return render_template('profile/profile.html', description=manager.description)
+
+
 @user_bp.route('/create_plan/', methods=['GET', 'POST'])
+@login_required(session)
 def create_plan():
     current_date = date.today()
     current_date_fmt = current_date.strftime("%m/%d/%Y")
