@@ -46,8 +46,14 @@ class MarqetaClient:
         self.DEPARTMENT_LIST = ['IT', 'AC', 'MK', 'HR', 'PD', 'RD',
                                 'SC',
                                 'LG']
-        self.MANAGERS = {dept: {'first_name': self.fake.first_name(), 'last_name': self.fake.last_name(
-        ), 'email': dept+'@eay.com', 'pass': 'root', 'manager_dept_FK': i+1} for i, dept in enumerate(self.DEPARTMENT_LIST)}
+        self.MANAGERS = {
+            dept: {'first_name': self.fake.first_name(),
+                   'last_name': self.fake.last_name(),
+                   'email': dept + '@eay.com',
+                   'pass': 'root',
+                   'manager_dept_FK': i + 1
+                   } for i, dept in enumerate(self.DEPARTMENT_LIST)
+        }
         self.BUSINESS_NAME = 'Einberg & Ying LLP'
         self.BUSINESS_TOKEN = ''.join(
             re.findall('([A-Z])', self.BUSINESS_NAME)) + '_' + secrets.token_urlsafe(5)[0:8] + '_'
