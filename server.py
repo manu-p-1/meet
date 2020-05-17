@@ -11,6 +11,7 @@ from flask_wtf.csrf import CSRFProtect
 from marqeta_setup import MarqetaClient
 import secrets
 
+
 mysql = MySQL()
 db = SQLAlchemy()
 csrf = CSRFProtect()
@@ -32,30 +33,7 @@ def create_server(config):
         db = SQLAlchemy(app)
         csrf = CSRFProtect(app)
 
-        from models import DepartmentLookup, Employee, Manager
-
-        for i, dept in enumerate(client.departments):
-            db.session.add(DepartmentLookup(token=dept.token,
-                                            department=client.DEPARTMENT_LIST[i]))
-
-        for e in client.employees:
-            db.session.add(Employee(token=e.token, first_name=e.first_name,
-                                    last_name=e.last_name, user_dept_FK=e.parent_token))
-
-        desc = """My primary role is managing different banking sectors involved in asset management, sanctioning 
-        loans, mortgages, investments, and account operations. I oversee the efficient day to day processes as well 
-        as preparing forecasts and reports to drive the overall success of our clients and the department. """
-        try:
-            db.session.add(Manager(email='accounting@eay.com',
-                                   _pass='root',
-                                   first_name='Max',
-                                   last_name='Williams',
-                                   title='Sr. Division Manager',
-                                   description=desc,
-                                   manager_dept_FK=2))
-            db.session.commit()
-        except exc.IntegrityError:
-            db.session.rollback()
+        init_db(client,db)
 
         # secret_key generation
         app.secret_key = secrets.token_urlsafe(256)
@@ -75,3 +53,28 @@ def create_server(config):
         app.register_blueprint(util_routes.util_bp, url_prefix="/util")
 
     return app
+
+
+def init_db(client,db):
+    from models import Employee, DepartmentLookup,Manager
+
+    for i, dept in enumerate(client.departments):
+        db.session.add(DepartmentLookup(token=dept.token,
+                                            department=client.DEPARTMENT_LIST[i]))
+
+    for e in client.employees:
+        db.session.add(Employee(token=e.token, first_name=e.first_name,
+                                    last_name=e.last_name, user_dept_FK=e.parent_token))
+
+    desc = """My primary role is managing different banking sectors involved in asset management, sanctioning 
+        loans, mortgages, investments, and account operations. I oversee the efficient day to day processes as well 
+        as preparing forecasts and reports to drive the overall success of our clients and the department. """
+
+    db.session.add(Manager(email='accounting@eay.com',
+                                   _pass='root',
+                                   first_name='Max',
+                                   last_name='Williams',
+                                   title='Sr. Division Manager',
+                                   description=desc,
+                                   manager_dept_FK=2))
+    db.session.commit()

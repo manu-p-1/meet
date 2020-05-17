@@ -3,12 +3,13 @@ import sys
 from flask import Blueprint, render_template, request, jsonify, redirect, flash, session, url_for
 from .forms import LoginForm
 from server import db, client
-from models import DepartmentLookup, Manager
+from models import DepartmentLookup, Manager,Employee
 from modules.decorators.utils import check_login
 from ..utils.functions.function_utils import gather_form_errors
 
 common_bp = Blueprint('common_bp', __name__,
                       template_folder='templates', static_folder='static')
+
 
 
 @common_bp.route('/login/', methods=['GET', 'POST'])

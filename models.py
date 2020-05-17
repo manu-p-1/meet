@@ -7,10 +7,6 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 metadata = Base.metadata
 
-db.drop_all()
-db.session.commit()
-
-
 class DepartmentLookup(db.Model):
     __tablename__ = 'department_lookup'
 
@@ -29,7 +25,8 @@ class Manager(db.Model):
     last_name = Column(VARCHAR(45), nullable=False)
     title = Column(VARCHAR(50), nullable=False)
     description = Column(VARCHAR(500), nullable=True)
-    manager_dept_FK = Column(ForeignKey('department_lookup.id'), nullable=False, index=True)
+    manager_dept_FK = Column(ForeignKey(
+        'department_lookup.id'), nullable=False, index=True)
 
     department_lookup = relationship('DepartmentLookup')
 
@@ -46,7 +43,8 @@ class Employee(db.Model):
     token = Column(String(200), nullable=False, unique=True)
     first_name = Column(VARCHAR(45), nullable=False)
     last_name = Column(VARCHAR(45), nullable=False)
-    user_dept_FK = Column(ForeignKey('department_lookup.token'), nullable=False, index=True)
+    user_dept_FK = Column(ForeignKey(
+        'department_lookup.token'), nullable=False, index=True)
 
     department_lookup = relationship('DepartmentLookup')
 
@@ -61,24 +59,27 @@ class Plan(db.Model):
     description = Column(VARCHAR(300), nullable=False)
     start_date = Column(DATETIME, nullable=False)
     end_date = Column(DATETIME, nullable=False)
-    source_fund = Column(String(50), nullable=False) #should be a fk
-    dest_fund = Column(String(50), nullable=False) #should be a fk
+    # source_fund = Column(ForeignKey('department_lookup.token'), nullable=False)
+    # dest_fund = Column(ForeignKey('department_lookup.token'), nullable=False)
     fund_individuals = Column(BOOLEAN, nullable=False)
     control_name = Column(VARCHAR(50))
     control_window = Column(DATETIME)
     amount_limit = Column(DECIMAL(12, 2))
     usage_limit = Column(Integer)
+    complete = Column(BOOLEAN, nullable=False)
 
-    # add column for whether plan is complete or not
+    # department_lookup = relationship('DepartmentLookup')
+
 
 class PlanUser(db.Model):
     __tablename__ = 'plan_user'
 
-    user_FK = Column(ForeignKey('employee.id'), primary_key=True, nullable=False)
+    user_FK = Column(ForeignKey('employee.id'),
+                     primary_key=True, nullable=False)
     plan_FK = Column(ForeignKey('plan.id'), primary_key=True, nullable=False)
 
     employee = relationship('Employee')
     plan = relationship('Plan')
 
-
+db.drop_all()
 db.create_all()
