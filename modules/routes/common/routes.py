@@ -15,8 +15,8 @@ common_bp = Blueprint('common_bp', __name__,
 def login(ctx=None):
     try:
         load_values()
-    except:
-        print('')    
+    except Exception as e:
+        print(e)    
     if check_login(session):
         return redirect(url_for('user_bp.overview'))
 
@@ -29,16 +29,17 @@ def login(ctx=None):
         if form.validate_on_submit():
             conn = mysql.connect()
             cursor = conn.cursor()
-            query = '''SELECT manager_dept_FK,first_name, last_name, email, title FROM manager WHERE email = %s'''
+            query = '''SELECT manager_dept_FK,first_name, last_name, email, title, pass FROM manager WHERE email = %s'''
             cursor.execute(query, (request.form.get('email')))
 
             try:
                 manager = cursor.fetchall()[0]
+                print(manager)
                 query = '''SELECT department FROM department_lookup WHERE id = %s'''
                 cursor.execute(query, (manager[0]))
                 department = cursor.fetchall()[0][0]
 
-                if manager.check_password(request.form.get('password')):
+                if manager[5] == request.form.get('password'):
                     session['logged_in'] = True
                     session['manager_fname'] = manager[1]
                     session['manager_lname'] = manager[2]
@@ -76,7 +77,7 @@ def load_values():
 
     for e in client.employees:
         query = """
-            INSERT INTO employee (token,first_name,last_name,user_dept_FK) 
+            INSERT INTO employee (token,first_name,last_name,employee_dept_FK) 
             VALUES (%s ,%s, %s, %s)"""
         cursor.execute(query, (e.token, e.first_name,
                                e.last_name, e.parent_token))
@@ -91,3 +92,4 @@ def load_values():
             client.MANAGERS[dept]['email'], client.MANAGERS[dept]['pass'], client.MANAGERS[dept]['first_name'],
             client.MANAGERS[dept]['last_name'], 'Sr. Division Manager', '', client.MANAGERS[dept]['manager_dept_FK']))
     session['db_init'] = True
+    conn.commit()
