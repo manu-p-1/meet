@@ -35,11 +35,11 @@ def overview(ctx=None):
 
     dept = request.args.get('department')[:2]
     name = request.args.get('term')
-    query = '''SELECT token FROM department WHERE department = %s'''
+    query = '''SELECT token FROM department_lookup WHERE department = %s'''
     cursor.execute(query,(dept))
     dept_token = cursor.fetchall()[0][0]
 
-    query = '''SELECT id, first_name, last_name FROM employee WHERE user_dept_FK = %s'''
+    query = '''SELECT id, first_name, last_name FROM employee WHERE employee_dept_FK = %s'''
     cursor.execute(query,(dept_token))
     employee = cursor.fetchall()
 
