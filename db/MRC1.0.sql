@@ -1,5 +1,9 @@
-SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS = @@UNIQUE_CHECKS, UNIQUE_CHECKS = 0;
+SET @OLD_FOREIGN_KEY_CHECKS = @@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS = 0;
+SET @OLD_SQL_MODE = @@SQL_MODE, SQL_MODE =
+        'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
 -- Schema mydb
@@ -7,13 +11,13 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema mrcdb
 -- -----------------------------------------------------
-DROP SCHEMA IF EXISTS `mrcdb` ;
+DROP SCHEMA IF EXISTS `mrcdb`;
 
 -- -----------------------------------------------------
 -- Schema mrcdb
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mrcdb` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
-USE `mrcdb` ;
+CREATE SCHEMA IF NOT EXISTS `mrcdb` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+USE `mrcdb`;
 
 -- -----------------------------------------------------
 -- Table `mrcdb`.`department_lookup`
@@ -21,13 +25,15 @@ USE `mrcdb` ;
 CREATE TABLE IF NOT EXISTS `mrcdb`.`department_lookup`
 (
     `id`         INT          NOT NULL AUTO_INCREMENT,
+    `token`      VARCHAR(200) NOT NULL,
     `department` VARCHAR(100) NOT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE INDEX `department_UNIQUE` (`department` ASC) VISIBLE
+    UNIQUE INDEX `department_UNIQUE` (`department` ASC) VISIBLE,
+    UNIQUE INDEX `token_UNIQUE` (`token` ASC) VISIBLE
 )
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4
+    COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
@@ -47,9 +53,9 @@ CREATE TABLE IF NOT EXISTS `mrcdb`.`employee`
         FOREIGN KEY (`employee_dept_FK`)
             REFERENCES `mrcdb`.`department_lookup` (`id`)
 )
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4
+    COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
@@ -83,9 +89,9 @@ CREATE TABLE IF NOT EXISTS `mrcdb`.`plan`
         FOREIGN KEY (`source_fund_FK`)
             REFERENCES `mrcdb`.`department_lookup` (`id`)
 )
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4
+    COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
