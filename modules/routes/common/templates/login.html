@@ -8,6 +8,22 @@
     {% endassets %}
     <link rel="stylesheet" href="/static/libs/mdb/css/mdb.css">
     <script type="text/javascript" src="/static/libs/mdb/js/mdb.js"></script>
+    <style>
+        .alt-font {
+            font-family: -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            Roboto,
+            "Helvetica Neue",
+            Arial,
+            "Noto Sans",
+            sans-serif,
+            "Apple Color Emoji",
+            "Segoe UI Emoji",
+            "Segoe UI Symbol",
+            "Noto Color Emoji" !important;
+        }
+    </style>
 {% endblock %}
 
 
@@ -19,19 +35,28 @@
                     <header style="text-align: center;">
                         <img id="main-logo" class="d-inline-block align-top mr-1" style="max-width: 50px;"
                              src="/static/images/logos/Generic%20Company%20Logo.png"
-                             alt="Vector LLC">
-                        <h3 class="card-title mb-5 primary">Vector LLC Dashboard Login</h3>
+                             alt="{{ session['company_name'] }}">
+                        <h3 class="card-title mb-4 mt-2">
+                            <span class="primary">{{ session['company_name'] }}</span> -
+                            <span class="alt-font" id="dashboardLoginText"> Dashboard Login </span>
+                        </h3>
                     </header>
-                    {#                    {% with invalid_login = get_flashed_messages() %}#}
-                    {#                        {% if invalid_login %}#}
-                    {##}
-                    {#                            <p class="flashes text-center" style="color: red;">#}
-                    {#                                {% for msg in invalid_login %}#}
-                    {#                                    {{ msg }}#}
-                    {#                                {% endfor %}#}
-                    {#                            </p>#}
-                    {#                        {% endif %}#}
-                    {#                    {% endwith %}#}
+                    {% with invalid_login = get_flashed_messages(with_categories=true) %}
+                        {% if invalid_login %}
+                            <div class="text-center mb-4">
+                                {% for category, msg in invalid_login %}
+                                    {% if category == 'err' %}
+                                        <i class="fa fa-times mx-2" style="color: #b00000;"></i>
+                                        <strong class="text-danger alt-font">{{ msg }}</strong>
+                                        <br>
+                                    {% elif category == 'success' %}
+                                        <strong class="text-success alt-font">{{ msg }}</strong>
+                                        <br>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
                     <form method="POST" action="" id="loginForm">
                         <div class="form-group md-form md-outline">
                             {{ form.csrf_token }}

@@ -22,8 +22,9 @@
                             <img class="rounded-circle"
                                  src="{{ url_for('user_bp.static', filename='images/avatars/1.jpg') }}"
                                  alt="User Avatar" width="110"></div>
-                        <h4 class="mb-0">Max Williams</h4>
-                        <span class="text-muted d-block mb-2">Sr. Division Manager</span>
+                        <h4 class="mb-1">{{ session['manager_fname'] }} {{ session['manager_lname'] }}</h4>
+                        <span class="text-muted d-block mb-2">{{ session['manager_title'] }}</span>
+                        <span class="text-muted d-block mb-2">{{ session['manager_dept'] }}</span>
                     </div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item p-4">
@@ -70,7 +71,7 @@
                                             <div class="form-group col">
                                                 <label for="feEmailAddress">Email</label>
                                                 <input type="email" class="form-control" id="feEmailAddress"
-                                                       placeholder="Email" value="maxwilliams@vectorllc.com">
+                                                       placeholder="Email" value="maxwilliams@eay.com">
                                             </div>
                                         </div>
                                         <div class="form-row">

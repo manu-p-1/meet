@@ -75,15 +75,15 @@ $(function () {
 
 
     //For the Description Counter
-    let descriptionBox = $("#description");
-    let descriptionCounterHolder = $("#count_message");
-    let descriptionCounter = $("#count_message_amt");
-    let descriptionBoxMaxLength = parseInt(descriptionBox.attr("maxLength"));
-    updateDescriptionCounter(0);
+    let memo = $("#memo");
+    let memoCounterHolder = $("#count_message");
+    let memoCounter = $("#count_message_amt");
+    let memoBoxMaxLength = parseInt(memo.attr("maxLength"));
+    updateMemoCounter(0);
 
-    descriptionBox.on("input", function () {
+    memo.on("input", function () {
         let num = $(this).val().length;
-        updateDescriptionCounter(num);
+        updateMemoCounter(num);
     });
 
 
@@ -171,13 +171,13 @@ $(function () {
     });
 
 
-    function updateDescriptionCounter(value) {
-        descriptionCounter.html(`${value}/${descriptionBoxMaxLength}`);
-        if (value === descriptionBoxMaxLength) {
-            descriptionCounterHolder.addClass("text-success");
+    function updateMemoCounter(value) {
+        memoCounter.html(`${value}/${memoBoxMaxLength}`);
+        if (value === memoBoxMaxLength) {
+            memoCounterHolder.addClass("text-success");
         } else {
-            if (descriptionCounterHolder.hasClass("text-success")) {
-                descriptionCounterHolder.removeClass("text-success");
+            if (memoCounterHolder.hasClass("text-success")) {
+                memoCounterHolder.removeClass("text-success");
             }
         }
     }

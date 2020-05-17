@@ -31,15 +31,15 @@ class CreatePlanForm(FlaskForm):
                                     render_kw={"placeholder": "Plan Justification",
                                                "class": "form-control"})
 
-    description = TextAreaField('Description (min 10 chars, max 500 chars.)',
-                                validators=[
-                                    InputRequired("A description is required."),
-                                    Length(min=10, max=500, message="Description was either too short or too long.")
-                                ],
-                                render_kw={"rows": 4,
-                                           "maxlength": 500,
-                                           "placeholder": "Description",
-                                           "class": "form-control"})
+    memo = TextAreaField('Memo (min 10 chars, max 255 chars.)',
+                         validators=[
+                             InputRequired("A memo is required."),
+                             Length(min=10, max=255, message="Memo was either too short or too long.")
+                         ],
+                         render_kw={"rows": 4,
+                                    "maxlength": 255,
+                                    "placeholder": "Memo Description",
+                                    "class": "form-control"})
 
     startDate = StringField('Start Date/Times',
                             validators=[
