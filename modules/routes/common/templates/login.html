@@ -20,18 +20,19 @@
                         <img id="main-logo" class="d-inline-block align-top mr-1" style="max-width: 50px;"
                              src="/static/images/logos/Generic%20Company%20Logo.png"
                              alt="Vector LLC">
-                        <h3 class="card-title mb-5 primary">Vector LLC Dashboard Login</h3>
+                        <h3 class="card-title mb-4 primary">{{ session['company_name'] }} Dashboard Login</h3>
                     </header>
-                    {#                    {% with invalid_login = get_flashed_messages() %}#}
-                    {#                        {% if invalid_login %}#}
-                    {##}
-                    {#                            <p class="flashes text-center" style="color: red;">#}
-                    {#                                {% for msg in invalid_login %}#}
-                    {#                                    {{ msg }}#}
-                    {#                                {% endfor %}#}
-                    {#                            </p>#}
-                    {#                        {% endif %}#}
-                    {#                    {% endwith %}#}
+                    {% with invalid_login = get_flashed_messages() %}
+                        {% if invalid_login %}
+                            <div class="text-center mb-4">
+                                {% for msg in invalid_login %}
+                                    <i class="fa fa-times mx-2" style="color: #b00000;"></i>
+                                    <strong class="text-danger">{{ msg }}</strong>
+                                    <br>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
                     <form method="POST" action="" id="loginForm">
                         <div class="form-group md-form md-outline">
                             {{ form.csrf_token }}
