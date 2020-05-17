@@ -47,13 +47,13 @@ class MarqetaClient:
                                 'SC',
                                 'LG']
         self.MANAGERS = {
-            dept: {'first_name': self.fake.first_name(),
-                   'last_name': self.fake.last_name(),
-                   'email': dept + '@eay.com',
-                   'pass': 'root',
-                   'manager_dept_FK': i + 1
-                   } for i, dept in enumerate(self.DEPARTMENT_LIST)
+            dept: {
+                'first_name': self.fake.first_name(),
+                'last_name': self.fake.last_name(),
+                'email': dept + '@eay.com', 'pass': 'root', 'manager_dept_FK': i + 1
+            } for i, dept in enumerate(self.DEPARTMENT_LIST)
         }
+
         self.BUSINESS_NAME = 'Einberg & Ying LLP'
         self.BUSINESS_TOKEN = ''.join(
             re.findall('([A-Z])', self.BUSINESS_NAME)) + '_' + secrets.token_urlsafe(5)[0:8] + '_'
@@ -177,6 +177,7 @@ class MarqetaClient:
             print(json.dumps(json.loads(i), indent=4))
             # token = json.loads(i)['token']
             # print(client.balances.find_for_user_or_business(token))
+
         # If you provide a client, it'll print the info, otherwise print all clients
 
         v(clt.__str__()) if clt is not None else [
@@ -188,6 +189,7 @@ class MarqetaClient:
             print(json.dumps(json.loads(i), indent=4))
             # token = json.loads(i)['token']
             # print(client.balances.find_for_user_or_business(token))
+
         # If you provide a client, it'll print the info, otherwise print all clients
 
         v(clt.__str__()) if clt is not None else [
