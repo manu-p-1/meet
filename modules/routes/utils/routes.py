@@ -40,11 +40,11 @@ def overview(ctx=None):
         fname = name[:name.find('')].lower()
         lname = name[name.find(''):].lower()
         e_payload = [{"name": e.first_name + ' ' + e.last_name, "id": e.id}
-                 for e in employee if fname in e.first_name.lower() and lname in e.last_name.lower()]
+                     for e in employee if fname in e.first_name.lower() and lname in e.last_name.lower()]
     else:
         name = name.lower()
         e_payload = [{"name": e.first_name + ' ' + e.last_name, "id": e.id}
-                 for e in employee if name in e.first_name.lower() or name in e.last_name.lower()]
+                     for e in employee if name in e.first_name.lower() or name in e.last_name.lower()]
 
     print(json.dumps(e_payload))
 
