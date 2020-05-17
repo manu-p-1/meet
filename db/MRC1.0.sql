@@ -12,7 +12,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 DROP SCHEMA IF EXISTS `mrcdb` ;
 
--- -----------------------------------------------------
+-- ------------------------------------------------------
 -- Schema mrcdb
 -- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `mrcdb` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
