@@ -1,11 +1,6 @@
-import os
-import sys
-
 from flask import Flask, session
 from flaskext.mysql import MySQL
-from flask_sqlalchemy import SQLAlchemy
 from flask_assets import Environment
-from sqlalchemy import exc
 
 from mrc_bundles import bundles
 from flask_wtf.csrf import CSRFProtect
@@ -31,7 +26,6 @@ def create_server(config):
         # initialize extensions
         mysql.init_app(app)
         csrf = CSRFProtect(app)
-
 
         init_db(client)
 
@@ -60,18 +54,26 @@ def init_db(client):
     cursor = conn.cursor()
 
     for i, dept in enumerate(client.departments):
-        query = 'INSERT INTO department_lookup (token, department) VALUES (%s,%s)'
+        query = """
+        INSERT INTO department_lookup (token, department) 
+        VALUES (%s,%s)"""
         cursor.execute(query, (dept.token, client.DEPARTMENT_LIST[i]))
 
     for e in client.employees:
-        query = 'INSERT INTO employee (token,first_name,last_name,user_dept_FK) VALUES (%s,%s)'
+        query = """
+        INSERT INTO employee (token,first_name,last_name,user_dept_FK) 
+        VALUES (%s ,%s, %s, %s)"""
         cursor.execute(query, (e.token, e.first_name,
                                e.last_name, e.parent_token))
 
     for dept in client.DEPARTMENT_LIST:
-        query = 'INSERT INTO manager (email,pass,first_name,last_name,title,description,manager_dept_FK) VALUES (%s,%s,%s,%s,%s,%s,%s)'
-        cursor.execute(query, (client.MANAGERS[dept]['email'], client.MANAGERS[dept]['pass'], client.MANAGERS[dept]['first_name'],
-                               client.MANAGERS[dept]['last_name'], 'Sr. Division Manager', '', client.MANAGERS[dept]['manager_dept_FK']))
+        query = """
+            INSERT INTO manager (email,pass,first_name,last_name,title,description,manager_dept_FK)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+         """
+        cursor.execute(query, (
+            client.MANAGERS[dept]['email'], client.MANAGERS[dept]['pass'], client.MANAGERS[dept]['first_name'],
+            client.MANAGERS[dept]['last_name'], 'Sr. Division Manager', '', client.MANAGERS[dept]['manager_dept_FK']))
 
     conn.commit()
     conn.close()
