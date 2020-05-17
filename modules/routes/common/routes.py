@@ -27,7 +27,7 @@ def login(ctx=None):
             manager = Manager.query.filter_by(email=request.form.get('email')).first()
 
             if manager is None:
-                flash("Account does not exist.")
+                flash("Account does not exist.", category='err')
                 return redirect(url_for('common_bp.login'))
 
             manager_dept = DepartmentLookup.query.filter_by(id=manager.manager_dept_FK).first()
@@ -41,10 +41,10 @@ def login(ctx=None):
                 session['manager_title'] = manager.title
                 return redirect(url_for('user_bp.overview'))
             else:
-                flash("Account could not be found")
+                flash("Account could not be found", category='err')
                 return redirect(url_for("common_bp.login"))
         else:
-            flash(gather_form_errors(form)[0])
+            flash(gather_form_errors(form)[0], category='err')
             return redirect(url_for('common_bp.login'))
 
 
