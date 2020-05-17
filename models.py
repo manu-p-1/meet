@@ -51,15 +51,17 @@ class Plan(db.Model):
     funding_amount = Column(Float, nullable=False)
     plan_justification = Column(VARCHAR(300), nullable=False)
     description = Column(VARCHAR(300), nullable=False)
-    date_range = Column(DATETIME, nullable=False)
-    source_fund = Column(String(50), nullable=False)
-    dest_fund = Column(String(50), nullable=False)
+    start_date = Column(DATETIME, nullable=False)
+    end_date = Column(DATETIME, nullable=False)
+    source_fund = Column(String(50), nullable=False) #should be a fk
+    dest_fund = Column(String(50), nullable=False) #should be a fk
     fund_individuals = Column(BOOLEAN, nullable=False)
     control_name = Column(VARCHAR(50))
     control_window = Column(DATETIME)
     amount_limit = Column(Float)
     usage_limit = Column(Integer)
 
+    # add column for whether plan is complete or not
 
 class PlanUser(db.Model):
     __tablename__ = 'plan_user'
