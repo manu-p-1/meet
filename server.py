@@ -68,8 +68,8 @@ def init_db(client):
 
     for dept in client.DEPARTMENT_LIST:
         query = """
-            INSERT INTO manager (email,pass,first_name,last_name,title,description,manager_dept_FK)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO manager (email,pass,first_name,last_name,title,description,manager_dept_FK)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
          """
         cursor.execute(query, (
             client.MANAGERS[dept]['email'], client.MANAGERS[dept]['pass'], client.MANAGERS[dept]['first_name'],
