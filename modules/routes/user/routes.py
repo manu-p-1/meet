@@ -2,7 +2,7 @@ import json
 
 from flask import Blueprint, render_template, request, jsonify, redirect, flash, session, url_for
 
-from models import Manager, Plan, PlanUser
+from models import Manager, Plan, UserPlan
 from modules.routes.user.forms import CreatePlanForm
 from datetime import date
 from sys import stderr
