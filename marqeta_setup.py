@@ -74,6 +74,7 @@ class MarqetaClient:
         self.employees = []
 
         self.setup()
+        print('\n\nMARQETA SETUP DONE\n\n')
 
     def setup(self):
         self.funding_source = self.create_program_funding_source(
