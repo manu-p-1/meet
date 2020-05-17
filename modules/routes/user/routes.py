@@ -1,8 +1,6 @@
 import json
-
+from server import mysql
 from flask import Blueprint, render_template, request, jsonify, redirect, flash, session, url_for
-
-from models import Manager, Plan, UserPlan
 from modules.routes.user.forms import CreatePlanForm
 from datetime import date
 from sys import stderr
@@ -21,8 +19,13 @@ def overview(ctx=None):
 @user_bp.route('/profile/', methods=['GET', 'POST'])
 @login_required(session)
 def profile(ctx=None):
-    manager = Manager.query.filter_by(email=session['manager_email']).first()
-    return render_template('profile/profile.html', description=manager.description)
+    conn = mysql()
+    cursor = conn.cursor()
+    query = 'SELECT description FROM manager WHERE email = %s'
+    cursor.execute(query, (session['manager_email']))
+    description = cursor.fetchall()[0][0]
+    conn.close()
+    return render_template('profile/profile.html', description=description)
 
 
 @user_bp.route('/logout/', methods=['GET'])
@@ -46,28 +49,29 @@ def create_plan():
         if form.validate_on_submit():
             print(request.form, file=stderr)
 
-            plan = Plan(plan_name=form.planName.data,
-                        funding_amount=form.fundingAmount.data,
-                        plan_justification=form.planJustification.data,
-                        description=form.memo.data,
-                        start_date=form.startDate.data,
-                        end_date=form.endDate.data,
-                        source_fund=form.sourceFund.data,
-                        dest_fund=form.destFund.data,
-                        fund_individuals=form.fundIndivEmployeesToggle.data,
-                        control_name=form.controlName.data,
-                        control_window=form.controlWindow.data,
-                        amount_limit=form.amountLimit.data,
-                        usage_limit=form.usageLimit.data,
-                        complete=False)
+            conn = mysql()
+            cursor = conn.cursor()
+
+            query = '''INSERT INTO plan (plan_name,funding_amount,plan_justification,description,start_date,end_date,
+            source_fund,dest_fund,fund_individuals,control_name, control_window,amount_limit,usage_limit,complete) VALUES 
+            (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'''
+            cursor.execute(query, (form.planName.data, form.fundingAmount.data,
+                                   form.planJustification.data, form.memo.data, form.startDate.data,
+                                   form.endDate.data, form.sourceFund.data, form.destFund.data, form.fundIndivEmployeesToggle.data,
+                                   form.controlName.data, form.controlWindow.data, form.amountLimit.data, form.usageLimit.data, False))
+
+            conn.commit()
+            conn.close()
 
             return jsonify(
                 status=True,
-                response=render_template('create_plan/alert_partial.html', status=True)
+                response=render_template(
+                    'create_plan/alert_partial.html', status=True)
             )
         else:
             print(form.errors.items(), file=stderr)
             return jsonify(
                 status=False,
-                response=render_template('create_plan/alert_partial.html', form=form, status=False)
+                response=render_template(
+                    'create_plan/alert_partial.html', form=form, status=False)
             )

@@ -2,8 +2,8 @@ import sys
 
 from flask import Blueprint, render_template, request, jsonify, redirect, flash, session, url_for
 from .forms import LoginForm
-from server import db, client
-from models import DepartmentLookup, Manager,Employee
+from server import client
+
 from modules.decorators.utils import check_login
 from ..utils.functions.function_utils import gather_form_errors
 

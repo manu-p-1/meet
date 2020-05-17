@@ -13,7 +13,6 @@ from marqeta_setup import MarqetaClient
 import secrets
 
 mysql = MySQL()
-db = SQLAlchemy()
 csrf = CSRFProtect()
 client = MarqetaClient()
 
@@ -31,12 +30,10 @@ def create_server(config):
     with app.app_context():
         # initialize extensions
         mysql.init_app(app)
-
         csrf = CSRFProtect(app)
 
-        if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
-            db = SQLAlchemy(app)
-            init_db(client, db)
+
+        init_db(client)
 
         # secret_key generation
         app.secret_key = secrets.token_urlsafe(256)
@@ -58,35 +55,23 @@ def create_server(config):
     return app
 
 
-def init_db(client, db):
-    from models import Employee, DepartmentLookup, Manager
+def init_db(client):
+    conn = mysql.connect()
+    cursor = conn.cursor()
 
     for i, dept in enumerate(client.departments):
-        db.session.add(DepartmentLookup(token=dept.token,
-                                        department=client.DEPARTMENT_LIST[i]))
+        query = 'INSERT INTO department_lookup (token, department) VALUES (%s,%s)'
+        cursor.execute(query, (dept.token, client.DEPARTMENT_LIST[i]))
 
     for e in client.employees:
-        db.session.add(Employee(token=e.token, first_name=e.first_name,
-                                last_name=e.last_name, user_dept_FK=e.parent_token))
+        query = 'INSERT INTO employee (token,first_name,last_name,user_dept_FK) VALUES (%s,%s)'
+        cursor.execute(query, (e.token, e.first_name,
+                               e.last_name, e.parent_token))
 
     for dept in client.DEPARTMENT_LIST:
-        db.session.add(Manager(email=client.MANAGERS[dept]['email'],
-                               _pass=client.MANAGERS[dept]['pass'],
-                               first_name=client.MANAGERS[dept]['first_name'],
-                               last_name=client.MANAGERS[dept]['last_name'],
-                               title='Sr. Division Manager',
-                               description='',
-                               manager_dept_FK=client.MANAGERS[dept]['manager_dept_FK']))
+        query = 'INSERT INTO manager (email,pass,first_name,last_name,title,description,manager_dept_FK) VALUES (%s,%s,%s,%s,%s,%s,%s)'
+        cursor.execute(query, (client.MANAGERS[dept]['email'], client.MANAGERS[dept]['pass'], client.MANAGERS[dept]['first_name'],
+                               client.MANAGERS[dept]['last_name'], 'Sr. Division Manager', '', client.MANAGERS[dept]['manager_dept_FK']))
 
-    # desc = """My primary role is managing different banking sectors involved in asset management, sanctioning 
-    #     loans, mortgages, investments, and account operations. I oversee the efficient day to day processes as well 
-    #     as preparing forecasts and reports to drive the overall success of our clients and the department. """
-
-    # db.session.add(Manager(email='accounting@eay.com',
-    #                                _pass='root',
-    #                                first_name='Max',
-    #                                last_name='Williams',
-    #                                title='Sr. Division Manager',
-    #                                description=desc,
-    #                                manager_dept_FK=2))
-    db.session.commit()
+    conn.commit()
+    conn.close()

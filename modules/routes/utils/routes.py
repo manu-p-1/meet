@@ -1,6 +1,4 @@
 from flask import Blueprint, render_template, request, jsonify, redirect, flash, session, url_for
-from server import db
-from models import DepartmentLookup, Employee
 import json
 
 util_bp = Blueprint('util_bp', __name__,
@@ -37,8 +35,8 @@ def overview(ctx=None):
     employee = Employee.query.filter_by(user_dept_FK=dept_token.token)
 
     if name and ' ' in name:
-        fname = name[:name.find('')].lower()
-        lname = name[name.find(''):].lower()
+        fname = name[:name.find(' ')].lower()
+        lname = name[name.find(' '):].lower()
         e_payload = [{"name": e.first_name + ' ' + e.last_name, "id": e.id}
                      for e in employee if fname in e.first_name.lower() and lname in e.last_name.lower()]
     else:

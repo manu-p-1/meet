@@ -1,7 +1,7 @@
 from functools import wraps
 from flask import flash, redirect, url_for
 from sqlalchemy import exc
-from models import DepartmentLookup, Employee, Manager
+
 
 def login_required(session):
     def dec(f):
