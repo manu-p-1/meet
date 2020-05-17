@@ -46,9 +46,9 @@ class MarqetaClient:
         self.DEPARTMENT_LIST = ['IT', 'AC', 'MK', 'HR', 'PD', 'RD',
                                 'SC',
                                 'LG']
-        self.BUSINESS_NAME = self.fake.company()
+        self.BUSINESS_NAME = 'Einberg & Ying LLP'
         self.BUSINESS_TOKEN = ''.join(
-            re.findall('([A-Z])', self.BUSINESS_NAME)) + '_' + secrets.token_urlsafe(5)[0:6] + '_'
+            re.findall('([A-Z])', self.BUSINESS_NAME)) + '_' + secrets.token_urlsafe(5)[0:8] + '_'
 
         self.TOKEN_COUNTER = 0
         self.DEPT_TOKEN_COUNTER = 0

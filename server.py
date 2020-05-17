@@ -1,6 +1,6 @@
 import sys
 
-from flask import Flask
+from flask import Flask, session
 from flaskext.mysql import MySQL
 from flask_sqlalchemy import SQLAlchemy
 from flask_assets import Environment
