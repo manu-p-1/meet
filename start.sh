@@ -78,15 +78,15 @@ fi
 #    cancel
 #fi
 
-verAsInt=${version//[\.]/}
+#verAsInt=${version//[\.]/}
+#
+#if ! [[ $verAsInt -ge 370 ]];
+#then
+#  echo "PYTHON VERSION IS $version BUT REQUIRES 3.7.0 OR HIGHER"
+#  cancel
+#fi
 
-if ! [[ $verAsInt -ge 370 ]];
-then
-  echo "PYTHON VERSION IS $version BUT REQUIRES 3.7.0 OR HIGHER"
-  cancel
-fi
-
-printf "\n==ALL PYTHON CHECKS PASSED==\n\n"
+#printf "\n==ALL PYTHON CHECKS PASSED==\n\n"
 
 if [[ -z "${DB}" ]]; then
   export DB=mrcdb
