@@ -21,7 +21,7 @@ def overview(ctx=None):
 @user_bp.route('/profile/', methods=['GET', 'POST'])
 @login_required(session)
 def profile(ctx=None):
-    manager = Manager.query.filter_by(email=session['email']).first()
+    manager = Manager.query.filter_by(email=session['manager_email']).first()
     return render_template('profile/profile.html', description=manager.description)
 
 
