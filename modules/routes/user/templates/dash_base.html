@@ -159,12 +159,12 @@
                                 <span class="d-none d-md-inline-block">{{ session['manager_fname'] }} {{ session['manager_lname'] }}</span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-small">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="{{ url_for('user_bp.profile') }}">
                                     <i class="material-icons">&#xE7FD;</i> Profile</a>
                                 <a class="dropdown-item" href="{{ url_for('user_bp.create_plan') }}">
                                     <i class="material-icons">note_add</i> Add New Plan</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item text-danger" href="#">
+                                <a class="dropdown-item text-danger" href="{{ url_for('user_bp.logout') }}">
                                     <i class="material-icons text-danger">&#xE879;</i> Logout </a>
                             </div>
                         </li>
