@@ -26,7 +26,8 @@ class CreatePlanForm(FlaskForm):
     planJustification = StringField('Plan Justification (e.g. Travel, Equipment, Party)',
                                     validators=[
                                         InputRequired(message="A plan justification is required."),
-                                        Length(min=3, message="Please enter a meaningful justification.")
+                                        Length(min=3, max=50,
+                                               message="Plan justification was either too short or too long.")
                                     ],
                                     render_kw={"placeholder": "Plan Justification",
                                                "class": "form-control"})
@@ -95,7 +96,8 @@ class CreatePlanForm(FlaskForm):
     controlName = StringField('Control Name',
                               validators=[
                                   RequiredIf('controlToggle',
-                                             message="The velocity control, control name is required.")
+                                             message="The velocity control, control name is required."),
+                                  Length(max=50)
                               ],
                               render_kw={"class": "form-control",
                                          "placeholder": "Enter a Control Name"})
@@ -103,7 +105,8 @@ class CreatePlanForm(FlaskForm):
     controlWindow = SelectField('Control Window',
                                 validators=[
                                     RequiredIf('controlToggle',
-                                               message="The velocity control, control window is required.")
+                                               message="The velocity control, control window is required."),
+                                    Length(max=30)
                                 ],
                                 choices=[
                                     ('', 'Select a Control Time Period'),
