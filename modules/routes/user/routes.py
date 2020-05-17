@@ -1,9 +1,9 @@
 import json
 from server import mysql
-from flask import Blueprint, render_template, request, jsonify, redirect, flash, session, url_for
-from modules.routes.user.forms import CreatePlanForm
 from datetime import date
 from sys import stderr
+from flask import Blueprint, render_template, request, jsonify, redirect, flash, session, url_for
+from modules.routes.user.forms import CreatePlanForm
 from modules.decorators.utils import login_required
 
 user_bp = Blueprint('user_bp', __name__,
