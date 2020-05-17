@@ -17,14 +17,6 @@ trap_ctrlc ()
     rm -r static/dist/*
     rm -r static/.webassets-cache/*
 
-    if [ ! -z "$(mysql -qfsBe "DROP DATABASE 'mrcdb'; CREATE SCHEMA 'mrcdb'" 2>&1)" ];
-    then
-      echo "INFO: Success"
-    else
-      echo "ERROR: mrcdb could not be found on the MySQL instance"
-      cancel
-    fi
-
     safe_cancel
 }
 
@@ -66,31 +58,31 @@ if [[ -z "${DB_PASS}" ]]; then
   echo "exported DB_PASS"
 fi
 
-if [[ ! -z "`mysql -qfsBe "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME='mrcdb'" 2>&1`" ]];
-then
-  echo "INFO: mrcdb registered"
-else
-  echo "ERROR - could not find mrcdb on host"
-  cancel
-fi
-
-printf "==ALL SQL CHECKS PASSED==\n"
-
-#Using an actual python script in case people have python 2 on their computer too.
-version=$(python -c 'import sys; print("".join(map(str, sys.version_info[:3])))')
-re='^[0-9]+$'
-
-if [[ -z "$version" || $version =~ re ]];
-then
-    echo "PYTHON WAS NOT FOUND ON THE SYSTEM."
-    cancel
-fi
+#if [[ ! -z "`mysql -qfsBe "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME='mrcdb'" 2>&1`" ]];
+#then
+#  echo "INFO: mrcdb registered"
+#else
+#  echo "ERROR - could not find mrcdb on host"
+#  cancel
+#fi
+#
+#printf "==ALL SQL CHECKS PASSED==\n"
+#
+##Using an actual python script in case people have python 2 on their computer too.
+#version=$(python -c 'import sys; print("".join(map(str, sys.version_info[:3])))')
+#re='^[0-9]+$'
+#
+#if [[ -z "$version" || $version =~ re ]];
+#then
+#    echo "PYTHON WAS NOT FOUND ON THE SYSTEM."
+#    cancel
+#fi
 
 verAsInt=${version//[\.]/}
 
 if ! [[ $verAsInt -ge 370 ]];
 then
-  echo "PYTHON VERSION IS $version BUT REQUIRES 3.7.5 OR HIGHER"
+  echo "PYTHON VERSION IS $version BUT REQUIRES 3.7.0 OR HIGHER"
   cancel
 fi
 
