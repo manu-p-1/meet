@@ -71,7 +71,7 @@ class MarqetaClient:
         self.ah_groups = []
         self.employees = []
 
-        self.setup()
+        # self.setup()
 
     def setup(self):
         self.funding_source = self.create_program_funding_source(
