@@ -45,17 +45,17 @@ def create_server(config):
         desc = """My primary role is managing different banking sectors involved in asset management, sanctioning 
         loans, mortgages, investments, and account operations. I oversee the efficient day to day processes as well 
         as preparing forecasts and reports to drive the overall success of our clients and the department. """
-        # try:
-        db.session.add(Manager(email='accounting@eay.com',
-                               _pass='root',
-                               first_name='Max',
-                               last_name='Williams',
-                               title='Sr. Division Manager',
-                               description=desc,
-                               manager_dept_FK=2))
-        db.session.commit()
-        # except exc.IntegrityError:
-        #     db.session.rollback()
+        try:
+            db.session.add(Manager(email='accounting@eay.com',
+                                   _pass='root',
+                                   first_name='Max',
+                                   last_name='Williams',
+                                   title='Sr. Division Manager',
+                                   description=desc,
+                                   manager_dept_FK=2))
+            db.session.commit()
+        except exc.IntegrityError:
+            db.session.rollback()
 
         # secret_key generation
         app.secret_key = secrets.token_urlsafe(256)
@@ -69,17 +69,9 @@ def create_server(config):
         from modules.routes.common import routes as common_routes
         from modules.routes.user import routes as user_routes
         from modules.routes.utils import routes as util_routes
-        # from routes.admin import routes as admin_routes
-        # from routes.api import routes as api_routes
-        # from routes.errors.routes import page_not_found,logic_error
 
         app.register_blueprint(common_routes.common_bp)
         app.register_blueprint(user_routes.user_bp, url_prefix="/user")
         app.register_blueprint(util_routes.util_bp, url_prefix="/util")
-        # app.register_blueprint(admin_routes.admin_bp, url_prefix="/admin")
-        # app.register_blueprint(api_routes.api_bp,url_prefix="/api")
-
-        # app.register_error_handler(404,page_not_found)
-        # app.register_error_handler(500,logic_error)
 
     return app
