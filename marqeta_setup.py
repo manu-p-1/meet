@@ -46,6 +46,8 @@ class MarqetaClient:
         self.DEPARTMENT_LIST = ['IT', 'AC', 'MK', 'HR', 'PD', 'RD',
                                 'SC',
                                 'LG']
+        self.MANAGERS = {dept: {'first_name': self.fake.first_name(), 'last_name': self.fake.last_name(
+        ), 'email': dept+'@eay.com', 'pass': 'root', 'manager_dept_FK': i+1} for i, dept in enumerate(self.DEPARTMENT_LIST)}
         self.BUSINESS_NAME = 'Einberg & Ying LLP'
         self.BUSINESS_TOKEN = ''.join(
             re.findall('([A-Z])', self.BUSINESS_NAME)) + '_' + secrets.token_urlsafe(5)[0:8] + '_'
@@ -125,8 +127,8 @@ class MarqetaClient:
     # WITH APPROPRIATE CONFIG
     def create_ah_group(self, department):
         ah_group_payload = {
-            'token': self.BUSINESS_TOKEN  + '_AH_GROUP' + str(self.AH_GROUP_TOKEN_COUNTER),
-            'name': self.BUSINESS_TOKEN  + '_AH_GROUP'
+            'token': self.BUSINESS_TOKEN + '_AH_GROUP' + str(self.AH_GROUP_TOKEN_COUNTER),
+            'name': self.BUSINESS_TOKEN + '_AH_GROUP'
         }
         # print(f'ah_group_payload: {ah_group_payload}')
         self.AH_GROUP_TOKEN_COUNTER += 1

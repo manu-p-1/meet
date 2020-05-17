@@ -66,15 +66,25 @@ def init_db(client,db):
         db.session.add(Employee(token=e.token, first_name=e.first_name,
                                     last_name=e.last_name, user_dept_FK=e.parent_token))
 
-    desc = """My primary role is managing different banking sectors involved in asset management, sanctioning 
-        loans, mortgages, investments, and account operations. I oversee the efficient day to day processes as well 
-        as preparing forecasts and reports to drive the overall success of our clients and the department. """
 
-    db.session.add(Manager(email='accounting@eay.com',
-                                   _pass='root',
-                                   first_name='Max',
-                                   last_name='Williams',
+    for dept in client.DEPARTMENT_LIST:
+        db.session.add(Manager(email=client.MANAGERS[dept]['email'],
+                                   _pass=client.MANAGERS[dept]['pass'],
+                                   first_name=client.MANAGERS[dept]['first_name'],
+                                   last_name=client.MANAGERS[dept]['last_name'],
                                    title='Sr. Division Manager',
-                                   description=desc,
-                                   manager_dept_FK=2))
+                                   description='',
+                                   manager_dept_FK=client.MANAGERS[dept]['manager_dept_FK']))
+
+    # desc = """My primary role is managing different banking sectors involved in asset management, sanctioning 
+    #     loans, mortgages, investments, and account operations. I oversee the efficient day to day processes as well 
+    #     as preparing forecasts and reports to drive the overall success of our clients and the department. """
+
+    # db.session.add(Manager(email='accounting@eay.com',
+    #                                _pass='root',
+    #                                first_name='Max',
+    #                                last_name='Williams',
+    #                                title='Sr. Division Manager',
+    #                                description=desc,
+    #                                manager_dept_FK=2))
     db.session.commit()

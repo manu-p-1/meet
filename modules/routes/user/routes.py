@@ -2,7 +2,7 @@ import json
 
 from flask import Blueprint, render_template, request, jsonify, redirect, flash, session, url_for
 
-from models import Manager
+from models import Manager, Plan, PlanUser
 from modules.routes.user.forms import CreatePlanForm
 from datetime import date
 from sys import stderr
@@ -45,6 +45,21 @@ def create_plan():
     else:
         if form.validate_on_submit():
             print(request.form, file=stderr)
+
+            plan = Plan(plan_name=form.planName.data,
+                        funding_amount=form.fundingAmount.data,
+                        plan_justification=form.planJustification.data,
+                        description=form.memo.data,
+                        start_date=form.startDate.data,
+                        end_date=form.endDate.data,
+                        source_fund=form.sourceFund.data,
+                        dest_fund=form.destFund.data,
+                        fund_individuals=form.fundIndivEmployeesToggle.data,
+                        control_name=form.controlName.data,
+                        control_window=form.controlWindow.data,
+                        amount_limit=form.amountLimit.data,
+                        usage_limit=form.usageLimit.data,
+                        complete=False)
 
             return jsonify(
                 status=True,
