@@ -66,7 +66,7 @@ if [[ -z "${DB_PASS}" ]]; then
   echo "exported DB_PASS"
 fi
 
-if [ ! -z "`mysql -qfsBe "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME='mrcdb'" 2>&1`" ];
+if [[ ! -z "`mysql -qfsBe "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME='mrcdb'" 2>&1`" ]];
 then
   echo "INFO: mrcdb registered"
 else
