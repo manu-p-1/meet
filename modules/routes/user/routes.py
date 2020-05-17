@@ -25,6 +25,14 @@ def profile(ctx=None):
     return render_template('profile/profile.html', description=manager.description)
 
 
+@user_bp.route('/logout/', methods=['GET'])
+@login_required(session)
+def logout(ctx=None):
+    session.clear()
+    flash("Logout Successful", category='success')
+    return redirect(url_for('common_bp.login'))
+
+
 @user_bp.route('/create_plan/', methods=['GET', 'POST'])
 @login_required(session)
 def create_plan():
