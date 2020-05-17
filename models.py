@@ -8,6 +8,7 @@ Base = declarative_base()
 metadata = Base.metadata
 
 db.drop_all()
+db.session.commit()
 
 
 class DepartmentLookup(db.Model):
@@ -80,6 +81,4 @@ class PlanUser(db.Model):
     plan = relationship('Plan')
 
 
-db.drop_all()
-db.session.commit()
 db.create_all()
