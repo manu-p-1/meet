@@ -5,5 +5,11 @@ from wtforms.validators import InputRequired, Length, AnyOf
 
 
 class LoginForm(FlaskForm):
-    email = EmailField("Enter Email", validators=[InputRequired()])
-    password = PasswordField('Enter Password', validators=[InputRequired()])
+    email = EmailField("Enter Email", validators=[
+        InputRequired("An email address is required"),
+        Length(min=1, max=255, message="Something went wrong, please try again.")
+    ])
+    password = PasswordField('Enter Password', validators=[
+        InputRequired("A password is required"),
+        Length(min=1, max=255, message="Something went wrong, please try again.")
+    ])
