@@ -1,3 +1,5 @@
+import sys
+
 from server import db
 from sqlalchemy import Column, ForeignKey, Integer, String, Float
 from sqlalchemy.dialects.mysql import VARCHAR, DATETIME, BOOLEAN, DECIMAL
@@ -7,8 +9,16 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 metadata = Base.metadata
 
+db.metadata.clear()
+db.session.commit()
+print(db.metadata, file=sys.stderr)
+for tbl in reversed(metadata.sorted_tables):
+    db.execute(tbl.delete())
+    db.session.commit()
+
+
 class DepartmentLookup(db.Model):
-    __tablename__ = 'department_lookup'
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True)
     token = Column(String(200), nullable=False, unique=True)
@@ -16,7 +26,7 @@ class DepartmentLookup(db.Model):
 
 
 class Manager(db.Model):
-    __tablename__ = 'manager'
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True)
     email = Column(VARCHAR(255), nullable=False, unique=True)
@@ -28,8 +38,6 @@ class Manager(db.Model):
     manager_dept_FK = Column(ForeignKey(
         'department_lookup.id'), nullable=False, index=True)
 
-    department_lookup = relationship('DepartmentLookup')
-
     def check_password(self, password):
         if self._pass == password:
             return True
@@ -37,7 +45,7 @@ class Manager(db.Model):
 
 
 class Employee(db.Model):
-    __tablename__ = 'employee'
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True)
     token = Column(String(200), nullable=False, unique=True)
@@ -46,11 +54,9 @@ class Employee(db.Model):
     user_dept_FK = Column(ForeignKey(
         'department_lookup.token'), nullable=False, index=True)
 
-    department_lookup = relationship('DepartmentLookup')
-
 
 class Plan(db.Model):
-    __tablename__ = 'plan'
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, autoincrement=1)
     plan_name = Column(String(200), nullable=False, unique=True)
@@ -68,18 +74,16 @@ class Plan(db.Model):
     usage_limit = Column(Integer)
     complete = Column(BOOLEAN, nullable=False)
 
-    # department_lookup = relationship('DepartmentLookup')
 
-
-class PlanUser(db.Model):
-    __tablename__ = 'plan_user'
+class UserPlan(db.Model):
+    __table_args__ = {'extend_existing': True}
 
     user_FK = Column(ForeignKey('employee.id'),
                      primary_key=True, nullable=False)
     plan_FK = Column(ForeignKey('plan.id'), primary_key=True, nullable=False)
 
-    employee = relationship('Employee')
-    plan = relationship('Plan')
 
 db.drop_all()
+db.session.commit()
+
 db.create_all()
