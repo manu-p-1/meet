@@ -66,13 +66,15 @@ if [[ -z "${DB_PASS}" ]]; then
   echo "exported DB_PASS"
 fi
 
-# if [ ! -z "`mysql -qfsBe "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME='mrcdb'" 2>&1`" ];
-# then
-#   mysql -qfsBe "CREATE SCHEMA 'mrcdb'" 2>&1
-#   echo "INFO: mrcdb registered"
-# fi
+if [ ! -z "`mysql -qfsBe "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME='mrcdb'" 2>&1`" ];
+then
+  echo "INFO: mrcdb registered"
+else
+  echo "ERROR - could not find mrcdb on host"
+  cancel
+fi
 
-# printf "==ALL SQL CHECKS PASSED==\n"
+printf "==ALL SQL CHECKS PASSED==\n"
 
 #Using an actual python script in case people have python 2 on their computer too.
 version=$(python -c 'import sys; print("".join(map(str, sys.version_info[:3])))')
