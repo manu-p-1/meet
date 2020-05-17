@@ -13,7 +13,7 @@ db.drop_all()
 class DepartmentLookup(db.Model):
     __tablename__ = 'department_lookup'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=1)
     token = Column(String(200), nullable=False, unique=True)
     department = Column(String(50), nullable=False, unique=True)
 
@@ -21,9 +21,15 @@ class DepartmentLookup(db.Model):
 class Manager(db.Model):
     __tablename__ = 'manager'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=1)
     email = Column(VARCHAR(255), nullable=False, unique=True)
     _pass = Column('pass', VARCHAR(128), nullable=False)
+    first_name = Column(VARCHAR(45), nullable=False)
+    last_name = Column(VARCHAR(45), nullable=False)
+    description = Column(VARCHAR(500), nullable=True)
+    manager_dept_FK = Column(ForeignKey('department_lookup.id'), nullable=False, index=True)
+
+    department_lookup = relationship('DepartmentLookup')
 
     def check_password(self, password):
         if self._pass == password:
@@ -34,7 +40,7 @@ class Manager(db.Model):
 class Employee(db.Model):
     __tablename__ = 'employee'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=1)
     token = Column(String(200), nullable=False, unique=True)
     first_name = Column(VARCHAR(45), nullable=False)
     last_name = Column(VARCHAR(45), nullable=False)
@@ -46,7 +52,7 @@ class Employee(db.Model):
 class Plan(db.Model):
     __tablename__ = 'plan'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=1)
     plan_name = Column(String(200), nullable=False, unique=True)
     funding_amount = Column(Float, nullable=False)
     plan_justification = Column(VARCHAR(300), nullable=False)
