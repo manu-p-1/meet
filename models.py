@@ -1,6 +1,6 @@
 from server import db
 from sqlalchemy import Column, ForeignKey, Integer, String, Float
-from sqlalchemy.dialects.mysql import VARCHAR, DATETIME, BOOLEAN
+from sqlalchemy.dialects.mysql import VARCHAR, DATETIME, BOOLEAN, DECIMAL
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -26,6 +26,7 @@ class Manager(db.Model):
     _pass = Column('pass', VARCHAR(128), nullable=False)
     first_name = Column(VARCHAR(45), nullable=False)
     last_name = Column(VARCHAR(45), nullable=False)
+    title = Column(VARCHAR(50), nullable=False)
     description = Column(VARCHAR(500), nullable=True)
     manager_dept_FK = Column(ForeignKey('department_lookup.id'), nullable=False, index=True)
 
@@ -54,7 +55,7 @@ class Plan(db.Model):
 
     id = Column(Integer, primary_key=True, autoincrement=1)
     plan_name = Column(String(200), nullable=False, unique=True)
-    funding_amount = Column(Float, nullable=False)
+    funding_amount = Column(DECIMAL(12, 2), nullable=False)
     plan_justification = Column(VARCHAR(300), nullable=False)
     description = Column(VARCHAR(300), nullable=False)
     date_range = Column(DATETIME, nullable=False)
@@ -63,7 +64,7 @@ class Plan(db.Model):
     fund_individuals = Column(BOOLEAN, nullable=False)
     control_name = Column(VARCHAR(50))
     control_window = Column(DATETIME)
-    amount_limit = Column(Float)
+    amount_limit = Column(DECIMAL(12, 2))
     usage_limit = Column(Integer)
 
 
