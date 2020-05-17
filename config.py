@@ -1,14 +1,10 @@
 import os
 import sys
-from packaging import version
+
 from urllib.parse import quote_plus
 
-def load_env(dbu, dbpw):
-    ver = ".".join(map(str, sys.version_info[:3]))
-    if version.parse(ver) < version.parse("3.7"):
-        print(f"PYTHON VERSION IS {ver} BUT REQUIRES 3.7 OR HIGHER", file=sys.stderr)
-        exit(1)
 
+def load_env(dbu, dbpw):
     if os.environ.get("ALCHEMY_URI") is None:
         os.environ['ALCHEMY_URI'] = f"mysql://{dbu}:%s@localhost/mrcdb" % quote_plus(dbpw)
         print('Exported ALCHEMY_URI\n', file=sys.stderr)
