@@ -5,6 +5,7 @@ from sys import stderr
 from flask import Blueprint, render_template, request, jsonify, redirect, flash, session, url_for
 from modules.routes.user.forms import create_plan_form
 from modules.decorators.utils import login_required
+from modules.middleware.logic import dept_to_dept
 
 user_bp = Blueprint('user_bp', __name__,
                     template_folder='templates', static_folder='static')
@@ -59,29 +60,14 @@ def create_plan():
 
             # the below code is only valid for dept-to-dept transfers as of now
             # feel free to test because there are 64 different ways
+            
             conn = mysql.connect()
             cursor = conn.cursor()
-            
-            query = 'SELECT manager_dept_fk FROM manager WHERE email = %s'
-            cursor.execute(query, (session['manager_email']))
-            manager_dept_fk = cursor.fetchall()[0][0]
 
-            query = 'SELECT id FROM department_lookup WHERE department = %s'
-            cursor.execute(query, (form.destFund.data))
-            id = cursor.fetchall()[0][0]
+            p = Plan(cursor, conn=conn)
+            p.insert_with_form(form)
 
-            #print("Manager Dept Fk:" + str(manager_dept_fk) + "Dest Fund ID:" + str(id))
-
-            query = '''INSERT INTO plan (plan_name,funding_amount,plan_justification,memo,start_date,end_date,
-            source_fund_FK,dest_fund_FK,fund_individuals,control_name, control_window,amount_limit,usage_limit,complete) VALUES 
-            (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'''
-            cursor.execute(query, (form.planName.data, form.fundingAmount.data,
-                                   form.planJustification.data, form.memo.data, form.startDate.data,
-                                   None, manager_dept_fk, id, form.fundIndivEmployeesToggle.data,
-                                   form.controlName.data, form.controlWindow.data, form.amountLimit.data, form.usageLimit.data, False))
-
-            conn.commit()
-            conn.close()
+            dept_to_dept(1)
 
             return jsonify(
                 status=True,
