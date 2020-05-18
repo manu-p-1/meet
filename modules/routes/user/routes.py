@@ -19,11 +19,12 @@ def overview(ctx=None):
 @user_bp.route('/profile/', methods=['GET', 'POST'])
 @login_required(session)
 def profile(ctx=None):
-    conn = mysql()
+    conn = mysql.connect()
     cursor = conn.cursor()
     query = 'SELECT description FROM manager WHERE email = %s'
     cursor.execute(query, (session['manager_email']))
     description = cursor.fetchall()[0][0]
+
     conn.close()
     return render_template('profile/profile.html', description=description)
 
@@ -56,11 +57,31 @@ def create_plan():
         if form.validate_on_submit():
             print(request.form, file=stderr)
 
+            # the below code is only valid for dept-to-dept transfers as of now
+            # feel free to test because there are 64 different ways
             conn = mysql.connect()
             cursor = conn.cursor()
+            
+            query = 'SELECT manager_dept_fk FROM manager WHERE email = %s'
+            cursor.execute(query, (session['manager_email']))
+            manager_dept_fk = cursor.fetchall()[0][0]
 
-            p = Plan(cursor, conn=conn)
-            p.insert_with_form(form)
+            query = 'SELECT id FROM department_lookup WHERE department = %s'
+            cursor.execute(query, (form.destFund.data))
+            id = cursor.fetchall()[0][0]
+
+            #print("Manager Dept Fk:" + str(manager_dept_fk) + "Dest Fund ID:" + str(id))
+
+            query = '''INSERT INTO plan (plan_name,funding_amount,plan_justification,memo,start_date,end_date,
+            source_fund_FK,dest_fund_FK,fund_individuals,control_name, control_window,amount_limit,usage_limit,complete) VALUES 
+            (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'''
+            cursor.execute(query, (form.planName.data, form.fundingAmount.data,
+                                   form.planJustification.data, form.memo.data, form.startDate.data,
+                                   None, manager_dept_fk, id, form.fundIndivEmployeesToggle.data,
+                                   form.controlName.data, form.controlWindow.data, form.amountLimit.data, form.usageLimit.data, False))
+
+            conn.commit()
+            conn.close()
 
             return jsonify(
                 status=True,
