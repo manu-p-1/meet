@@ -44,10 +44,8 @@ def create_plan_form(sn, fund_choices):
                                         "maxlength": 255,
                                         "placeholder": "Memo Description",
                                         "class": "form-control"})
-                             render_kw={"class": "form-control"},
-                             default='')
 
-    destFund = SelectField('Fund Destination',
+        destFund = SelectField('Fund Destination',
                            validators=[InputRequired(message="A funding destination department is required.")],
                            choices=[
                                 ('', 'Destination Fund Department'),
@@ -63,10 +61,10 @@ def create_plan_form(sn, fund_choices):
                            render_kw={"class": "form-control"},
                            default='')
 
-    fundIndivEmployeesToggle = BooleanField('Employee specific disbursement', default=False,
+        fundIndivEmployeesToggle = BooleanField('Employee specific disbursement', default=False,
                                             render_kw={"class": "custom-control-input"})
 
-    employeesOptional = FieldList(EmployeeInfoTextAreaField('employeesOptional',
+        employeesOptional = FieldList(EmployeeInfoTextAreaField('employeesOptional',
                                                             validators=[
                                                                 RequiredIf('fundIndivEmployeesToggle',
                                                                            message="Please specify at least 1 "
@@ -76,9 +74,9 @@ def create_plan_form(sn, fund_choices):
                                   min_entries=1,
                                   max_entries=12)
 
-    endDateToggle = BooleanField('Add End Date', default=False, render_kw={"class": "custom-control-input"})
+        endDateToggle = BooleanField('Add End Date', default=False, render_kw={"class": "custom-control-input"})
 
-    endDate = StringField('End Date/Times',
+        endDate = StringField('End Date/Times',
                           validators=[
                               RequiredIf("endDateToggle", message="The end date is required."),
                               DateProper(message="The end date is malformed.")
@@ -86,10 +84,10 @@ def create_plan_form(sn, fund_choices):
                           render_kw={"placeholder": "Date Date/Times",
                                      "class": "form-control"})
 
-    controlToggle = BooleanField('Add Velocity Controls', default=False,
+        controlToggle = BooleanField('Add Velocity Controls', default=False,
                                  render_kw={"class": "custom-control-input"})
 
-    controlName = StringField('Control Name',
+        controlName = StringField('Control Name',
                               validators=[
                                   RequiredIf('controlToggle',
                                              message="The velocity control, control name is required."),
