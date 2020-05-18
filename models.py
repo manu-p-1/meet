@@ -1,6 +1,3 @@
-from modules.routes.user.forms import CreatePlanForm
-
-
 class Plan:
 
     def __init__(self, cursor, conn=None):
@@ -37,6 +34,7 @@ class Plan:
                                                     usage_limit, complete))
         if self._conn is not None:
             self._conn.commit()
+            self._conn.close()
 
     def select_all(self):
         self._cursor.execute(self._generic_select)
@@ -60,6 +58,7 @@ class Manager:
 
         if self._conn is not None:
             self._conn.commit()
+            self._conn.close()
 
     def select_all(self):
         self._cursor.execute(self._generic_select)
@@ -82,6 +81,7 @@ class Employee:
 
         if self._conn is not None:
             self._conn.commit()
+            self._conn.close()
 
     def select_all(self):
         self._cursor.execute(self._generic_select)
