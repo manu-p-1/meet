@@ -27,6 +27,10 @@ def profile(ctx=None):
     description = cursor.fetchall()[0][0]
 
     conn.close()
+
+    if description is None or description.strip() == '':
+        description = "None Provided"
+
     return render_template('profile/profile.html', description=description)
 
 
