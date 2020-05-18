@@ -29,9 +29,7 @@
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item p-4">
                             <strong class="text-muted d-block mb-2">Description</strong>
-                            <span>My primary role is managing different banking sectors involved in asset management, sanctioning loans, mortgages, investments, and account operations. I oversee the efficient day to day processes as well as
-                                preparing forecasts and reports to drive the overall success of our clients and the department.
-                            </span>
+                            <span>{{ description }}</span>
                         </li>
                     </ul>
                 </div>
@@ -78,7 +76,7 @@
                                             <div class="form-group col-md-12">
                                                 <label for="feDescription">Description</label>
                                                 <textarea id="feDescription" class="form-control" name="feDescription"
-                                                          rows="5">My primary role is managing different banking sectors involved in asset management, sanctioning loans, mortgages, investments, and account operations. I oversee the efficient day to day processes as well as preparing forecasts and reports to drive the overall success of our clients and the department.</textarea>
+                                                          rows="5">{{ description }}</textarea>
                                             </div>
                                         </div>
                                         <button type="submit" class="btn btn-accent">Update Account</button>
