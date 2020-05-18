@@ -90,6 +90,9 @@ class MarqetaClient:
         self.setup()
         print('\n\nMARQETA SETUP DONE\n\n')
 
+    '''
+    Initialize class attributes of MarqetaClient.
+    '''
     def setup(self):
         self.funding_source = self.create_program_funding_source(
             self.FUNDING_PAYLOAD)
@@ -112,14 +115,36 @@ class MarqetaClient:
     # HIERARCHY
     # CREATE PROGRAM FUNDING SOURCE
 
+    '''
+    Used to create a program funding source.
+
+    fund - the request fields needed to create a program funding source.
+    '''
     def create_program_funding_source(self, fund):
         return self.client.funding_sources.program.create(fund)
 
-    # CREATE BUSINESS USER
+    '''
+    Used to create a single business.
+
+    business - the request fields needed to create a business.
+    '''
     def create_business(self, business):
         return self.client.businesses.create(business)
 
-    # MAKE GPA ORDER TO BUSINESS
+
+    '''
+    Used to fund the main business account.
+
+    amount: float - the amount to transfer.
+
+    gpa_type: str - the type of the GPA account to fund (business or user).
+
+    fund_source_token: str - the business/user token to transfer from.
+
+    dest_token: str - the business/user token to transfer to.
+
+    currency_code: str - the currency type.
+    '''
     def fund(self, amount: float, gpa_type: str, fund_source_token: str, dest_token: str, currency_code: str = 'USD'):
         payload = {'token': self.BUSINESS_TOKEN + '_GPA_TOKEN',
                    gpa_type + '_token': dest_token,
@@ -129,6 +154,20 @@ class MarqetaClient:
                    }
         return self.client.gpa_orders.create(payload)
 
+
+    '''
+    Used to make transfers from one GPA account to another.
+
+    amount: float - the amount to transfer.
+
+    token: str - the unique identifier of the peer transfer.
+
+    source_token: str - the business/user token to transfer from.
+
+    dest_token: str - the business/user token to transfer to.
+
+    currency_code: str - the currency type.
+    '''
     def transfer(self, amount: float, token: str, source_token: str, dest_token: str, currency_code: str = 'USD'):
         payload = {
             'token': token,
@@ -145,6 +184,11 @@ class MarqetaClient:
 
 
     # CREATE DEPARTMENT USERS (BUSINESSES)
+    '''
+    Used to create departments (businesses).
+
+    department - the request fields to create a business.
+    '''
     def create_department(self, department):
         dept_payload = {'token': self.BUSINESS_TOKEN + '_' + department + str(self.DEPT_TOKEN_COUNTER),
                         'business_name_dba': self.BUSINESS_TOKEN + '_' + department,
@@ -155,6 +199,11 @@ class MarqetaClient:
 
     # CREATE ACCOUNT HOLDER GROUPS FOR EACH DEPARTMENT
     # WITH APPROPRIATE CONFIG
+    '''
+    Used to create account holder groups.
+
+    department - the request fields to create an account holder group.
+    '''
     def create_ah_group(self, department):
         ah_group_payload = {
             'token': self.BUSINESS_TOKEN + '_AH_GROUP' + str(self.AH_GROUP_TOKEN_COUNTER),
@@ -166,9 +215,23 @@ class MarqetaClient:
 
         # CREATE USERS OF EACH DEPARTMENT WITH PARENT BEING THE DEPARTMENT USER TOKEN AND HAVING ACH TOKEN
 
+    '''
+    Used to create a user.
+
+    employee - the request fields to create a user.
+    '''
     def create_employee(self, employee):
         return self.client.users.create(employee)
 
+    '''
+    Used to generate user data.
+
+    n: int - the amount of employees to generate per department.
+
+    parent_token: str - the parent token of the user.
+
+    ah_group_token: str - the account group holder token of the user.
+    '''
     def generate_employee_data(self, n: int, parent_token: str, ah_group_token: str):
         for count in range(n):
             e_payload = {
@@ -183,6 +246,11 @@ class MarqetaClient:
 
     # EXPORT BUSINESS DATA AS JSON OR JUST SUBMIT DIRECTLY TO MARQETA API
 
+    '''
+    Print all businesses.
+
+    clt - print a specific business.
+    '''
     def print_businesses(self, clt=None):
 
         def v(i: str):
@@ -194,6 +262,11 @@ class MarqetaClient:
         v(clt.__str__()) if clt is not None else [
             v(u.__str__()) for u in self.client.businesses.stream()]
 
+    '''
+    Print all clients.
+
+    clt - print a specific client.
+    '''
     def print_clients(self, clt=None):
 
         def v(i: str):
@@ -206,6 +279,11 @@ class MarqetaClient:
         v(clt.__str__()) if clt is not None else [
             v(u.__str__()) for u in self.client.users.stream()]
 
+    '''
+    Print all account holder groups.
+
+    clt - print a specific account holder group.
+    '''
     def print_ah_groups(self, clt=None):
 
         def v(i: str):
