@@ -14,6 +14,7 @@ class Plan:
                     %s,%s,%s,%s,%s,%s)'''
 
         self._generic_select = """SELECT * FROM plan"""
+        self._generic_select_where = "SELECT * FROM plan WHERE %s = %s"
 
     def insert_with_form(self, form):
 
@@ -47,6 +48,10 @@ class Plan:
 
     def select_all(self):
         self._cursor.execute(self._generic_select)
+        return self._cursor.fetchall()[0][0]
+
+    def select_where(self, condition1, condition2):
+        self._cursor.execute(self._generic_select_where, (condition1, condition2))
         return self._cursor.fetchall()[0][0]
 
 
