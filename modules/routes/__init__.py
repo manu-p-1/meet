@@ -33,6 +33,15 @@ def load_values():
             '',
             client.MANAGERS[dept]['manager_dept_FK'])
 
+    # trans = Transaction(cursor)
+    # for t in client.transactions:
+    #     trans.insert(
+    #         t['src_token'],
+    #         t['dest_token'],
+    #         t['create_time'],
+    #         t['amount'],
+    #     )
+
     session['db_init'] = True
     conn.commit()
     conn.close()
