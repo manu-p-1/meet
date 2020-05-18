@@ -169,13 +169,13 @@ class MarqetaClient:
     currency_code: str - the currency type.
     '''
     def transfer(self, amount: float, token: str, source_token: str, dest_token: str, currency_code: str = 'USD'):
-        payload = {
+        payload = json.dumps({
             'token': token,
             'sender_business_token': source_token,
             'recipient_business_token': dest_token,
             'currency_code': currency_code,
             'amount': amount
-        }
+        })
         headers = {
             'Content-type': 'application/json',
         }
