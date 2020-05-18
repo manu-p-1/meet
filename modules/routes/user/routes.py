@@ -71,7 +71,7 @@ def create_plan():
             p = Plan(cursor, conn=conn)
             p.insert_with_form(form)
 
-            dept_to_dept(p.select_all()[0])
+            dept_to_dept(p.select_all())
 
             return jsonify(
                 status=True,
