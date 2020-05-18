@@ -9,27 +9,30 @@ cancel(){
 
 trap_ctrlc ()
 {
-    echo "Ctrl-C caught...performing clean up"
-    echo "Killing...$f_pid"
+    echo "Ctrl-C caught....performing clean up"
+    printf "===Killing....$f_pid===\n\n"
     kill "$f_pid"
 
     #cleanup the dist folder
     rm -r static/dist/*
     rm -r static/.webassets-cache/*
 
-    if [[ $operating_system == "Cygwin" || $operating_system == "MinGw" ]]
+    if [[ "$OSTYPE" == "cygwin" || "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]]
     then
-        mysql -uroot -p < ./db/MRC_DROP.sql
+      echo "Running DB DROP script...."
+      /c/Program\ Files/MySql/MySQL\ Server\ 8.0/bin/mysql -u "${DB_USER}" -p"${DB_PASS}" < db/MRC_DROP.sql
     else
-        mysql -u $DB_USER -p < ./db/MRC_DROP.sql
+      echo "Running DB DROP script...."
+      mysql -u "$DB_USER" -p"${DB_PASS}" < ./db/MRC_DROP.sql
     fi
+    printf "===DROPPED mrcdb===\n\n"
     safe_cancel
 }
 
 safe_cancel(){
       # Allow the user to see the message, so sleep for 4 seconds
     echo "Exiting In: "
-    for i in 2 1
+    for i in 3 2 1
     do
        echo "$i... "
        sleep 1
@@ -49,98 +52,62 @@ printf "\n\n"
 echo "--------------------------------------------------------------------"
 printf "\n\n"
 
-echo "Hello $(whoami)"
-
-operating_system="$(uname -s)"
-case "${operating_system}" in 
-    Linux*)     machine=Linux;;
-    Darwin*)    machine=Mac;;
-    CYGWIN*)    machine=Cygwin;;
-    MINGW*)     machine=MinGw;;
-    *)          machine="UNKNOWN:${unameOut}"
-esac
-
-
+printf "Hello $(whoami)\n\n"
 
 if [[ -z "${DB_USER}" ]]; then
   read -r -p "Enter Your MySQL username: "  uname
   export DB_USER=$uname
-  echo "exported DB_USER"
+  echo "===exported DB_USER==="
 fi
 
 
 if [[ -z "${DB_PASS}" ]]; then
   read -s -r -p "Enter Your MySQL password: "  pwd
   export DB_PASS=$pwd
-  echo "exported DB_PASS"
+  printf "===exported DB_PASS===\n\n"
 fi
 
-if [[ $operating_system == "Cygwin" || $operating_system == "MinGw" ]]
+if [[ "$OSTYPE" == "cygwin" || "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]]
 then
-  mysql -uroot -p < ./db/MRC1.1.sql
+  printf "Running DB creation script...."
+  /c/Program\ Files/MySql/MySQL\ Server\ 8.0/bin/mysql -u "${DB_USER}" -p"${DB_PASS}" < db/MRC1.1.sql
 else
-  mysql -u $DB_USER -p < ./db/MRC1.1.sql
+  printf "Running DB creation script...."
+  mysql -u "${DB_USER}" -p"${DB_PASS}" < ./db/MRC1.1.sql
 fi
-#if [[ ! -z "`mysql -qfsBe "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME='mrcdb'" 2>&1`" ]];
-#then
-#  echo "INFO: mrcdb registered"
-#else
-#  echo "ERROR - could not find mrcdb on host"
-#  cancel
-#fi
-#
-#printf "==ALL SQL CHECKS PASSED==\n"
-#
-##Using an actual python script in case people have python 2 on their computer too.
-#version=$(python -c 'import sys; print("".join(map(str, sys.version_info[:3])))')
-#re='^[0-9]+$'
-#
-#if [[ -z "$version" || $version =~ re ]];
-#then
-#    echo "PYTHON WAS NOT FOUND ON THE SYSTEM."
-#    cancel
-#fi
 
-#verAsInt=${version//[\.]/}
-#
-#if ! [[ $verAsInt -ge 370 ]];
-#then
-#  echo "PYTHON VERSION IS $version BUT REQUIRES 3.7.0 OR HIGHER"
-#  cancel
-#fi
-
-#printf "\n==ALL PYTHON CHECKS PASSED==\n\n"
+printf "===CREATED: mrcdb===\n\n"
 
 if [[ -z "${DB}" ]]; then
   export DB=mrcdb
-  echo "exported DB"
+  echo "===exported DB==="
 fi
 
 if [[ -z "${DB_HOST}" ]]; then
   export DB_HOST=localhost
-  echo "exported DB_HOST"
+  echo "===exported DB_HOST==="
 fi
 
 if [[ -z "${MRC_APP_TOKEN}" ]]; then
   read -r -p "Enter Your Marqeta app token: "  app_token
   export MRC_APP_TOKEN=$app_token
-  echo "exported MRC_APP_TOKEN"
+  echo "===exported MRC_APP_TOKEN==="
 fi
 
 if [[ -z "${MRC_ACCESS_TOKEN}" ]]; then
   read -r -p "Enter Your Marqeta access token: "  access_token
   export MRC_ACCESS_TOKEN=$access_token
-  echo "exported MRC_ACCESS_TOKEN"
+  echo "===exported MRC_ACCESS_TOKEN==="
 fi
 
 if [[ -z "${MY_ACCESS}" ]]; then
   export MY_ACCESS=abf01008-65c8-4e4b-b950-c30634f37f2f
-  echo "exported MY_ACCESS"
+  echo "===exported MY_ACCESS==="
 fi
 
 if [[ -z "${MY_APP}" ]]; then
   export MY_APP=2ef6b1d8-5a92-4884-9cf6-ae04d02b8fa5
-  echo "exported MY_APP"
+  printf "===exported MY_APP===\n\n"
 fi
 
 
@@ -148,8 +115,13 @@ fi
 export FLASK_DEBUG=1
 export FLASK_APP=server:create_server
 
+printf "===exported FLASK_DEBUG and FLASK_APP===\n\n"
+
 flask run -h 127.0.0.1 &
 f_pid=$!
+
+printf "===Running Flask===\n\n"
+echo "Starting Browser...."
 
 python -mwebbrowser http://127.0.0.1:5000
 wait
