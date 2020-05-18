@@ -8,7 +8,7 @@ $(function () {
     let search = $("#searchEmployee");
     destFund.children(":first-child").prop("disabled", true);
 
-    var cache = {};
+    const cache = {};
     search.autocomplete({
         minLength: 1,
         source: function (request, response) {
@@ -73,6 +73,10 @@ $(function () {
             .appendTo(ul);
     };
 
+    //Listen to the destination fund change
+    destFund.on("change", function () {
+        cache.clear();
+    });
 
     //For the Description Counter
     let memo = $("#memo");
