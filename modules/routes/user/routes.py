@@ -49,10 +49,10 @@ def create_plan():
         if form.validate_on_submit():
             print(request.form, file=stderr)
 
-            conn = mysql()
+            conn = mysql.connect()
             cursor = conn.cursor()
 
-            query = '''INSERT INTO plan (plan_name,funding_amount,plan_justification,description,start_date,end_date,
+            query = '''INSERT INTO plan (plan_name,funding_amount,plan_justification,memo,start_date,end_date,
             source_fund,dest_fund,fund_individuals,control_name, control_window,amount_limit,usage_limit,complete) VALUES 
             (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'''
             cursor.execute(query, (form.planName.data, form.fundingAmount.data,
