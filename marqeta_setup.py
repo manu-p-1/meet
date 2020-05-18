@@ -105,7 +105,7 @@ class MarqetaClient:
         self.departments = [self.create_department(
             dept) for dept in self.DEPARTMENT_LIST]
 
-        amount_per_department = master_fund_amount/(len(self.departments) * 2)
+        amount_per_department = master_fund_amount/(len(self.departments) * 3)
         for dep in self.departments:
             self.transfer(amount_per_department, self.business.token, dep.token)
 
