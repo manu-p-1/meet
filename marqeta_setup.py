@@ -99,11 +99,15 @@ class MarqetaClient:
 
         self.business = self.create_business(self.BUSINESS_PAYLOAD)
 
-        self.fund(float(random.randint(100_000, 1_000_000)),
-                  gpa_type='business', fund_source_token=self.funding_source.token, dest_token=self.business.token)
+        master_fund_amount = float(random.randint(100_000, 1_000_000))
+        self.fund(master_fund_amount, gpa_type='business', fund_source_token=self.funding_source.token, dest_token=self.business.token)
 
         self.departments = [self.create_department(
             dept) for dept in self.DEPARTMENT_LIST]
+
+        amount_per_department = master_fund_amount/(len(self.departments) * 2)
+        for dep in self.departments:
+            self.transfer(amount_per_department, self.business.token, dep.token)
 
         self.ah_groups = [self.create_ah_group(
             dept) for dept in self.DEPARTMENT_LIST]
@@ -168,17 +172,26 @@ class MarqetaClient:
 
     currency_code: str - the currency type.
     '''
-    def transfer(self, amount: float, token: str, source_token: str, dest_token: str, currency_code: str = 'USD'):
-        payload = json.dumps({
-            'token': token,
+    def transfer(self, amount: float, source_token: str, dest_token: str,token: str = None , currency_code: str = 'USD'):
+        
+        payload = {
             'sender_business_token': source_token,
             'recipient_business_token': dest_token,
             'currency_code': currency_code,
-            'amount': amount
-        })
+            'amount': str(amount)
+        }
+
+        if token:
+            payload['token'] = token
+        
+        payload = json.dumps(payload)
+
         headers = {
             'Content-type': 'application/json',
         }
+        print(json.loads(r.post('https://sandbox-api.marqeta.com/v3/peertransfers', headers=headers,
+                          data=payload, auth=(os.environ['MY_APP'], os.environ['MY_ACCESS'])).content))
+
         return PeerTransfer(json.loads(r.post('https://sandbox-api.marqeta.com/v3/peertransfers', headers=headers,
                           data=payload, auth=(os.environ['MY_APP'], os.environ['MY_ACCESS'])).content))
 

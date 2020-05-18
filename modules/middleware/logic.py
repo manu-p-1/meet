@@ -1,57 +1,83 @@
 from marqeta import Client
+from server import mysql, client
 import json
 import os
+import random
 
-base_url = "https://sandbox-api.marqeta.com/v3/"
-application_token = os.environ.get("MRC_APP_TOKEN")
-access_token = os.environ.get("MRC_ACCESS_TOKEN")
-timeout = 60  # seconds
+# open Client connection
+def openClient():
+    # Marqeta Client
+    client_payload = {
+        'base_url': "https://sandbox-api.marqeta.com/v3/",
+        'application_token': os.environ['MY_APP'],
+        'access_token': os.environ['MY_ACCESS'],
+        'timeout': 60
+    }
+    client = Client(client_payload['base_url'], client_payload['application_token'],
+                         client_payload['access_token'], client_payload['timeout'])
+    return client
 
-client = Client(base_url, application_token, access_token, timeout)
+# executeOrders
+# the plan_ids should be a list of plan ids, as stored in the db
+# This will come from some func that queries the db for all
+# past due and store them as a list
+def executerOrders(plan_ids):
+    # Implement: for-each over plan_ids, sorting them,
+    # then sending each id to the appropriate func
+    # (either dept_to_dept or dept_to_emp)
 
 
-def print_clients(clt=None):
+    #if(fund_individuals == False and completed == False) {
+    #    # send plan to dep_to_dep order
+    #} else {
+    #    # send pan to dep_to_emps order
+    #}
 
-    def v(i: str):
-        print(json.dumps(json.loads(i), indent=4))
-
-    # If you provide a client, it'll print the info, otherwise print all clients
-
-    v(clt.__str__()) if clt is not None else [v(u.__str__()) for u in client.users.stream()]
-
-
-def create_client(d: dict):
-    client.users.create(d)
+    pass
 
 
-data = {
-    "first_name": "Sam",
-    "last_name": "Yuen"
-}
+def dept_to_dept(plan_id):
+    '''
+    for department to department transfers,
+    gathers info from plan in db and
+    enters it into Marqet API
 
-data2 = {
-    "first_name": "William",
-    "last_name": "Vega"
-}
+     param: plan_id - the id of the plan in db to submit
+     returns: 1 on success 0 on faliure
+    '''
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    query = 'SELECT * FROM plan WHERE id = %s'
+    cursor.execute(query, plan_id)
+    records = cursor.fetchall()
 
-data3 = {
-    "first_name": "Yi-jian",
-    "last_name": "Ma Ma"
-}
+    id = records[0][0]
+    plan_name = records[0][1]
+    funding_amount = records[0][2]
+    plan_justification = records[0][3]
+    memo = records[0][4]
+    start_date = records[0][5]
+    end_date = records[0][6]
+    source_fund_FK = records[0][7]
+    dest_fund_FK = records[0][8]
+    fund_individuals = records[0][9]
+    control_name = records[0][10]
+    control_window = records[0][11]
+    amount_limit = records[0][12]
+    usage_limit = records[0][13]
+    complete = records[0][14]
+    
+    query = 'SELECT token FROM department_lookup WHERE id = %s'
+    cursor.execute(query, source_fund_FK)
+    source_token = cursor.fetchall()[0][0]
 
-data4 = {
-    "first_name": "Manu",
-    "last_name": "Puduvalli"
-}
+    query = 'SELECT token FROM department_lookup WHERE id = %s'
+    cursor.execute(query, dest_fund_FK)
+    dest_token = cursor.fetchall()[0][0]
 
-create_client(data)
-create_client(data2)
-create_client(data3)
-create_client(data4)
+    conn.commit()
+    conn.close()
 
-# To find a user, provide a token
+    transfer = client.transfer(funding_amount, source_token, dest_token)
 
-# user = client.users.find("USER_TOKEN")
-# print_clients(user)
-
-print_clients()
+    print(transfer)
