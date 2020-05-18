@@ -1,9 +1,9 @@
-import json
-from server import mysql
+from models import Plan
+from server import mysql, client
 from datetime import date
 from sys import stderr
 from flask import Blueprint, render_template, request, jsonify, redirect, flash, session, url_for
-from modules.routes.user.forms import CreatePlanForm
+from modules.routes.user.forms import create_plan_form
 from modules.decorators.utils import login_required
 
 user_bp = Blueprint('user_bp', __name__,
@@ -42,7 +42,14 @@ def create_plan():
     current_date = date.today()
     current_date_fmt = current_date.strftime("%m/%d/%Y")
 
-    form = CreatePlanForm()
+    fund_choices = client.DEPT_MAPPINGS
+
+    if not session.get('create_plan_visited'):
+        session['create_plan_visited'] = True
+        fund_choices.insert(0, ('', 'Please choose a fund destination'))
+
+    form = create_plan_form(session, fund_choices)
+
     if request.method == 'GET':
         return render_template('create_plan/create_plan_partial.html', form=form, current_date=current_date_fmt)
     else:
@@ -52,16 +59,8 @@ def create_plan():
             conn = mysql.connect()
             cursor = conn.cursor()
 
-            query = '''INSERT INTO plan (plan_name,funding_amount,plan_justification,memo,start_date,end_date,
-            source_fund,dest_fund,fund_individuals,control_name, control_window,amount_limit,usage_limit,complete) VALUES 
-            (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'''
-            cursor.execute(query, (form.planName.data, form.fundingAmount.data,
-                                   form.planJustification.data, form.memo.data, form.startDate.data,
-                                   form.endDate.data, form.sourceFund.data, form.destFund.data, form.fundIndivEmployeesToggle.data,
-                                   form.controlName.data, form.controlWindow.data, form.amountLimit.data, form.usageLimit.data, False))
-
-            conn.commit()
-            conn.close()
+            p = Plan(cursor, conn=conn)
+            p.insert_with_form(form)
 
             return jsonify(
                 status=True,
