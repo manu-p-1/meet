@@ -48,11 +48,13 @@ class Plan:
 
     def select_all(self):
         self._cursor.execute(self._generic_select)
-        return self._cursor.fetchall()[0][0]
+        x = self._cursor.fetchall()
+        return x[0] if len(x) == 0 else x[0][0]
 
     def select_where(self, condition1, condition2):
         self._cursor.execute(self._generic_select_where, (condition1, condition2))
-        return self._cursor.fetchall()[0][0]
+        x = self._cursor.fetchall()
+        return x[0] if len(x) == 0 else x[0][0]
 
 
 class Manager:
@@ -76,7 +78,8 @@ class Manager:
 
     def select_all(self):
         self._cursor.execute(self._generic_select)
-        return self._cursor.fetchall()[0][0]
+        x = self._cursor.fetchall()
+        return x[0] if len(x) == 0 else x[0][0]
 
 
 class Employee:
@@ -99,4 +102,28 @@ class Employee:
 
     def select_all(self):
         self._cursor.execute(self._generic_select)
-        return self._cursor.fetchall()[0][0]
+        x = self._cursor.fetchall()
+        return x[0] if len(x) == 0 else x[0][0]
+
+
+class Transaction:
+
+    def __init__(self, cursor, conn=None):
+        self._cursor = cursor
+        self._conn = conn
+        self._generic_insert = '''
+        INSERT INTO transaction(src_token, dest_token, create_time, amount) VALUES (%s, %s, %s, %s)'''
+
+        self._generic_select = """SELECT * FROM transaction"""
+
+    def insert(self, src_token, dest_token, create_time, amount):
+        self._cursor.execute(self._generic_insert, (src_token, dest_token, create_time, amount))
+
+        if self._conn is not None:
+            self._conn.commit()
+            self._conn.close()
+
+    def select_all(self):
+        self._cursor.execute(self._generic_select)
+        x = self._cursor.fetchall()
+        return x[0] if len(x) == 0 else x[0][0]
