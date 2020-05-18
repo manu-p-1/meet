@@ -17,8 +17,12 @@ trap_ctrlc ()
     rm -r static/dist/*
     rm -r static/.webassets-cache/*
 
-    mysql -u $DB_USER -p < ./db/MRC_DROP.sql
-
+    if [[ $operating_system == "Cygwin" || $operating_system == "MinGw" ]]
+    then
+        mysql -uroot -p < ./db/MRC_DROP.sql
+    else
+        mysql -u $DB_USER -p < ./db/MRC_DROP.sql
+    fi
     safe_cancel
 }
 
@@ -47,6 +51,17 @@ printf "\n\n"
 
 echo "Hello $(whoami)"
 
+operating_system="$(uname -s)"
+case "${operating_system}" in 
+    Linux*)     machine=Linux;;
+    Darwin*)    machine=Mac;;
+    CYGWIN*)    machine=Cygwin;;
+    MINGW*)     machine=MinGw;;
+    *)          machine="UNKNOWN:${unameOut}"
+esac
+
+
+
 if [[ -z "${DB_USER}" ]]; then
   read -r -p "Enter Your MySQL username: "  uname
   export DB_USER=$uname
@@ -60,7 +75,12 @@ if [[ -z "${DB_PASS}" ]]; then
   echo "exported DB_PASS"
 fi
 
-mysql -u $DB_USER -p < ./db/MRC1.1.sql
+if [[ $operating_system == "Cygwin" || $operating_system == "MinGw" ]]
+then
+  mysql -uroot -p < ./db/MRC1.1.sql
+else
+  mysql -u $DB_USER -p < ./db/MRC1.1.sql
+fi
 #if [[ ! -z "`mysql -qfsBe "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME='mrcdb'" 2>&1`" ]];
 #then
 #  echo "INFO: mrcdb registered"

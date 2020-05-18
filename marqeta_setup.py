@@ -46,6 +46,10 @@ class MarqetaClient:
         self.DEPARTMENT_LIST = ['IT', 'AC', 'MK', 'HR', 'PD', 'RD',
                                 'SC',
                                 'LG']
+
+        self.DEPT_MAPPINGS = [('IT','IT'),('AC','ACCOUNTING'),('MK','MARKETING'),('HR','HUMAN RESOURCES'),
+                                ('PD','PRODUCTION'),('RD','RESEARCH & DEVELOPMENT'),('SC','SECURITY'),('LG','LOGISTICS')]
+        self.CURRENT_DEPT = None
         self.MANAGERS = {
             dept: {
                 'first_name': self.fake.first_name(),

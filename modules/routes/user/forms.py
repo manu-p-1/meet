@@ -7,6 +7,7 @@ from wtforms.widgets.html5 import NumberInput
 from modules.routes.user.custom_fields import EmployeeInfoTextAreaField
 from modules.routes.user.custom_validators import RequiredIf, DateProper, EmployeeUnique
 
+from server import client
 
 class CreatePlanForm(FlaskForm):
     planName = StringField("Plan Name", validators=[InputRequired(message="Enter a plan name.")],
@@ -60,10 +61,7 @@ class CreatePlanForm(FlaskForm):
 
     destFund = SelectField('Fund Destination',
                            validators=[InputRequired(message="A funding destination department is required.")],
-                           choices=[
-                               ('', 'Destination Fund Department'),
-                               ('ACCOUNTING', 'ACCOUNTING')
-                           ],
+                           choices=client.DEPT_MAPPINGS,
                            render_kw={"class": "form-control"},
                            default='')
 
