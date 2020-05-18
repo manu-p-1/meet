@@ -5,6 +5,8 @@ import json
 import random
 import os
 import secrets
+import requests as r
+from sdk.ext import PeerTransfer
 
 '''
 HIERARCHY
@@ -48,7 +50,8 @@ class MarqetaClient:
                                 'LG']
 
         self.DEPT_MAPPINGS = [('IT', 'IT'), ('AC', 'ACCOUNTING'), ('MK', 'MARKETING'), ('HR', 'HUMAN RESOURCES'),
-                              ('PD', 'PRODUCTION'), ('RD', 'RESEARCH & DEVELOPMENT'), ('SC', 'SECURITY'),
+                              ('PD', 'PRODUCTION'), ('RD',
+                                                     'RESEARCH & DEVELOPMENT'), ('SC', 'SECURITY'),
                               ('LG', 'LOGISTICS')]
         self.CURRENT_DEPT = None
         self.MANAGERS = {
@@ -125,6 +128,21 @@ class MarqetaClient:
                    'currency_code': currency_code
                    }
         return self.client.gpa_orders.create(payload)
+
+    def transfer(self, amount: float, token: str, source_token: str, dest_token: str, currency_code: str = 'USD'):
+        payload = {
+            'token': token,
+            'sender_business_token': source_token,
+            'recipient_business_token': dest_token,
+            'currency_code': currency_code,
+            'amount': amount
+        }
+        headers = {
+            'Content-type': 'application/json',
+        }
+        return PeerTransfer(json.loads(r.post('https://sandbox-api.marqeta.com/v3/peertransfers', headers=headers,
+                          data=payload, auth=(os.environ['MY_APP'], os.environ['MY_ACCESS'])).content))
+
 
     # CREATE DEPARTMENT USERS (BUSINESSES)
     def create_department(self, department):
