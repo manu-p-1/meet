@@ -140,6 +140,20 @@ CREATE TABLE IF NOT EXISTS `mrcdb`.`manager`
     COLLATE = utf8mb4_0900_ai_ci;
 
 
+CREATE TABLE `mrcdb`.`transaction`
+(
+    `id`           INT            NOT NULL AUTO_INCREMENT,
+    `src_token`    VARCHAR(50)    NOT NULL,
+    `dest_token`   VARCHAR(50)    NOT NULL,
+    `create_time`  DATETIME       NOT NULL,
+    `amount`       DECIMAL(12, 2) NOT NULL,
+    `new_tablecol` VARCHAR(45)    NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `src_token_UNIQUE` (`src_token` ASC) VISIBLE,
+    UNIQUE INDEX `dest_token_UNIQUE` (`dest_token` ASC) VISIBLE
+);
+
+
 SET SQL_MODE = @OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS = @OLD_UNIQUE_CHECKS;
