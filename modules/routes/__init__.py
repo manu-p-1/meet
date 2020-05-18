@@ -35,3 +35,4 @@ def load_values():
 
     session['db_init'] = True
     conn.commit()
+    conn.close()
