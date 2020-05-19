@@ -11,8 +11,10 @@ class PeerTransfer:
         if 'sender_user_token' not in response:
             self.sender_business_token = response['sender_business_token']
             self.recipient_business_token = response['recipient_business_token']
+            self.recipient_user_token = None
         else:
-            self.sender_user_token = response['sender_business_token']
+            self.sender_business_token = response['sender_business_token']
             self.recipient_user_token = response['recipient_user_token']
+            self.recipient_business_token = None
     def __str__(self):
         return json.dumps(self.response, indent=4)

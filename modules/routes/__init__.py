@@ -1,9 +1,10 @@
 from flask import session
 
-from models import Employee, Manager
+from models import Employee, Manager, Transaction
 from server import client, mysql
 from sys import stderr
 
+from datetime import datetime
 
 def load_values():
     conn = mysql.connect()
@@ -33,14 +34,22 @@ def load_values():
             '',
             client.MANAGERS[dept]['manager_dept_FK'])
 
-    # trans = Transaction(cursor)
-    # for t in client.transactions:
-    #     trans.insert(
-    #         t['src_token'],
-    #         t['dest_token'],
-    #         t['create_time'],
-    #         t['amount'],
-    #     )
+    trans = Transaction(cursor)
+    for t in client.transactions:
+        if t.recipient_user_token == None:
+            trans.insert(
+                t.sender_business_token,
+                t.recipient_business_token,
+                datetime.strptime(t.created_time,"%Y-%m-%dT%H:%M:%SZ"),
+                t.amount,
+            )
+        else:
+            trans.insert(
+                t.sender_business_token,
+                t.recipient_user_token,
+                datetime.strptime(t.created_time,"%Y-%m-%dT%H:%M:%SZ"),
+                t.amount,
+            )
 
     session['db_init'] = True
     conn.commit()

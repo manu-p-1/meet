@@ -147,9 +147,7 @@ CREATE TABLE `mrcdb`.`transaction`
     `dest_token`   VARCHAR(50)    NOT NULL,
     `create_time`  DATETIME       NOT NULL,
     `amount`       DECIMAL(12, 2) NOT NULL,
-    PRIMARY KEY (`id`),
-    UNIQUE INDEX `src_token_UNIQUE` (`src_token` ASC) VISIBLE,
-    UNIQUE INDEX `dest_token_UNIQUE` (`dest_token` ASC) VISIBLE
+    PRIMARY KEY (`id`)
 );
 
 
