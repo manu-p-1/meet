@@ -5,12 +5,13 @@ from datetime import datetime
 
 class Model(ABC):
 
-    def __init__(self, cursor, conn, generic_insert, generic_select, generic_select_where):
+    def __init__(self, cursor, conn, generic_insert, generic_select, generic_select_where, immediate_commit):
         self._cursor = cursor
         self._conn = conn
         self._generic_insert = generic_insert
         self._generic_select = generic_select
         self._generic_select_where = generic_select_where
+        self._immediate_commit = immediate_commit
 
     @abstractmethod
     def insert(self, *args):
@@ -35,10 +36,14 @@ class Model(ABC):
     def get_cursor(self):
         return self._cursor
 
+    @property
+    def is_immediate_commit(self):
+        return self._immediate_commit
+
 
 class Plan(Model):
 
-    def __init__(self, cursor, conn):
+    def __init__(self, cursor, conn, immediate_commit=True):
 
         insert = '''INSERT INTO plan (plan_name,funding_amount,plan_justification,memo,start_date,end_date,
                     source_fund_FK, dest_fund_FK,fund_individuals,control_name, control_window,amount_limit,usage_limit,complete) VALUES 
@@ -49,7 +54,7 @@ class Plan(Model):
         select = """SELECT * FROM plan"""
         select_where = "SELECT * FROM plan WHERE %s = %s"
 
-        super().__init__(cursor, conn, insert, select, select_where)
+        super().__init__(cursor, conn, insert, select, select_where, immediate_commit)
 
     def insert(self, form):
 
@@ -79,51 +84,58 @@ class Plan(Model):
                 print("EMPLOYEE FIELD", employeeField, file=stderr)
                 self._cursor.execute(q, (employeeField['id'], plid))
 
-        self._conn.commit()
+        if self.is_immediate_commit():
+            self._conn.commit()
 
 
 class Manager(Model):
 
-    def __init__(self, cursor, conn):
+    def __init__(self, cursor, conn, immediate_commit=True):
         insert = '''INSERT INTO manager(email, pass, first_name, last_name, title, description, manager_dept_FK) VALUES 
                     (%s,%s,%s,%s,%s,%s,%s)'''
         select = """SELECT * FROM manager"""
         select_where = """SELECT * FROM manager where %s = %s"""
 
-        super().__init__(cursor, conn, insert, select, select_where)
+        super().__init__(cursor, conn, insert, select, select_where, immediate_commit)
 
     def insert(self, email, pass_, first_name, last_name, title, description, manager_dept_FK, loop=False):
         self._cursor.execute(self._generic_insert,
                              (email, pass_, first_name, last_name, title, description, manager_dept_FK))
-        self._conn.commit()
+
+        if self.is_immediate_commit():
+            self._conn.commit()
 
 
 class Employee(Model):
 
-    def __init__(self, cursor, conn):
+    def __init__(self, cursor, conn, immediate_commit=True):
         insert = '''INSERT INTO employee(token, first_name, last_name, employee_dept_FK) VALUES (%s,%s,%s,%s)'''
         select = """SELECT * FROM employee"""
         select_where = """SELECT * FROM employee where %s = %s"""
 
-        super().__init__(cursor, conn, insert, select, select_where)
+        super().__init__(cursor, conn, insert, select, select_where, immediate_commit)
 
     def insert(self, token, first_name, last_name, employee_dept_FK):
         self._cursor.execute(self._generic_insert, (token, first_name, last_name, employee_dept_FK))
-        self._conn.commit()
+
+        if self.is_immediate_commit():
+            self._conn.commit()
 
 
 class Transaction(Model):
 
-    def __init__(self, cursor, conn):
+    def __init__(self, cursor, conn, immediate_commit=True):
         insert = '''INSERT INTO transaction(src_token, dest_token, create_time, amount) VALUES (%s, %s, %s, %s)'''
         select = """SELECT * FROM transaction"""
         select_where = """SELECT * FROM transaction WHERE %s = %s"""
 
-        super().__init__(cursor, conn, insert, select, select_where)
+        super().__init__(cursor, conn, insert, select, select_where, immediate_commit)
 
     def insert(self, src_token, dest_token, create_time, amount):
         self._cursor.execute(self._generic_insert, (src_token, dest_token, create_time, amount))
-        self._conn.commit()
+
+        if self.is_immediate_commit():
+            self._conn.commit()
 
     @classmethod
     def current_time(cls, transaction_time):
