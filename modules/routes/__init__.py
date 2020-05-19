@@ -45,14 +45,14 @@ def load_values():
             trans.insert(
                 t.sender_business_token,
                 t.recipient_business_token,
-                trans.current_time(t.created_time),
+                Transaction.current_time(t.created_time),
                 t.amount,
             )
         else:
             trans.insert(
                 t.sender_business_token,
                 t.recipient_user_token,
-                trans.current_time(t.created_time),
+                Transaction.current_time(t.created_time),
                 t.amount,
             )
 

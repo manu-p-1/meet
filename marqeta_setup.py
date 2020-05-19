@@ -6,7 +6,7 @@ import random
 import os
 import secrets
 import requests as r
-from sdk.ext import PeerTransfer, Transaction
+from sdk.ext import PeerTransfer, Authorization
 
 
 '''
@@ -228,7 +228,7 @@ class MarqetaClient:
         }
 
         
-        return Transaction(json.loads(r.post('https://sandbox-api.marqeta.com/v3/simulate/authorization', header=headers,
+        return Authorization(json.loads(r.post('https://sandbox-api.marqeta.com/v3/simulate/authorization', headers=headers,
                                              data=payload, auth=(os.environ['MY_APP'], os.environ['MY_ACCESS'])).content))
 
     

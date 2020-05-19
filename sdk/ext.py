@@ -19,11 +19,14 @@ class PeerTransfer:
         return json.dumps(self.response, indent=4)
 
 
-class Transaction:
+class Authorization:
     def __init__(self, response:dict):
         self.card_token = response['card_token']
-        self.amount = response['amount']
+        self.user_token = response['user_token']
+        self.amount = response['gpa_order']['amount']
         self.mid = response['mid']
+        self.created_time = response['gpa_order']['created_time']
+        self.response = response
 
     def __str__(self):
         return json.dumps(self.response, indent=4)
