@@ -41,8 +41,8 @@ class MarqetaClient:
             'access_token': os.environ['MY_ACCESS'],
             'timeout': 60
         }
-        self.client = Client(client_payload['base_url'], client_payload['application_token'],
-                             client_payload['access_token'], client_payload['timeout'])
+        self.client_sdk = Client(client_payload['base_url'], client_payload['application_token'],
+                                 client_payload['access_token'], client_payload['timeout'])
 
         # Constants
         self.DEPARTMENT_LIST = ['IT', 'AC', 'MK', 'HR', 'PD', 'RD',
@@ -126,7 +126,7 @@ class MarqetaClient:
     fund - the request fields needed to create a program funding source.
     '''
     def create_program_funding_source(self, fund):
-        return self.client.funding_sources.program.create(fund)
+        return self.client_sdk.funding_sources.program.create(fund)
 
     '''
     Used to create a single business.
@@ -134,7 +134,7 @@ class MarqetaClient:
     business - the request fields needed to create a business.
     '''
     def create_business(self, business):
-        return self.client.businesses.create(business)
+        return self.client_sdk.businesses.create(business)
 
 
     '''
@@ -157,7 +157,7 @@ class MarqetaClient:
                    'amount': amount,
                    'currency_code': currency_code
                    }
-        return self.client.gpa_orders.create(payload)
+        return self.client_sdk.gpa_orders.create(payload)
 
 
     '''
@@ -215,7 +215,7 @@ class MarqetaClient:
                         }
         # print(f'dept_payload: {dept_payload}')
         self.DEPT_TOKEN_COUNTER += 1
-        return self.client.businesses.create(dept_payload)
+        return self.client_sdk.businesses.create(dept_payload)
 
     # CREATE ACCOUNT HOLDER GROUPS FOR EACH DEPARTMENT
     # WITH APPROPRIATE CONFIG
@@ -231,7 +231,7 @@ class MarqetaClient:
         }
         # print(f'ah_group_payload: {ah_group_payload}')
         self.AH_GROUP_TOKEN_COUNTER += 1
-        return self.client.account_holder_groups.create(ah_group_payload)
+        return self.client_sdk.account_holder_groups.create(ah_group_payload)
 
         # CREATE USERS OF EACH DEPARTMENT WITH PARENT BEING THE DEPARTMENT USER TOKEN AND HAVING ACH TOKEN
 
@@ -241,7 +241,7 @@ class MarqetaClient:
     employee - the request fields to create a user.
     '''
     def create_employee(self, employee):
-        return self.client.users.create(employee)
+        return self.client_sdk.users.create(employee)
 
     '''
     Used to generate user data.
@@ -280,7 +280,7 @@ class MarqetaClient:
                 print(token)
 
         v(clt.__str__()) if clt is not None else [
-            v(u.__str__()) for u in self.client.businesses.stream()]
+            v(u.__str__()) for u in self.client_sdk.businesses.stream()]
 
     '''
     Print all clients.
@@ -297,7 +297,7 @@ class MarqetaClient:
         # If you provide a client, it'll print the info, otherwise print all clients
 
         v(clt.__str__()) if clt is not None else [
-            v(u.__str__()) for u in self.client.users.stream()]
+            v(u.__str__()) for u in self.client_sdk.users.stream()]
 
     '''
     Print all account holder groups.
@@ -314,7 +314,7 @@ class MarqetaClient:
         # If you provide a client, it'll print the info, otherwise print all clients
 
         v(clt.__str__()) if clt is not None else [
-            v(u.__str__()) for u in self.client.account_holder_groups.stream()]
+            v(u.__str__()) for u in self.client_sdk.account_holder_groups.stream()]
 
     # def print_hierarchy(self):
 
