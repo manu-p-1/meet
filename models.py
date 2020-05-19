@@ -31,6 +31,7 @@ class Plan:
                                                     form.amountLimit.data,
                                                     form.usageLimit.data, False))
 
+        # this is ok for now but what if two plans have the same name? Fetch one probably won't work.
         v = """SELECT id FROM `plan` WHERE plan_name = (%s)"""
         self._cursor.execute(v, form.planName.data)
         plid = self._cursor.fetchone()[0]
@@ -41,7 +42,7 @@ class Plan:
                                   VALUES ( %s,  %s)"""
             for employeeField in form.employeesOptional.data:
                 print("EMPLOYEE FIELD", employeeField, file=stderr)
-                self._cursor.execute(q, (employeeField.data['id'], plid))
+                self._cursor.execute(q, (employeeField['id'], plid))
 
         if self._conn is not None:
             self._conn.commit()
