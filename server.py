@@ -26,7 +26,6 @@ def create_server(config):
         # initialize extensions
         mysql.init_app(app)
         csrf = CSRFProtect(app)
-        client = MarqetaClient()
 
         # secret_key generation
         app.secret_key = secrets.token_urlsafe(256)

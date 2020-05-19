@@ -7,7 +7,7 @@ Configuration settings to be used on localhost.
 
 class DevelopmentConfig:
     # SERVER RELOAD ON CODE CHANGE
-    DEBUG = True
+    DEBUG = False
     TEMPLATES_AUTO_RELOAD = True
 
     # MySQL setup
