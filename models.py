@@ -125,14 +125,15 @@ class Employee(Model):
 class Transaction(Model):
 
     def __init__(self, cursor, conn, immediate_commit=True):
-        insert = '''INSERT INTO transaction(src_token, dest_token, create_time, amount) VALUES (%s, %s, %s, %s)'''
+        insert = '''INSERT INTO transaction(src_token, dest_token, create_time, amount, src_token_is_card) 
+        VALUES (%s, %s, %s, %s, %s)'''
         select = """SELECT * FROM transaction"""
         select_where = """SELECT * FROM transaction WHERE %s = %s"""
 
         super().__init__(cursor, conn, insert, select, select_where, immediate_commit)
 
-    def insert(self, src_token, dest_token, create_time, amount):
-        self._cursor.execute(self._generic_insert, (src_token, dest_token, create_time, amount))
+    def insert(self, src_token, dest_token, create_time, amount, is_card=False):
+        self._cursor.execute(self._generic_insert, (src_token, dest_token, create_time, amount, is_card))
 
         if self.is_immediate_commit:
             self._conn.commit()
