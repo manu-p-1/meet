@@ -140,15 +140,19 @@ CREATE TABLE IF NOT EXISTS `mrcdb`.`manager`
     COLLATE = utf8mb4_0900_ai_ci;
 
 
-CREATE TABLE `mrcdb`.`transaction`
+CREATE TABLE `transaction`
 (
-    `id`           INT            NOT NULL AUTO_INCREMENT,
-    `src_token`    VARCHAR(50)    NOT NULL,
-    `dest_token`   VARCHAR(50)    NOT NULL,
-    `create_time`  DATETIME       NOT NULL,
-    `amount`       DECIMAL(12, 2) NOT NULL,
+    `id`                int            NOT NULL AUTO_INCREMENT,
+    `src_token`         varchar(50)    NOT NULL,
+    `dest_token`        varchar(50)    NOT NULL,
+    `create_time`       datetime       NOT NULL,
+    `amount`            decimal(12, 2) NOT NULL,
+    `src_token_is_card` bit(1) DEFAULT b'0',
     PRIMARY KEY (`id`)
-);
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 49
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
 
 
 SET SQL_MODE = @OLD_SQL_MODE;
