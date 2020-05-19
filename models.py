@@ -24,6 +24,9 @@ class Model(ABC):
         self._cursor.execute(self._generic_select_where, (condition1, condition2))
         return self._cursor.fetchall()
 
+    def close_connection(self):
+        self._conn.close()
+
     @property
     def get_conn(self):
         return self._conn
