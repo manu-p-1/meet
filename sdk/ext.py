@@ -7,14 +7,13 @@ class PeerTransfer:
         self.amount = response['amount']
         self.currency_code = response['currency_code']
         self.created_time = response['created_time']
+        self.sender_business_token = response['sender_business_token']
         self.response = response
-        if 'sender_user_token' not in response:
-            self.sender_business_token = response['sender_business_token']
-            self.recipient_business_token = response['recipient_business_token']
-            self.recipient_user_token = None
-        else:
-            self.sender_business_token = response['sender_business_token']
+        if 'recipient_user_token' in response:
             self.recipient_user_token = response['recipient_user_token']
             self.recipient_business_token = None
+        else:
+            self.recipient_business_token = response['recipient_business_token']
+            self.recipient_user_token = None
     def __str__(self):
         return json.dumps(self.response, indent=4)
