@@ -12,6 +12,7 @@ def department_alloc():
         SELECT amount FROM transaction WHERE src_token = %s
     """
     cursor.execute(q, client.business.token)
+    conn.close()
     return cursor.fetchall()
 
 
@@ -29,4 +30,5 @@ def department_utilization():
         cursor.execute(q, dept.token)
         spending[name] = cursor.fetchall()
 
+    conn.close()
     return spending
