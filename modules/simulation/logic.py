@@ -36,22 +36,24 @@ def department_utilization():
     conn.close()
     return spending
 
+
 def simulate_startup():
     conn = mysql.connect()
     cursor = conn.cursor()
-    
+    t = Transaction(cursor, conn=conn)
 
-    for dept,e_list in client.department_employees.items():
-        
+    for dept, e_list in client.department_employees.items():
+        print("Department --> ", dept, file=stderr)
         dept_balance = client.retrieve_balance(dept).gpa.available_balance * .1
 
-        employees = random.sample(e_list,5)
+        employees = random.sample(e_list, 5)
 
         for e in employees:
-            transfer = client.transfer(dept_balance,dept,e,dest_token_is_user=True)
-            t = Transaction(cursor,conn=conn)
-            t.insert(dept,e,t.current_time(transfer.created_time),dept_balance)
+            print("Employeees --> ", e, file=stderr)
+            transfer = client.transfer(dept_balance, dept, e, dest_token_is_user=True)
+            t.insert(dept, e, t.current_time(transfer.created_time), dept_balance)
             card = client.client_sdk.cards.list_for_user(e)
             print(f'card from marqeta --> {card}')
 
             # client.simulate(card,)
+    conn.close()
