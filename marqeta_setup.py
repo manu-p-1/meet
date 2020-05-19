@@ -205,7 +205,7 @@ class MarqetaClient:
     '''
     def create_department(self, department):
         dept_payload = {'token': self.BUSINESS_TOKEN + '_' + department + str(self.DEPT_TOKEN_COUNTER),
-                        'business_name_dba': self.BUSINESS_TOKEN + '_' + department,
+                        'business_name_dba': department
                         }
         # print(f'dept_payload: {dept_payload}')
         self.DEPT_TOKEN_COUNTER += 1
