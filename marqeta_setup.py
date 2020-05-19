@@ -261,8 +261,13 @@ class MarqetaClient:
                 "parent_token": parent_token,
                 "account_holder_group_token": ah_group_token
             }
+            card_payload = {
+                'user_token' : e_payload['token'],
+                'card_product_token' : os.environ['SAM_CARD_PRODUCT_TOKEN']
+            }
             self.EMPLOYEE_TOKEN_COUNTER += 1
             self.employees.append(self.create_employee(e_payload))
+            card = self.client_sdk.cards.create(card_payload)
 
     # EXPORT BUSINESS DATA AS JSON OR JUST SUBMIT DIRECTLY TO MARQETA API
 
@@ -317,7 +322,6 @@ class MarqetaClient:
             v(u.__str__()) for u in self.client_sdk.account_holder_groups.stream()]
 
     # def print_hierarchy(self):
-
 
 # ESTABLISH THE DEPARTMENTS AS CONSTANTS/ACCOUNT HOLDER GROUPS
 
