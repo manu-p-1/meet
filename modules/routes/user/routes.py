@@ -69,7 +69,7 @@ def create_plan():
             cursor = conn.cursor()
 
             p = Plan(cursor, conn=conn)
-            p.insert_with_form(form)
+            p.insert(form)
 
             # There needs to be some more logic written here, specifically sending the right id
 

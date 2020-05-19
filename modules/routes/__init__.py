@@ -6,6 +6,7 @@ from sys import stderr
 
 from datetime import datetime
 
+
 def load_values():
     conn = mysql.connect()
     cursor = conn.cursor()
@@ -18,7 +19,7 @@ def load_values():
         cursor.execute(query1, (dept.token, client.DEPARTMENT_LIST[i]))
         print(dept.token + client.DEPARTMENT_LIST[i] + ' has been inserted.', file=stderr)
 
-    emp = Employee(cursor,conn=conn)
+    emp = Employee(cursor, conn, immediate_commit=False)
     for e in client.employees:
         emp.insert(e.token, e.first_name, e.last_name, e.parent_token)
         print(e.token + 'h has been inserted.', file=stderr)
@@ -27,7 +28,7 @@ def load_values():
            "mortgages, investments, and account operations. I oversee the efficient day to day processes as well as " \
            "preparing forecasts and reports to drive the overall success of our clients and the department. "
 
-    man = Manager(cursor,conn=conn)
+    man = Manager(cursor, conn, immediate_commit=False)
     for dept in client.DEPARTMENT_LIST:
         man.insert(
             client.MANAGERS[dept]['email'],
@@ -38,7 +39,7 @@ def load_values():
             desc,
             client.MANAGERS[dept]['manager_dept_FK'])
 
-    trans = Transaction(cursor,conn=conn)
+    trans = Transaction(cursor, conn, immediate_commit=False)
     for t in client.transactions:
         if t.recipient_user_token is None:
             trans.insert(
