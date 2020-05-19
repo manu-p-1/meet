@@ -6,7 +6,7 @@ import random
 import os
 import secrets
 import requests as r
-from sdk.ext import PeerTransfer
+from sdk.ext import PeerTransfer, Transaction
 
 '''
 HIERARCHY
@@ -94,6 +94,7 @@ class MarqetaClient:
     '''
     Initialize class attributes of MarqetaClient.
     '''
+
     def setup(self):
         self.funding_source = self.create_program_funding_source(
             self.FUNDING_PAYLOAD)
@@ -101,14 +102,16 @@ class MarqetaClient:
         self.business = self.create_business(self.BUSINESS_PAYLOAD)
 
         master_fund_amount = float(random.randint(100_000, 1_000_000))
-        self.fund(master_fund_amount, gpa_type='business', fund_source_token=self.funding_source.token, dest_token=self.business.token)
+        self.fund(master_fund_amount, gpa_type='business',
+                  fund_source_token=self.funding_source.token, dest_token=self.business.token)
 
         self.departments = [self.create_department(
             dept) for dept in self.DEPARTMENT_LIST]
 
         amount_per_department = master_fund_amount/(len(self.departments) * 3)
         for dep in self.departments:
-            self.transactions.append(self.transfer(amount_per_department, self.business.token, dep.token))
+            self.transactions.append(self.transfer(
+                amount_per_department, self.business.token, dep.token))
 
         self.ah_groups = [self.create_ah_group(
             dept) for dept in self.DEPARTMENT_LIST]
@@ -125,6 +128,7 @@ class MarqetaClient:
 
     fund - the request fields needed to create a program funding source.
     '''
+
     def create_program_funding_source(self, fund):
         return self.client_sdk.funding_sources.program.create(fund)
 
@@ -133,9 +137,9 @@ class MarqetaClient:
 
     business - the request fields needed to create a business.
     '''
+
     def create_business(self, business):
         return self.client_sdk.businesses.create(business)
-
 
     '''
     Used to fund the main business account.
@@ -150,6 +154,7 @@ class MarqetaClient:
 
     currency_code: str - the currency type.
     '''
+
     def fund(self, amount: float, gpa_type: str, fund_source_token: str, dest_token: str, currency_code: str = 'USD'):
         payload = {'token': self.BUSINESS_TOKEN + '_GPA_TOKEN',
                    gpa_type + '_token': dest_token,
@@ -158,7 +163,6 @@ class MarqetaClient:
                    'currency_code': currency_code
                    }
         return self.client_sdk.gpa_orders.create(payload)
-
 
     '''
     Used to make transfers from one GPA account to another.
@@ -175,8 +179,9 @@ class MarqetaClient:
 
     currency_code: str - the currency type.
     '''
-    def transfer(self, amount: float, source_token: str, dest_token: str, dest_token_is_user: bool = False, token: str = None , currency_code: str = 'USD' ):
-        
+
+    def transfer(self, amount: float, source_token: str, dest_token: str, dest_token_is_user: bool = False, token: str = None, currency_code: str = 'USD'):
+
         payload = {
             'sender_business_token': source_token,
             'currency_code': currency_code,
@@ -190,25 +195,43 @@ class MarqetaClient:
 
         if token:
             payload['token'] = token
-        
+
         payload = json.dumps(payload)
 
         headers = {
             'Content-type': 'application/json',
         }
         print(json.loads(r.post('https://sandbox-api.marqeta.com/v3/peertransfers', headers=headers,
-                          data=payload, auth=(os.environ['MY_APP'], os.environ['MY_ACCESS'])).content))
+                                data=payload, auth=(os.environ['MY_APP'], os.environ['MY_ACCESS'])).content))
 
         return PeerTransfer(json.loads(r.post('https://sandbox-api.marqeta.com/v3/peertransfers', headers=headers,
-                          data=payload, auth=(os.environ['MY_APP'], os.environ['MY_ACCESS'])).content))
+                                              data=payload, auth=(os.environ['MY_APP'], os.environ['MY_ACCESS'])).content))
 
+    def simulate(self, card_token: str, amount: float, mid: str):
+        payload = {
+            'card_token': card_token,
+            'amount': amount,
+            'mid': mid
+        }
 
+        payload = json.dumps(payload)
+
+        headers = {
+            'Content-type': 'application/json',
+        }
+
+        print(json.loads(r.post('https://sandbox-api.marqeta.com/v3/simulate/authorization', header=headers,
+                                             data=payload, auth=(os.environ['MY_APP'], os.environ['MY_ACCESS'])).content))
+
+        return Transaction(json.loads(r.post('https://sandbox-api.marqeta.com/v3/simulate/authorization', header=headers,
+                                             data=payload, auth=(os.environ['MY_APP'], os.environ['MY_ACCESS'])).content))
     # CREATE DEPARTMENT USERS (BUSINESSES)
     '''
     Used to create departments (businesses).
 
     department - the request fields to create a business.
     '''
+
     def create_department(self, department):
         dept_payload = {'token': self.BUSINESS_TOKEN + '_' + department + str(self.DEPT_TOKEN_COUNTER),
                         'business_name_dba': department
@@ -224,6 +247,7 @@ class MarqetaClient:
 
     department - the request fields to create an account holder group.
     '''
+
     def create_ah_group(self, department):
         ah_group_payload = {
             'token': self.BUSINESS_TOKEN + '_AH_GROUP' + str(self.AH_GROUP_TOKEN_COUNTER),
@@ -240,6 +264,7 @@ class MarqetaClient:
 
     employee - the request fields to create a user.
     '''
+
     def create_employee(self, employee):
         return self.client_sdk.users.create(employee)
 
@@ -252,6 +277,7 @@ class MarqetaClient:
 
     ah_group_token: str - the account group holder token of the user.
     '''
+
     def generate_employee_data(self, n: int, parent_token: str, ah_group_token: str):
         for count in range(n):
             e_payload = {
@@ -262,8 +288,8 @@ class MarqetaClient:
                 "account_holder_group_token": ah_group_token
             }
             card_payload = {
-                'user_token' : e_payload['token'],
-                'card_product_token' : os.environ['SAM_CARD_PRODUCT_TOKEN']
+                'user_token': e_payload['token'],
+                'card_product_token': os.environ['SAM_CARD_PRODUCT_TOKEN']
             }
             self.EMPLOYEE_TOKEN_COUNTER += 1
             self.employees.append(self.create_employee(e_payload))
@@ -276,6 +302,7 @@ class MarqetaClient:
 
     clt - print a specific business.
     '''
+
     def print_businesses(self, clt=None):
 
         def v(i: str):
@@ -292,6 +319,7 @@ class MarqetaClient:
 
     clt - print a specific client.
     '''
+
     def print_clients(self, clt=None):
 
         def v(i: str):
@@ -309,6 +337,7 @@ class MarqetaClient:
 
     clt - print a specific account holder group.
     '''
+
     def print_ah_groups(self, clt=None):
 
         def v(i: str):
@@ -324,6 +353,7 @@ class MarqetaClient:
     # def print_hierarchy(self):
 
 # ESTABLISH THE DEPARTMENTS AS CONSTANTS/ACCOUNT HOLDER GROUPS
+
 
 # FOR EACH DEPARTMENT/ACCOUNT HOLDER GROUP, CREATE A RANDOM AMOUNT OF USERS FOR EACH GROUP WHOSE PARENTS ARE THE BUSINESS
 if __name__ == '__main__':
