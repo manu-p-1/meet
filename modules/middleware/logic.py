@@ -78,6 +78,49 @@ def dept_to_dept(plan_id):
     conn.commit()
     conn.close()
 
-    transfer = client.transfer(funding_amount, source_token, dest_token)
+    transfer = client.transfer(funding_amount, source_token, dest_token, dest_token_is_user=False)
 
-    print(transfer)
+    #print(transfer)
+
+def dept_to_emp(plan_id):
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    query = 'SELECT * FROM plan WHERE id = %s'
+    cursor.execute(query, plan_id)
+    records = cursor.fetchall()
+
+    id = records[0][0]
+    plan_name = records[0][1]
+    funding_amount = records[0][2]
+    plan_justification = records[0][3]
+    memo = records[0][4]
+    start_date = records[0][5]
+    end_date = records[0][6]
+    source_fund_FK = records[0][7]
+    dest_fund_FK = records[0][8]
+    fund_individuals = records[0][9]
+    control_name = records[0][10]
+    control_window = records[0][11]
+    amount_limit = records[0][12]
+    usage_limit = records[0][13]
+    complete = records[0][14]
+
+    query = 'SELECT token FROM department_lookup WHERE id = %s'
+    cursor.execute(query, source_fund_FK)
+    source_token = cursor.fetchall()[0][0]
+
+    query = 'SELECT * FROM employee_plan WHERE ep_plan_FK = %s'
+    cursor.execute(query, plan_id)
+    records = cursor.fetchall()
+
+    for row in records:
+        query = 'SELECT token FROM employee WHERE id = %s'
+        cursor.execute(query, row[0])
+        dest_token = cursor.fetchall()[0][0]
+        transfer = client.transfer(funding_amount, source_token, dest_token, dest_token_is_user=True)
+        #print(transfer)
+
+    conn.commit()
+    conn.close()
+
+    # now we can make a function that adds cards based on the transfer (either here or from transaction table)

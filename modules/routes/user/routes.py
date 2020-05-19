@@ -5,7 +5,7 @@ from sys import stderr
 from flask import Blueprint, render_template, request, jsonify, redirect, flash, session, url_for
 from modules.routes.user.forms import create_plan_form
 from modules.decorators.utils import login_required
-from modules.middleware.logic import dept_to_dept
+from modules.middleware.logic import dept_to_dept, dept_to_emp
 
 user_bp = Blueprint('user_bp', __name__,
                     template_folder='templates', static_folder='static')
@@ -71,7 +71,10 @@ def create_plan():
             p = Plan(cursor, conn=conn)
             p.insert_with_form(form)
 
-            dept_to_dept(p.select_all())
+            # There needs to be some more logic written here, specifically sending the right id
+
+            ## unckeck the below and restart server to see it work on the plan you make (need more logic as above)
+            #dept_to_emp(1)
 
             return jsonify(
                 status=True,
