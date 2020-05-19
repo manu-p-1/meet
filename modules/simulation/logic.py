@@ -9,7 +9,7 @@ def department_alloc():
     cursor = conn.cursor()
 
     q = """
-        SELECT amount FROM transaction WHERE src_token = %s
+        SELECT amount, dest_token FROM transaction WHERE src_token = %s
     """
     cursor.execute(q, client.business.token)
     conn.close()
