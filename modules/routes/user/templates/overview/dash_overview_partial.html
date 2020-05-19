@@ -4,6 +4,9 @@
 {% block base_head %}
     {{ super() }}
     <script async defer src="https://buttons.github.io/buttons.js"></script>
+    {% assets "dash_overview_css" %}
+        <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
+    {% endassets %}
 {% endblock %}
 
 {% block dashboard_main %}
@@ -120,35 +123,28 @@
                     </div>
                 </div>
             </div>
-            <!-- End Users Stats -->
-            <!-- Users By Device Stats -->
+
+            <!--DEPARMENT FUND ALLOC PIE CHART-->
             <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
                 <div class="card card-small h-100">
                     <div class="card-header border-bottom">
-                        <h6 class="m-0">Users by device</h6>
+                        <h6 class="m-0">Per Department Fund Allocation</h6>
                     </div>
-                    <div class="card-body d-flex py-0">
-                        <canvas height="220" class="blog-users-by-device m-auto"></canvas>
+                    <div class="card-body d-flex py-0 loader-content">
+                        <div class="loader" id="deptAllocLoading">
+                            <i class="fas fa-spinner fa-pulse fa-4x mb-2"></i>
+                            <p>Loading...</p>
+                        </div>
+                        <canvas height="220" id="deptAllocFunds" class="m-auto">
+                        </canvas>
                     </div>
                     <div class="card-footer border-top">
-                        <div class="row">
-                            <div class="col">
-                                <select class="custom-select custom-select-sm" style="max-width: 130px;">
-                                    <option selected>Last Week</option>
-                                    <option value="1">Today</option>
-                                    <option value="2">Last Month</option>
-                                    <option value="3">Last Year</option>
-                                </select>
-                            </div>
-                            <div class="col text-right view-report">
-                                <a href="#">Full report &rarr;</a>
-                            </div>
-                        </div>
+                        <p class="text-muted font-italic">Represents Semi-Yearly Funds</p>
                     </div>
                 </div>
             </div>
-            <!-- End Users By Device Stats -->
-            <!-- New Draft Component -->
+
+
             <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
                 <!-- Quick Post -->
                 <div class="card card-small h-100">
