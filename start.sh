@@ -117,6 +117,10 @@ if [[ -z "${MY_APP}" ]]; then
   printf "===exported MY_APP===\n\n"
 fi
 
+if [[ -z "${SAM_CARD_PRODUCT_TOKEN}" ]]; then
+  export SAM_CARD_PRODUCT_TOKEN=9044a8cd-ee94-4ed9-a6b4-16d688820f90
+  printf "===exported SAM_CARD_PRODUCT_TOKEN===\n\n"
+fi
 
 # DEBUG TRUE - FLASK RESTARTS FOR EVERY CHANGE :)
 export FLASK_DEBUG=1
