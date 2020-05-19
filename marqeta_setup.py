@@ -169,18 +169,24 @@ class MarqetaClient:
 
     source_token: str - the business/user token to transfer from.
 
+    dest_token_is_user: bool - defaults to False, assuming b2b/d2d transfer.
+
     dest_token: str - the business/user token to transfer to.
 
     currency_code: str - the currency type.
     '''
-    def transfer(self, amount: float, source_token: str, dest_token: str,token: str = None , currency_code: str = 'USD'):
+    def transfer(self, amount: float, source_token: str, dest_token: str, dest_token_is_user: bool = False, token: str = None , currency_code: str = 'USD' ):
         
         payload = {
             'sender_business_token': source_token,
-            'recipient_business_token': dest_token,
             'currency_code': currency_code,
             'amount': str(amount)
         }
+
+        if dest_token_is_user:
+            payload['recipient_user_token'] = dest_token
+        else:
+            payload['recipient_business_token'] = dest_token
 
         if token:
             payload['token'] = token
