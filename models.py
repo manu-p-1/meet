@@ -84,7 +84,7 @@ class Plan(Model):
                 print("EMPLOYEE FIELD", employeeField, file=stderr)
                 self._cursor.execute(q, (employeeField['id'], plid))
 
-        if self.is_immediate_commit():
+        if self.is_immediate_commit:
             self._conn.commit()
 
 
@@ -102,7 +102,7 @@ class Manager(Model):
         self._cursor.execute(self._generic_insert,
                              (email, pass_, first_name, last_name, title, description, manager_dept_FK))
 
-        if self.is_immediate_commit():
+        if self.is_immediate_commit:
             self._conn.commit()
 
 
@@ -118,7 +118,7 @@ class Employee(Model):
     def insert(self, token, first_name, last_name, employee_dept_FK):
         self._cursor.execute(self._generic_insert, (token, first_name, last_name, employee_dept_FK))
 
-        if self.is_immediate_commit():
+        if self.is_immediate_commit:
             self._conn.commit()
 
 
@@ -134,7 +134,7 @@ class Transaction(Model):
     def insert(self, src_token, dest_token, create_time, amount):
         self._cursor.execute(self._generic_insert, (src_token, dest_token, create_time, amount))
 
-        if self.is_immediate_commit():
+        if self.is_immediate_commit:
             self._conn.commit()
 
     @classmethod
