@@ -23,6 +23,10 @@ def load_values():
         emp.insert(e.token, e.first_name, e.last_name, e.parent_token)
         print(e.token + 'h has been inserted.', file=stderr)
 
+    desc = "My primary role is managing different banking sectors involved in asset management, sanctioning loans, " \
+           "mortgages, investments, and account operations. I oversee the efficient day to day processes as well as " \
+           "preparing forecasts and reports to drive the overall success of our clients and the department. "
+
     man = Manager(cursor)
     for dept in client.DEPARTMENT_LIST:
         man.insert(
@@ -31,16 +35,16 @@ def load_values():
             client.MANAGERS[dept]['first_name'],
             client.MANAGERS[dept]['last_name'],
             'Sr. Division Manager',
-            '',
+            desc,
             client.MANAGERS[dept]['manager_dept_FK'])
 
     trans = Transaction(cursor)
     for t in client.transactions:
-        if t.recipient_user_token == None:
+        if t.recipient_user_token is None:
             trans.insert(
                 t.sender_business_token,
                 t.recipient_business_token,
-                datetime.strptime(t.created_time,"%Y-%m-%dT%H:%M:%SZ"),
+                datetime.strptime(t.created_time, "%Y-%m-%dT%H:%M:%SZ"),
                 t.amount,
             )
         else:
