@@ -1,4 +1,9 @@
+from abc import ABC
 from sys import stderr
+
+
+class Model(ABC):
+    pass
 
 
 class Plan:
@@ -49,13 +54,11 @@ class Plan:
 
     def select_all(self):
         self._cursor.execute(self._generic_select)
-        x = self._cursor.fetchall()
-        return x[0] if len(x) == 0 else x[0][0]
+        return self._cursor.fetchall()
 
     def select_where(self, condition1, condition2):
         self._cursor.execute(self._generic_select_where, (condition1, condition2))
-        x = self._cursor.fetchall()
-        return x[0] if len(x) == 0 else x[0][0]
+        return self._cursor.fetchall()
 
 
 class Manager:
@@ -79,8 +82,7 @@ class Manager:
 
     def select_all(self):
         self._cursor.execute(self._generic_select)
-        x = self._cursor.fetchall()
-        return x[0] if len(x) == 0 else x[0][0]
+        return self._cursor.fetchall()
 
 
 class Employee:
@@ -103,8 +105,7 @@ class Employee:
 
     def select_all(self):
         self._cursor.execute(self._generic_select)
-        x = self._cursor.fetchall()
-        return x[0] if len(x) == 0 else x[0][0]
+        return self._cursor.fetchall()
 
 
 class Transaction:
@@ -126,5 +127,4 @@ class Transaction:
 
     def select_all(self):
         self._cursor.execute(self._generic_select)
-        x = self._cursor.fetchall()
-        return x[0] if len(x) == 0 else x[0][0]
+        return self._cursor.fetchall()
