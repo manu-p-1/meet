@@ -1,5 +1,6 @@
 from abc import ABC
 from sys import stderr
+from datetime import datetime
 
 
 class Model(ABC):
@@ -128,3 +129,6 @@ class Transaction:
     def select_all(self):
         self._cursor.execute(self._generic_select)
         return self._cursor.fetchall()
+    
+    def current_time(self, transaction_time):
+        return datetime.strptime(transaction_time, "%Y-%m-%dT%H:%M:%SZ")

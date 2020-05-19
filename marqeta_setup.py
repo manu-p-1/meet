@@ -8,6 +8,7 @@ import secrets
 import requests as r
 from sdk.ext import PeerTransfer, Transaction
 
+
 '''
 HIERARCHY
 
@@ -87,6 +88,7 @@ class MarqetaClient:
         self.ah_groups = []
         self.employees = []
         self.transactions = []
+        self.department_employees = {}
 
         self.setup()
         print('\n\nMARQETA SETUP DONE\n\n')
@@ -119,6 +121,10 @@ class MarqetaClient:
         for i, dept in enumerate(self.departments):
             self.generate_employee_data(
                 12, self.departments[i].token, self.ah_groups[i].token)
+        
+        # print(json.dumps(self.department_employees,indent=4))
+        
+
 
     # HIERARCHY
     # CREATE PROGRAM FUNDING SOURCE
@@ -201,11 +207,12 @@ class MarqetaClient:
         headers = {
             'Content-type': 'application/json',
         }
-        print(json.loads(r.post('https://sandbox-api.marqeta.com/v3/peertransfers', headers=headers,
-                                data=payload, auth=(os.environ['MY_APP'], os.environ['MY_ACCESS'])).content))
-
+        
         return PeerTransfer(json.loads(r.post('https://sandbox-api.marqeta.com/v3/peertransfers', headers=headers,
                                               data=payload, auth=(os.environ['MY_APP'], os.environ['MY_ACCESS'])).content))
+
+    def retrieve_balance(self,token):
+        return self.client_sdk.balances.find_for_user_or_business(token)
 
     def simulate(self, card_token: str, amount: float, mid: str):
         payload = {
@@ -220,11 +227,11 @@ class MarqetaClient:
             'Content-type': 'application/json',
         }
 
-        print(json.loads(r.post('https://sandbox-api.marqeta.com/v3/simulate/authorization', header=headers,
-                                             data=payload, auth=(os.environ['MY_APP'], os.environ['MY_ACCESS'])).content))
-
+        
         return Transaction(json.loads(r.post('https://sandbox-api.marqeta.com/v3/simulate/authorization', header=headers,
                                              data=payload, auth=(os.environ['MY_APP'], os.environ['MY_ACCESS'])).content))
+
+    
     # CREATE DEPARTMENT USERS (BUSINESSES)
     '''
     Used to create departments (businesses).
@@ -279,6 +286,7 @@ class MarqetaClient:
     '''
 
     def generate_employee_data(self, n: int, parent_token: str, ah_group_token: str):
+        
         for count in range(n):
             e_payload = {
                 "token": self.BUSINESS_TOKEN + '_e' + str(self.EMPLOYEE_TOKEN_COUNTER),
@@ -292,9 +300,20 @@ class MarqetaClient:
                 'card_product_token': os.environ['SAM_CARD_PRODUCT_TOKEN']
             }
             self.EMPLOYEE_TOKEN_COUNTER += 1
-            self.employees.append(self.create_employee(e_payload))
+
+            e_object = self.create_employee(e_payload)
+            self.employees.append(e_object)
+
+            if parent_token in self.department_employees:
+
+                self.department_employees[parent_token].append(e_object.token)
+            else:
+
+                self.department_employees[parent_token] = [e_object.token]
+
             card = self.client_sdk.cards.create(card_payload)
 
+    
     # EXPORT BUSINESS DATA AS JSON OR JUST SUBMIT DIRECTLY TO MARQETA API
 
     '''
@@ -359,6 +378,4 @@ class MarqetaClient:
 if __name__ == '__main__':
     pass
     # client = MarqetaClient()
-    # client.print_businesses()
-    # client.print_clients()
-    # client.print_ah_groups()
+    

@@ -124,3 +124,27 @@ def dept_to_emp(plan_id):
     conn.close()
 
     # now we can make a function that adds cards based on the transfer (either here or from transaction table)
+
+
+def complete_employee_plan(plan_id):
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    query = 'SELECT ep_employee_FK FROM employee_plan WHERE ep_plan_FK = %s'
+    cursor.execute(query, plan_id)
+
+    # list of employees IDs under a plan
+    employee_ids = cursor.fetchall()
+
+    query = 'SELECT token FROM employee WHERE id = %s'
+    employee_tokens = []
+    for eid in employee_ids:
+        cursor.execute(query,eid[0])
+        employee_tokens.append(cursor.fetchone()[0])
+
+    for et in employee_tokens:
+        card = client.client_sdk.cards.list_for_user(et)
+        for c in card:
+            print(c)
+        break
+

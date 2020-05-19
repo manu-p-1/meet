@@ -7,6 +7,7 @@ from server import client
 from modules.decorators.utils import check_login
 from modules.routes import load_values
 from modules.routes.utils.functions.function_utils import gather_form_errors
+from modules.simulation.logic import simulate_startup
 
 common_bp = Blueprint('common_bp', __name__,
                       template_folder='templates', static_folder='static')
@@ -17,6 +18,7 @@ def login(ctx=None):
     if not session.get('db_init'):
         try:
             load_values()
+            simulate_startup()
         except Exception as e:
             print(e)
 

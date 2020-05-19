@@ -44,14 +44,14 @@ def load_values():
             trans.insert(
                 t.sender_business_token,
                 t.recipient_business_token,
-                datetime.strptime(t.created_time, "%Y-%m-%dT%H:%M:%SZ"),
+                trans.current_time(t.created_time),
                 t.amount,
             )
         else:
             trans.insert(
                 t.sender_business_token,
                 t.recipient_user_token,
-                datetime.strptime(t.created_time,"%Y-%m-%dT%H:%M:%SZ"),
+                trans.current_time(t.created_time),
                 t.amount,
             )
 
