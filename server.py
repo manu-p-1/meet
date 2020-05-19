@@ -11,6 +11,7 @@ from flask_wtf.csrf import CSRFProtect
 from marqeta_setup import MarqetaClient
 import secrets
 import subprocess
+import platform
 
 mysql = MySQL()
 csrf = CSRFProtect()
@@ -18,7 +19,10 @@ client = MarqetaClient()
 
 
 def create_server():
-    os.system('startdb.sh')
+    if platform.system() == 'Windows':
+        os.system('startdb.sh')
+    else:
+        os.system('./startdb.sh')
     app = Flask(__name__)
 
     # update app config from file config.py
