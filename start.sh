@@ -11,7 +11,6 @@ cancel(){
 trap_ctrlslash(){
     printf "===Ctrl-C caught....Restarting start.sh===\n\n"
     kill "$f_pid"
-    drop_schema
     exec "./start.sh" command
 }
 
@@ -44,17 +43,6 @@ drop_schema(){
       echo "Running DB DROP script...."
       mysql -u "$DB_USER" -p"${DB_PASS}" < ./db/MRC_DROP.sql
     fi
-}
-
-create_schema(){
-  if [[ "$OSTYPE" == "cygwin" || "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]]
-  then
-    printf "Running DB creation script...."
-    /c/Program\ Files/MySql/MySQL\ Server\ 8.0/bin/mysql -u "${DB_USER}" -p"${DB_PASS}" < db/MRC1.1.sql
-  else
-    printf "Running DB creation script...."
-    mysql -u "${DB_USER}" -p"${DB_PASS}" < ./db/MRC1.1.sql
-  fi
 }
 
 safe_cancel(){
@@ -95,8 +83,6 @@ if [[ -z "${DB_PASS}" ]]; then
   printf "===exported DB_PASS===\n\n"
 fi
 
-create_schema
-
 printf "===CREATED: mrcdb===\n\n"
 
 if [[ -z "${DB}" ]]; then
@@ -133,7 +119,7 @@ fi
 
 
 # DEBUG TRUE - FLASK RESTARTS FOR EVERY CHANGE :)
-export FLASK_DEBUG=0
+export FLASK_DEBUG=1
 export FLASK_APP=server:create_server
 
 printf "===exported FLASK_DEBUG and FLASK_APP===\n\n"
