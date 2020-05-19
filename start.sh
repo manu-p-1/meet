@@ -1,23 +1,42 @@
 #!/bin/sh
 
 trap "trap_ctrlc" 2
+trap "trap_ctrlslash" 3
 
 cancel(){
   read -r -p "Press ENTER to EXIT"
   exit 1
 }
 
+trap_ctrlslash(){
+    printf "===Ctrl-C caught....Restarting start.sh===\n\n"
+    kill "$f_pid"
+    drop_schema
+    exec "./start.sh" command
+}
+
 trap_ctrlc ()
 {
-    echo "Ctrl-C caught....performing clean up"
-    printf "===Killing....$f_pid===\n\n"
-    kill "$f_pid"
+    echo "===Ctrl-C caught....performing clean up==="
+    kill_flask
 
     #cleanup the dist folder
     rm -r static/dist/*
     rm -r static/.webassets-cache/*
 
-    if [[ "$OSTYPE" == "cygwin" || "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]]
+    drop_schema
+
+    printf "===DROPPED mrcdb===\n\n"
+    safe_cancel
+}
+
+kill_flask(){
+  printf "===Killing....$f_pid===\n\n"
+  kill "$f_pid"
+}
+
+drop_schema(){
+   if [[ "$OSTYPE" == "cygwin" || "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]]
     then
       echo "Running DB DROP script...."
       /c/Program\ Files/MySql/MySQL\ Server\ 8.0/bin/mysql -u "${DB_USER}" -p"${DB_PASS}" < db/MRC_DROP.sql
@@ -25,8 +44,17 @@ trap_ctrlc ()
       echo "Running DB DROP script...."
       mysql -u "$DB_USER" -p"${DB_PASS}" < ./db/MRC_DROP.sql
     fi
-    printf "===DROPPED mrcdb===\n\n"
-    safe_cancel
+}
+
+create_schema(){
+  if [[ "$OSTYPE" == "cygwin" || "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]]
+  then
+    printf "Running DB creation script...."
+    /c/Program\ Files/MySql/MySQL\ Server\ 8.0/bin/mysql -u "${DB_USER}" -p"${DB_PASS}" < db/MRC1.1.sql
+  else
+    printf "Running DB creation script...."
+    mysql -u "${DB_USER}" -p"${DB_PASS}" < ./db/MRC1.1.sql
+  fi
 }
 
 safe_cancel(){
@@ -67,14 +95,7 @@ if [[ -z "${DB_PASS}" ]]; then
   printf "===exported DB_PASS===\n\n"
 fi
 
-if [[ "$OSTYPE" == "cygwin" || "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]]
-then
-  printf "Running DB creation script...."
-  /c/Program\ Files/MySql/MySQL\ Server\ 8.0/bin/mysql -u "${DB_USER}" -p"${DB_PASS}" < db/MRC1.1.sql
-else
-  printf "Running DB creation script...."
-  mysql -u "${DB_USER}" -p"${DB_PASS}" < ./db/MRC1.1.sql
-fi
+create_schema
 
 printf "===CREATED: mrcdb===\n\n"
 
@@ -112,7 +133,7 @@ fi
 
 
 # DEBUG TRUE - FLASK RESTARTS FOR EVERY CHANGE :)
-export FLASK_DEBUG=1
+export FLASK_DEBUG=0
 export FLASK_APP=server:create_server
 
 printf "===exported FLASK_DEBUG and FLASK_APP===\n\n"

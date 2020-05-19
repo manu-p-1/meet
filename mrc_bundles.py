@@ -45,6 +45,10 @@ bundles = {
                                filters=closure,
                                output=f'dist/dash/overview/{gen_uuid()}.js'),
 
+    "dash_overview_css": Bundle('user_bp/css/overview/*.css',
+                                filters='cssmin',
+                                output=f'dist/dash/overview/{gen_uuid()}.css'),
+
     "dash_create_plan_css": Bundle('user_bp/css/create_plan/*.css',
                                    filters='cssmin',
                                    output=f'dist/dash/create_plan/{gen_uuid()}.css'),
