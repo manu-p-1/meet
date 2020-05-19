@@ -1,3 +1,7 @@
+import os
+import sys
+from sys import stderr
+
 from flask import Flask, session
 from flaskext.mysql import MySQL
 from flask_assets import Environment
@@ -6,13 +10,15 @@ from mrc_bundles import bundles
 from flask_wtf.csrf import CSRFProtect
 from marqeta_setup import MarqetaClient
 import secrets
+import subprocess
 
 mysql = MySQL()
 csrf = CSRFProtect()
 client = MarqetaClient()
 
 
-def create_server(config):
+def create_server():
+    os.system('startdb.sh')
     app = Flask(__name__)
 
     # update app config from file config.py
