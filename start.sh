@@ -123,7 +123,7 @@ if [[ -z "${SAM_CARD_PRODUCT_TOKEN}" ]]; then
 fi
 
 # DEBUG TRUE - FLASK RESTARTS FOR EVERY CHANGE :)
-export FLASK_DEBUG=1
+export FLASK_DEBUG=0
 export FLASK_APP=server:create_server
 
 printf "===exported FLASK_DEBUG and FLASK_APP===\n\n"
