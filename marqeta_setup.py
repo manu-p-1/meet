@@ -212,24 +212,7 @@ class MarqetaClient:
     def retrieve_balance(self, token):
         return self.client_sdk.balances.find_for_user_or_business(token)
 
-    def simulate(self, card_token: str, amount: float, mid: str):
-        payload = {
-            'card_token': card_token,
-            'amount': amount.__round__(2),
-            'mid': mid
-        }
-
-        payload = json.dumps(payload)
-
-        headers = {
-            'Content-type': 'application/json',
-        }
-
-
-        resp = json.loads(r.post('https://sandbox-api.marqeta.com/v3/simulate/authorization', headers=headers,
-                                               data=payload, auth=(os.environ['MY_APP'], os.environ['MY_ACCESS'])).content)
-
-        return Authorization(resp['transaction'])
+    
 
     # CREATE DEPARTMENT USERS (BUSINESSES)
     '''
