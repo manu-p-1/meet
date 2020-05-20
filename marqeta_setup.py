@@ -7,6 +7,7 @@ import os
 import secrets
 import requests as r
 from sdk.ext import PeerTransfer, Authorization
+import random
 
 
 '''
@@ -111,9 +112,12 @@ class MarqetaClient:
             dept) for dept in self.DEPARTMENT_LIST]
 
         amount_per_department = master_fund_amount/(len(self.departments) * 3)
-        for dep in self.departments:
+
+        adjusted_percents = self.generate_percents()
+
+        for i,dep in enumerate(self.departments):
             self.transactions.append(self.transfer(
-                amount_per_department, self.business.token, dep.token))
+                amount_per_department * adjusted_percents[i], self.business.token, dep.token))
 
         self.ah_groups = [self.create_ah_group(
             dept) for dept in self.DEPARTMENT_LIST]
@@ -144,6 +148,17 @@ class MarqetaClient:
 
     def create_business(self, business):
         return self.client_sdk.businesses.create(business)
+
+
+    def generate_percents(self):
+        rs = []
+        s = 0
+        for i in range(len(self.DEPARTMENT_LIST)):
+            r = random.random()
+            s += r
+            rs.append(r)
+        
+        return [i/s for i in rs]
 
     '''
     Used to fund the main business account.
