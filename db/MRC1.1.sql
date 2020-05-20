@@ -97,22 +97,19 @@ CREATE TABLE IF NOT EXISTS `mrcdb`.`plan`
 -- -----------------------------------------------------
 -- Table `mrcdb`.`employee_plan`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mrcdb`.`employee_plan`
+CREATE TABLE `employee_plan`
 (
-    `ep_employee_FK` INT NOT NULL,
-    `ep_plan_FK`     INT NOT NULL,
+    `ep_employee_FK` int         NOT NULL,
+    `ep_plan_FK`     int         NOT NULL,
+    `ep_card_token`  varchar(50) NOT NULL,
     PRIMARY KEY (`ep_employee_FK`, `ep_plan_FK`),
-    INDEX `ep_plan_FK_idx` (`ep_plan_FK` ASC) VISIBLE,
-    CONSTRAINT `ep_employee_FK`
-        FOREIGN KEY (`ep_employee_FK`)
-            REFERENCES `mrcdb`.`employee` (`id`),
-    CONSTRAINT `ep_plan_FK`
-        FOREIGN KEY (`ep_plan_FK`)
-            REFERENCES `mrcdb`.`plan` (`id`)
-)
-    ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8mb4
-    COLLATE = utf8mb4_0900_ai_ci;
+    UNIQUE KEY `ep_card_token_UNIQUE` (`ep_card_token`),
+    KEY `ep_plan_FK_idx` (`ep_plan_FK`),
+    CONSTRAINT `ep_employee_FK` FOREIGN KEY (`ep_employee_FK`) REFERENCES `employee` (`id`),
+    CONSTRAINT `ep_plan_FK` FOREIGN KEY (`ep_plan_FK`) REFERENCES `plan` (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
@@ -153,6 +150,15 @@ CREATE TABLE `transaction`
   AUTO_INCREMENT = 49
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
+
+CREATE TABLE `mrcdb`.`employee_card`
+(
+    `ec_employee_FK` INT         NOT NULL,
+    `ec_card_token`  VARCHAR(50) NOT NULL,
+    PRIMARY KEY (`ec_employee_FK`),
+    UNIQUE INDEX `ec_card_token_UNIQUE` (`ec_card_token` ASC)
+);
+
 
 
 SET SQL_MODE = @OLD_SQL_MODE;
