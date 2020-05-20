@@ -39,24 +39,20 @@ CREATE TABLE IF NOT EXISTS `mrcdb`.`department_lookup`
 -- -----------------------------------------------------
 -- Table `mrcdb`.`employee`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mrcdb`.`employee`
+CREATE TABLE `mrcdb`.`employee`
 (
-    `id`               INT          NOT NULL AUTO_INCREMENT,
-    `token`            VARCHAR(200) NOT NULL,
-    `first_name`       VARCHAR(45)  NOT NULL,
-    `last_name`        VARCHAR(45)  NOT NULL,
-    `employee_dept_FK` VARCHAR(200) NOT NULL,
+    `id`               int          NOT NULL AUTO_INCREMENT,
+    `token`            varchar(50)  NOT NULL,
+    `first_name`       varchar(45)  NOT NULL,
+    `last_name`        varchar(45)  NOT NULL,
+    `employee_dept_FK` varchar(200) NOT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE INDEX `token_UNIQUE` (`token` ASC) VISIBLE,
-    INDEX `employee_dept_FK_idx` (`employee_dept_FK` ASC) VISIBLE,
-    CONSTRAINT `employee_dept_FK`
-        FOREIGN KEY (`employee_dept_FK`)
-            REFERENCES `mrcdb`.`department_lookup` (`token`)
-)
-    ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8mb4
-    COLLATE = utf8mb4_0900_ai_ci;
-
+    UNIQUE KEY `token_UNIQUE` (`token`),
+    KEY `employee_dept_FK_idx` (`employee_dept_FK`),
+    CONSTRAINT `employee_dept_FK` FOREIGN KEY (`employee_dept_FK`) REFERENCES `department_lookup` (`token`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
 
 -- -----------------------------------------------------
 -- Table `mrcdb`.`plan`
@@ -97,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `mrcdb`.`plan`
 -- -----------------------------------------------------
 -- Table `mrcdb`.`employee_plan`
 -- -----------------------------------------------------
-CREATE TABLE `employee_plan`
+CREATE TABLE `mrcdb`.`employee_plan`
 (
     `ep_employee_FK` int         NOT NULL,
     `ep_plan_FK`     int         NOT NULL,
@@ -137,7 +133,7 @@ CREATE TABLE IF NOT EXISTS `mrcdb`.`manager`
     COLLATE = utf8mb4_0900_ai_ci;
 
 
-CREATE TABLE `transaction`
+CREATE TABLE `mrcdb`.`transaction`
 (
     `id`                int            NOT NULL AUTO_INCREMENT,
     `src_token`         varchar(50)    NOT NULL,
@@ -153,11 +149,14 @@ CREATE TABLE `transaction`
 
 CREATE TABLE `mrcdb`.`employee_card`
 (
-    `ec_employee_FK` INT         NOT NULL,
-    `ec_card_token`  VARCHAR(50) NOT NULL,
-    PRIMARY KEY (`ec_employee_FK`),
-    UNIQUE INDEX `ec_card_token_UNIQUE` (`ec_card_token` ASC)
-);
+    `ec_employee_token` varchar(50) NOT NULL,
+    `ec_card_token`     varchar(50) NOT NULL,
+    PRIMARY KEY (`ec_employee_token`),
+    UNIQUE KEY `ec_card_token_UNIQUE` (`ec_card_token`),
+    CONSTRAINT `ec_employee_token` FOREIGN KEY (`ec_employee_token`) REFERENCES `employee` (`token`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
 
 
 
