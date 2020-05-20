@@ -193,3 +193,17 @@ def find_department_token(dept_code):
         if dept.business_name_dba == dept_code:
             return dept.token
     return None
+
+
+def department_employee__monthly_spending():
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    """
+    NAME:
+        CURRENT_GPA_BAL
+        MONTHLY SPENDING
+    NAME:
+        CURRENT_GPA_BAL
+        MONTHLY SPENDING
+    """
