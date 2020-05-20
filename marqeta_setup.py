@@ -121,10 +121,8 @@ class MarqetaClient:
         for i, dept in enumerate(self.departments):
             self.generate_employee_data(
                 12, self.departments[i].token, self.ah_groups[i].token)
-        
-        # print(json.dumps(self.department_employees,indent=4))
-        
 
+        # print(json.dumps(self.department_employees,indent=4))
 
     # HIERARCHY
     # CREATE PROGRAM FUNDING SOURCE
@@ -207,17 +205,17 @@ class MarqetaClient:
         headers = {
             'Content-type': 'application/json',
         }
-        
+
         return PeerTransfer(json.loads(r.post('https://sandbox-api.marqeta.com/v3/peertransfers', headers=headers,
                                               data=payload, auth=(os.environ['MY_APP'], os.environ['MY_ACCESS'])).content))
 
-    def retrieve_balance(self,token):
+    def retrieve_balance(self, token):
         return self.client_sdk.balances.find_for_user_or_business(token)
 
     def simulate(self, card_token: str, amount: float, mid: str):
         payload = {
             'card_token': card_token,
-            'amount': amount,
+            'amount': amount.__round__(2),
             'mid': mid
         }
 
@@ -227,11 +225,12 @@ class MarqetaClient:
             'Content-type': 'application/json',
         }
 
-        
-        return Authorization(json.loads(r.post('https://sandbox-api.marqeta.com/v3/simulate/authorization', headers=headers,
-                                             data=payload, auth=(os.environ['MY_APP'], os.environ['MY_ACCESS'])).content))
 
-    
+        resp = json.loads(r.post('https://sandbox-api.marqeta.com/v3/simulate/authorization', headers=headers,
+                                               data=payload, auth=(os.environ['MY_APP'], os.environ['MY_ACCESS'])).content)
+
+        return Authorization(resp['transaction'])
+
     # CREATE DEPARTMENT USERS (BUSINESSES)
     '''
     Used to create departments (businesses).
@@ -286,7 +285,7 @@ class MarqetaClient:
     '''
 
     def generate_employee_data(self, n: int, parent_token: str, ah_group_token: str):
-        
+
         for count in range(n):
             e_payload = {
                 "token": self.BUSINESS_TOKEN + '_e' + str(self.EMPLOYEE_TOKEN_COUNTER),
@@ -313,7 +312,6 @@ class MarqetaClient:
 
             card = self.client_sdk.cards.create(card_payload)
 
-    
     # EXPORT BUSINESS DATA AS JSON OR JUST SUBMIT DIRECTLY TO MARQETA API
 
     '''
@@ -378,4 +376,3 @@ class MarqetaClient:
 if __name__ == '__main__':
     pass
     # client = MarqetaClient()
-    

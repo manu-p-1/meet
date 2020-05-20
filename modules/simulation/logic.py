@@ -46,23 +46,20 @@ def simulate_startup():
     
 
     for dept, e_list in client.department_employees.items():
-        print("Department --> ", dept, file=stderr)
+
         dept_balance = client.retrieve_balance(dept).gpa.available_balance * .1
 
         employees = random.sample(e_list, 5)
 
         for e in employees:
-            print("Employeees --> ", e, file=stderr)
+
             transfer = client.transfer(dept_balance, dept, e, dest_token_is_user=True)
             t.insert(dept, e, Transaction.current_time(transfer.created_time), dept_balance)
             card = client.client_sdk.cards.list_for_user(e)[0].token
-            print(type(card))
-            print(f'card from marqeta --> {card}')
+
             mid_identifer = random.choice(MIDS)
             employee_transaction = client.simulate(card,amount=dept_balance*random.random(),mid=mid_identifer)
-            print('printing employee transaction response')
-            print(f'employee transaction --> {employee_transaction.response}')
-            print('done')
+
             t.insert(card,mid_identifer,Transaction.current_time(employee_transaction.created_time),employee_transaction.amount)
             
 

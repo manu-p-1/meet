@@ -23,9 +23,9 @@ class Authorization:
     def __init__(self, response:dict):
         self.card_token = response['card_token']
         self.user_token = response['user_token']
-        self.amount = response['gpa_order']['amount']
-        self.mid = response['mid']
-        self.created_time = response['gpa_order']['created_time']
+        self.amount = response['amount']
+        self.mid = response['card_acceptor']['mid']
+        self.created_time = response['created_time']
         self.response = response
 
     def __str__(self):
