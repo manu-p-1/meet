@@ -38,7 +38,7 @@ def wid_department_employee_count():
     return jsonify(amount=department_employee_count(session['manager_dept']))
 
 
-@widgets_bp.route('/dash/current_outgoing_transactions/', methods=['GET'])  # Doesn't work
+@widgets_bp.route('/dash/current_outgoing_transactions/', methods=['GET'])
 @login_required(session)
 def wid_current_outgoing_transactions():
     return jsonify(current_outgoing_transactions(session['manager_dept']))
