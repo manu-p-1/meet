@@ -216,7 +216,7 @@ $(document).ready(function () {
 
     var deptList = [];
     var amountList = [];
-    $.getJSON('/widgets/dash/department_allocation/', function (data, status, xhr) {
+    $.getJSON('/user/widgets/dash/department_allocation/', function (data, status, xhr) {
         console.log(data);
         $.each(data, function (key, val) {
             deptList.push(key.replace(/^\w/, c => c.toUpperCase()));
