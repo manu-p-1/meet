@@ -157,13 +157,23 @@ def current_outgoing_transactions(dept_code):
     amounts = []
     for e in e_list:
         cursor.execute(q, (e, start_date, twenty_four_ago))
-        amounts.append(cursor.fetchall()[0][0])
+        cf = cursor.fetchall()
+        print(cf, file=stderr)
+        if len(cf) != 0:
+            amounts.append(cf[0][0])
 
     cursor.execute(q, (token, start_date, twenty_four_ago))
-    amounts.append(cursor.fetchall()[0][0])
+
+    cf = cursor.fetchall()
+    if len(cf) != 0:
+        amounts.append(cursor.fetchall()[0][0])
+
     tot = float(sum(amounts))
 
-    return tot
+    return {
+        "number_transactions": len(amounts),
+        "total": tot
+    }
 
 
 def active_plans():
