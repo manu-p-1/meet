@@ -1,8 +1,8 @@
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from sys import stderr
 import random
-from models import Transaction
+from models import Transaction, EmployeeCard
 from sdk.ext import Authorization
 import os
 import requests as r
@@ -78,7 +78,8 @@ def simulate(card_token: str, amount: float, mid: str):
 def simulate_startup():
     conn = mysql.connect()
     cursor = conn.cursor()
-    t = Transaction(cursor, conn=conn)
+    t = Transaction(cursor, conn)
+    ec = EmployeeCard(cursor, conn)
 
     for dept, e_list in client.department_employees.items():
 
@@ -99,6 +100,7 @@ def simulate_startup():
 
             t.insert(card, mid_identifer, Transaction.current_time(
                 employee_transaction.created_time), employee_transaction.amount, is_card=True)
+            ec.insert(e, card)
 
     conn.close()
 
@@ -146,7 +148,7 @@ def current_outgoing_transactions(dept_code):
     """
     e_list = client.department_employees[token]
 
-    now = datetime.now()
+    now = time_now()
     start_date = now.strftime("%Y-%m-%d %H:%M:%S")
     twenty_four_ago = (now - timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S")
 
@@ -180,7 +182,7 @@ def active_plans():
     conn = mysql.connect()
     cursor = conn.cursor()
 
-    now = datetime.now()
+    now = time_now()
     now_time = now.strftime("%Y-%m-%d %H:%M:%S")
 
     q = """SELECT COUNT(id) FROM plan WHERE start_date >= %s AND end_date <= %s"""
@@ -195,15 +197,56 @@ def find_department_token(dept_code):
     return None
 
 
-def department_employee__monthly_spending():
+def department_employee__monthly_spending(dept_code):
     conn = mysql.connect()
     cursor = conn.cursor()
 
     """
-    NAME:
+    ID:
+        NAME
         CURRENT_GPA_BAL
         MONTHLY SPENDING
-    NAME:
+    ID:
+        NAME
         CURRENT_GPA_BAL
         MONTHLY SPENDING
     """
+
+    employee_to_spending = {}
+    dept_token = find_department_token(dept_code)
+
+    now = time_now()
+    start_date = now.strftime("%Y-%m-%d %H:%M:%S")
+    week_ago = (now - timedelta(days=7)).strftime("%Y-%m-%d %H:%M:%S")
+
+    q = """SELECT e.id, first_name, last_name, e.token, t.amount FROM employee e
+    JOIN employee_card ec on e.token = ec.ec_employee_token
+    JOIN transaction t on src_token = ec.ec_card_token
+    WHERE e.employee_dept_FK = %s
+    AND t.create_time >= %s AND t.create_time <= %s"""
+
+    cursor.execute(q, (dept_token, week_ago, start_date))
+    cf = cursor.fetchall()
+
+    # No need for length check because we are guaranteed first 5 people
+
+    for record in cf:
+        employee_to_spending[record[0]] = {
+            "name": record[1] + ' ' + record[2],
+            "current_gpa_bal": client.retrieve_balance(record[3]).gpa.available_balance,
+            "weekly_spending": float(record[4])
+        }
+
+    return employee_to_spending
+
+
+def weekly_department_transactions():
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    q = """"""
+
+
+def time_now():
+    now = datetime.now(timezone.utc)
+    return now
