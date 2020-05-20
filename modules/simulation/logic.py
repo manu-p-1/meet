@@ -42,7 +42,7 @@ def department_utilization():
     return spending
 
 
-def simulate(self, card_token: str, amount: float, mid: str):
+def simulate(card_token: str, amount: float, mid: str):
     payload = {
         'card_token': card_token,
         'amount': amount.__round__(2),
@@ -68,21 +68,20 @@ def simulate_startup():
 
     for dept, e_list in client.department_employees.items():
 
-        dept_balance = client.retrieve_balance(dept).gpa.available_balance * .1
+        dept_bal = client.retrieve_balance(dept).gpa.available_balance * .1
 
         employees = random.sample(e_list, 5)
 
         for e in employees:
 
             transfer = client.transfer(
-                dept_balance, dept, e, dest_token_is_user=True)
+                dept_bal, dept, e, dest_token_is_user=True)
             t.insert(dept, e, Transaction.current_time(
-                transfer.created_time), dept_balance)
+                transfer.created_time), dept_bal)
             card = client.client_sdk.cards.list_for_user(e)[0].token
 
             mid_identifer = random.choice(MIDS)
-            employee_transaction = simulate(
-                card, amount=dept_balance*random.random(), mid=mid_identifer)
+            employee_transaction = simulate(card, amount=dept_bal*random.random(), mid=mid_identifer)
 
             t.insert(card, mid_identifer, Transaction.current_time(
                 employee_transaction.created_time), employee_transaction.amount)
