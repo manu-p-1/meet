@@ -81,7 +81,7 @@ def simulate_startup():
             card = client.client_sdk.cards.list_for_user(e)[0].token
 
             mid_identifer = random.choice(MIDS)
-            employee_transaction = client.simulate(
+            employee_transaction = simulate(
                 card, amount=dept_balance*random.random(), mid=mid_identifer)
 
             t.insert(card, mid_identifer, Transaction.current_time(
