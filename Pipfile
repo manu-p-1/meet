@@ -22,7 +22,7 @@ sqlacodegen = "*"
 
 [scripts]
 server = "./start.sh"
-windows_server = "start.sh"
+ws = "start.sh"
 
 [requires]
 python_version = "3.7"
