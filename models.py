@@ -141,3 +141,41 @@ class Transaction(Model):
     @classmethod
     def current_time(cls, transaction_time):
         return datetime.strptime(transaction_time, "%Y-%m-%dT%H:%M:%SZ")
+
+
+class EmployeeCard(Model):
+
+    def __init__(self, cursor, conn, immediate_commit=True):
+        insert = '''INSERT INTO employee_card(ec_employee_token, ec_card_token) 
+        VALUES (%s, %s)'''
+        select = """SELECT * FROM employee_card"""
+        select_where = """SELECT * FROM employee_card WHERE %s = %s"""
+
+        super().__init__(cursor, conn, insert, select, select_where, immediate_commit)
+
+    def insert(self, employee_token, card_token):
+        self._cursor.execute(self._generic_insert, (employee_token, card_token))
+
+        if self.is_immediate_commit:
+            self._conn.commit()
+
+
+class EmployeePlan(Model):
+
+    def __init__(self, cursor, conn, immediate_commit=True):
+        insert = '''INSERT INTO employee_plan(ep_employee_FK, ep_plan_fk, ep_card_token) 
+        VALUES (
+        (SELECT id FROM employee WHERE token = %s), 
+        (SELECT id FROM plan WHERE plan_name = %s),
+        %s
+        )'''
+        select = """SELECT * FROM employee_plan"""
+        select_where = """SELECT * FROM employee_plan WHERE %s = %s"""
+
+        super().__init__(cursor, conn, insert, select, select_where, immediate_commit)
+
+    def insert(self, employee_token, plan_name, card_token):
+        self._cursor.execute(self._generic_insert, (employee_token, plan_name, card_token))
+
+        if self.is_immediate_commit:
+            self._conn.commit()
