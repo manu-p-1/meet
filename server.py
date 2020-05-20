@@ -54,7 +54,7 @@ def create_server():
         app.register_blueprint(common_routes.common_bp)
         app.register_blueprint(user_routes.user_bp, url_prefix="/user")
         app.register_blueprint(util_routes.util_bp, url_prefix="/util")
-        app.register_blueprint(widget_routes.widgets_bp, url_prefix="/widgets")
+        app.register_blueprint(widget_routes.widgets_bp, url_prefix="/user/widgets")
 
     return app
 

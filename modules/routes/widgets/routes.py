@@ -3,7 +3,8 @@ from server import mysql
 from flask import Blueprint, render_template, request, jsonify, redirect, flash, session, url_for
 from server import client
 from modules.simulation.logic import department_alloc, department_utilization, current_business_balance, \
-    department_balance, department_employee_count, current_outgoing_transactions, active_plans
+    department_balance, department_employee_count, current_outgoing_transactions, active_plans, \
+    department_employee__monthly_spending
 
 widgets_bp = Blueprint('widgets_bp', __name__)
 
@@ -48,3 +49,9 @@ def wid_current_outgoing_transactions():
 @login_required(session)
 def wid_active_plans():
     return jsonify(total=active_plans())
+
+
+@widgets_bp.route('/dash/department_employee__monthly_spending/', methods=['GET'])
+@login_required(session)
+def wid_department_employee__monthly_spending():
+    return jsonify(department_employee__monthly_spending(session['manager_dept']))
