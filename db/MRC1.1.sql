@@ -160,6 +160,89 @@ CREATE TABLE `mrcdb`.`employee_card`
 
 
 
-SET SQL_MODE = @OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS = @OLD_UNIQUE_CHECKS;
+INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
+                 dest_fund_FK, fund_individuals, complete)
+VALUES ('Travel To England', 1400, 'Travel', 'This is a travel plan', "2020-11-25 23:20:20", "2020-11-29 23:20:20", 1,
+        1, 1, 1);
+
+INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
+                 dest_fund_FK, fund_individuals, complete)
+VALUES ('Travel To China', 1600, 'Travel', 'This is a travel plan', "2020-11-21 05:20:20", "2020-01-29 05:20:20", 2, 2,
+        1, 1);
+
+
+INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
+                 dest_fund_FK, fund_individuals, complete)
+VALUES ('Travel To Taiwan', 2250, 'Travel', 'This is a travel plan', "2020-12-25 23:20:20", "2020-12-29 23:20:20", 1, 1,
+        1, 1);
+
+INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
+                 dest_fund_FK, fund_individuals, complete)
+VALUES ('Travel To India', 3256, 'Travel', 'This is a travel plan', "2020-12-21 05:20:20", "2020-12-29 05:20:20", 2, 2,
+        1, 1);
+
+
+INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
+                 dest_fund_FK, fund_individuals, complete)
+VALUES ('Travel To Dallas', 500, 'Travel', 'This is a travel plan', "2020-01-20 23:20:20", "2020-01-22 23:20:20", 7, 7,
+        1, 1);
+
+INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
+                 dest_fund_FK, fund_individuals, complete)
+VALUES ('Travel To Los Angeles', 500, 'Travel', 'This is a travel plan', "2020-01-04 05:20:20", "2020-01-15 05:20:20",
+        3, 3, 1, 1);
+
+
+INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
+                 dest_fund_FK, fund_individuals, complete)
+VALUES ('Travel To New York', 400, 'Travel', 'This is a travel plan', "2020-02-05 05:20:20", "2020-01-15 05:20:20", 5,
+        5, 1, 1);
+
+INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
+                 dest_fund_FK, fund_individuals, complete)
+VALUES ('Travel To Atlanta', 800, 'Travel', 'This is a travel plan', "2020-02-15 05:20:20", "2020-02-29 05:20:20", 5, 5,
+        1, 1);
+
+
+INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
+                 dest_fund_FK, fund_individuals, complete)
+VALUES ('Travel To Salt Lake City', 400, 'Travel', 'This is a travel plan', "2020-03-15 05:20:20",
+        "2020-03-29 05:20:20", 5, 5, 1, 1);
+
+INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
+                 dest_fund_FK, fund_individuals, complete)
+VALUES ('Travel To Chicago', 1235, 'Travel', 'This is a travel plan', "2020-03-20 05:20:20", "2020-03-25 05:20:20", 2,
+        2, 1, 1);
+
+
+INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
+                 dest_fund_FK, fund_individuals, complete)
+VALUES ('Travel To Charleston', 400, 'Travel', 'This is a travel plan', "2020-03-16 05:20:20", "2020-03-29 05:20:20", 5,
+        5, 1, 1);
+
+INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
+                 dest_fund_FK, fund_individuals, complete)
+VALUES ('Travel To Indianapolis', 1235, 'Travel', 'This is a travel plan', "2020-03-16 05:20:20", "2020-03-25 05:20:20",
+        2, 2, 1, 1);
+
+
+INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
+                 dest_fund_FK, fund_individuals, complete)
+VALUES ('Travel To Seattle', 1000, 'Travel', 'This is a travel plan', "2020-04-12 05:20:20", "2020-04-12 23:20:20", 4,
+        4, 1, 1);
+
+INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
+                 dest_fund_FK, fund_individuals, complete)
+VALUES ('Travel To Omaha', 1000, 'Travel', 'This is a travel plan', "2020-04-13 05:20:20", "2020-04-17 23:20:20", 4, 4,
+        1, 1);
+
+
+INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
+                 dest_fund_FK, fund_individuals, complete)
+VALUES ('Travel To Tacoma', 1000, 'Travel', 'This is a travel plan', "2020-05-12 05:20:20", "2020-05-12 23:20:20", 1, 1,
+        1, 1);
+
+INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
+                 dest_fund_FK, fund_individuals, complete)
+VALUES ('Travel To Rio', 2541, 'Travel', 'This is a travel plan', "2020-05-13 05:20:20", "2020-05-17 23:20:20", 1, 1, 1,
+        1);
