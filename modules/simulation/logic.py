@@ -9,10 +9,19 @@ import requests as r
 from server import client, mysql
 
 MIDS = ['123456890', '111111', '524352', '123421']
-INT_TO_LABEL = {
+INT_MONTHS = {
     1: "January",
     2: "February",
-    3: "March"
+    3: "March",
+    4: "April",
+    5: "May",
+    6: "June",
+    7: "July",
+    8: "August",
+    9: "September",
+    10: "October",
+    11: "November",
+    12: "December"
 }
 
 
@@ -122,7 +131,7 @@ def department_balance(dept_code):
     for dept in client.departments:
         if dept.business_name_dba == dept_code:
             bal = client.retrieve_balance(dept.token)
-            if not bal:
+            if bal:
                 return {
                     "available_balance": float(bal.gpa.available_balance),
                     "ledger_balance": float(bal.gpa.ledger_balance)
