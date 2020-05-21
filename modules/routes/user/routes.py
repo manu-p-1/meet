@@ -80,14 +80,14 @@ def create_plan():
             return jsonify(
                 status=True,
                 response=render_template(
-                    'create_plan/alert_partial.html', status=True)
+                    'alert_partial.html', status=True)
             )
         else:
             print(form.errors.items(), file=stderr)
             return jsonify(
                 status=False,
                 response=render_template(
-                    'create_plan/alert_partial.html', form=form, status=False)
+                    'alert_partial.html', form=form, status=False)
             )
 
 
@@ -125,5 +125,5 @@ def manage_plan():
             return jsonify(
                 status=True,
                 response=render_template(
-                    'create_plan/alert_partial.html', status=True)
+                    'alert_partial.html', status=True)
             )
