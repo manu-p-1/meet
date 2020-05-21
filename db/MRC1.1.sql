@@ -84,8 +84,7 @@ CREATE TABLE IF NOT EXISTS `mrcdb`.`plan`
     CONSTRAINT `source_fund_FK`
         FOREIGN KEY (`source_fund_FK`)
             REFERENCES `mrcdb`.`department_lookup` (`id`)
-)
-    ENGINE = InnoDB
+)   ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8mb4
     COLLATE = utf8mb4_0900_ai_ci;
 
@@ -105,7 +104,7 @@ CREATE TABLE `mrcdb`.`employee_plan`
     CONSTRAINT `ep_plan_FK` FOREIGN KEY (`ep_plan_FK`) REFERENCES `plan` (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci
+  COLLATE = utf8mb4_0900_ai_ci;
 
 -- -----------------------------------------------------
 -- Table `mrcdb`.`manager`
@@ -126,8 +125,7 @@ CREATE TABLE IF NOT EXISTS `mrcdb`.`manager`
     CONSTRAINT `manager_dept_FK`
         FOREIGN KEY (`manager_dept_FK`)
             REFERENCES `mrcdb`.`department_lookup` (`id`)
-)
-    ENGINE = InnoDB
+)   ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8mb4
     COLLATE = utf8mb4_0900_ai_ci;
 
