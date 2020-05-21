@@ -103,9 +103,13 @@ def manage_plan():
         return render_template('manage_plan/manage_plan_partial.html',current_date=current_date,form=ef)
     else:
         formatted_plan = session['MANAGE_FORM']
-        print(f'formatted_plan ---> {formatted_plan}')
+
         form = get_plan_form(formatted_plan,session,client.DEPT_MAPPINGS)
-        print(f'model form ----> {form}')
+        for field in form:
+            print(f'printing field data ----> {field.data}')
+            print(f'type of field data ----> {type(field.data)}')
+            field = None
+
         if form.validate_on_submit():
             print(request.form, file=stderr)
 
