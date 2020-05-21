@@ -5,6 +5,7 @@ import json
 from server import mysql, client
 from modules.routes.utils.forms import get_plan_form
 from models import Plan
+from datetime import datetime, timezone
 
 util_bp = Blueprint('util_bp', __name__,
                     template_folder='templates', static_folder='static')
@@ -78,13 +79,11 @@ def manage_plan():
     conn = mysql.connect()
     cursor = conn.cursor()
 
-    # p = Plan(cursor, conn=conn)
-
     fund_choices = client.DEPT_MAPPINGS
 
     search_query = request.args.get('value')
-    # plan_data = p.select_where('plan_name', search_query)
-    cursor.execute('SELECT * FROM PLAN where plan_name = %s',search_query)
+
+    cursor.execute('SELECT * FROM PLAN where plan_name = %s',(search_query))
     plan_data = cursor.fetchall()
 
     print(plan_data)

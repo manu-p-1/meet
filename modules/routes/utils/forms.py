@@ -57,48 +57,6 @@ def get_plan_form(plan: dict,sn:dict, fund_choices: list):
                                         "class": "form-control",
                                         "value":plan['memo']})
 
-        destFund = SelectField('Fund Destination',
-                           validators=[InputRequired(message="A funding destination department is required.")],
-                           choices=[
-                                ('', 'Destination Fund Department'),
-                                ('IT', "Information Technology"),
-                                ('AC', "Accounting"),
-                                ('MK',"Marketing"),
-                                ('HR', "Human Resources"),
-                                ('PD',"Project Development"),
-                                ('RD', "Research and Development"),
-                                ('SC',"Some Stuff Dont Know"),
-                                ('LG','Legal')
-                           ],
-                           render_kw={"class": "form-control",
-                           "disabled":"",
-                           "value":plan['dest_fund_FK']},
-                           default='')
-
-        fundIndivEmployeesToggle = BooleanField('Employee specific disbursement', default=plan['fund_individuals'],
-                                            render_kw={"class": "custom-control-input",
-                                            "disabled":""})
-
-        employeesOptional = FieldList(EmployeeInfoTextAreaField('employeesOptional',
-                                                            validators=[
-                                                                RequiredIf('fundIndivEmployeesToggle',
-                                                                           message="Please specify at least 1 "
-                                                                                   "employee to disburse funds to."),
-                                                            ]),
-                                  validators=[EmployeeUnique(object_name="employee id's")],
-                                  min_entries=1,
-                                  max_entries=12)
-
-        endDateToggle = BooleanField('Add End Date', default=plan['end_date_toggle'], render_kw={"class": "custom-control-input"})
-
-        endDate = StringField('End Date/Times',
-                          validators=[
-                              RequiredIf("endDateToggle", message="The end date is required."),
-                              DateProper(message="The end date is malformed.")
-                          ],
-                          render_kw={"placeholder": "Date Date/Times",
-                                     "class": "form-control"})
-
         controlToggle = BooleanField('Add Velocity Controls', default=plan['control_toggle'],
                                  render_kw={"class": "custom-control-input"})
 
@@ -143,8 +101,6 @@ def get_plan_form(plan: dict,sn:dict, fund_choices: list):
                                "value":plan['dest_fund_FK']},
                                default='')
 
-        fundIndivEmployeesToggle = BooleanField('Employee specific disbursement', default=False,
-                                                render_kw={"class": "custom-control-input"})
 
         employeesOptional = FieldList(EmployeeInfoTextAreaField('employeesOptional',
                                                                 validators=[
@@ -167,17 +123,8 @@ def get_plan_form(plan: dict,sn:dict, fund_choices: list):
                                          "class": "form-control",
                                          "value":plan['end_date']})
 
-        controlToggle = BooleanField('Add Velocity Controls', default=False,
-                                     render_kw={"class": "custom-control-input"})
 
-        controlName = StringField('Control Name',
-                                  validators=[
-                                      RequiredIf('controlToggle',
-                                                 message="The velocity control, control name is required."),
-                                      Length(max=50)
-                                  ],
-                                  render_kw={"class": "form-control",
-                                             "placeholder": "Enter a Control Name"})
+
 
         controlWindow = SelectField('Control Window',
                                     validators=[
@@ -266,48 +213,16 @@ def get_empty_manage_form(sn,fund_choices):
                                         "class": "form-control",
                                         "disabled":""})
 
-        destFund = SelectField('Fund Destination',
-                           validators=[InputRequired(message="A funding destination department is required.")],
-                           choices=[
-                                ('', 'Destination Fund Department'),
-                                ('IT', "Information Technology"),
-                                ('AC', "Accounting"),
-                                ('MK',"Marketing"),
-                                ('HR', "Human Resources"),
-                                ('PD',"Project Development"),
-                                ('RD', "Research and Development"),
-                                ('SC',"Some Stuff Dont Know"),
-                                ('LG','Legal')
-                           ],
-                           render_kw={"class": "form-control",
-                           "disabled":"",
-                           },
-                           default='')
 
         fundIndivEmployeesToggle = BooleanField('Employee specific disbursement', default=False,
                                             render_kw={"class": "custom-control-input",
                                             "disabled":""})
 
-        employeesOptional = FieldList(EmployeeInfoTextAreaField('employeesOptional',
-                                                            validators=[
-                                                                RequiredIf('fundIndivEmployeesToggle',
-                                                                           message="Please specify at least 1 "
-                                                                                   "employee to disburse funds to."),
-                                                            ]),
-                                  validators=[EmployeeUnique(object_name="employee id's")],
-                                  min_entries=1,
-                                  max_entries=12)
+
 
         endDateToggle = BooleanField('Add End Date', default=False, render_kw={"class": "custom-control-input","disabled":""})
 
-        endDate = StringField('End Date/Times',
-                          validators=[
-                              RequiredIf("endDateToggle", message="The end date is required."),
-                              DateProper(message="The end date is malformed.")
-                          ],
-                          render_kw={"placeholder": "Date Date/Times",
-                                     "class": "form-control",
-                                     "disabled":""})
+
 
         controlToggle = BooleanField('Add Velocity Controls', default=False,
                                  render_kw={"class": "custom-control-input","disabled":""})
@@ -366,7 +281,6 @@ def get_empty_manage_form(sn,fund_choices):
                                       min_entries=1,
                                       max_entries=12)
 
-        endDateToggle = BooleanField('Add End Date', default='', render_kw={"class": "custom-control-input","disabled":""})
 
         endDate = StringField('End Date/Times',
                               validators=[
@@ -377,18 +291,8 @@ def get_empty_manage_form(sn,fund_choices):
                                          "class": "form-control",
                                          "disabled":""})
 
-        controlToggle = BooleanField('Add Velocity Controls', default=False,
-                                     render_kw={"class": "custom-control-input"})
 
-        controlName = StringField('Control Name',
-                                  validators=[
-                                      RequiredIf('controlToggle',
-                                                 message="The velocity control, control name is required."),
-                                      Length(max=50)
-                                  ],
-                                  render_kw={"class": "form-control",
-                                             "placeholder": "Enter a Control Name",
-                                             "disabled":""})
+
 
         controlWindow = SelectField('Control Window',
                                     validators=[
