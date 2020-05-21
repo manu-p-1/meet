@@ -144,6 +144,10 @@ def is_active(mysql, field) -> bool:
     cursor = conn.cursor()
     now = datetime.now(timezone.utc)
     start_date = now.strftime("%Y-%m-%d %H:%M:%S")
-    q = '''SELECT plan_name FROM plan WHERE plan_name = %s WHERE start_date > %s'''
+    q = '''SELECT plan_name FROM plan WHERE plan_name = %s AND start_date > %s'''
     cursor.execute(q,(field, start_date))
+    if len(cursor.fetchall()) == 0:
+        return False
+    else:
+        return True
         
