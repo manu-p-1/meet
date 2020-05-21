@@ -71,6 +71,11 @@ class Plan(Model):
                                                     form.amountLimit.data,
                                                     form.usageLimit.data, False))
 
+        if len(form.employeesOptional.data) != 0 and form.employeesOptional.data[0] != '':
+                for employeeField in form.employeesOptional.data:
+                    ep = EmployeePlan(self.get_cursor, self.get_conn)
+                    ep.insert_with_id(employeeField['id'],form.planName.data)
+
         if self.is_immediate_commit:
             self._conn.commit()
 
@@ -187,10 +192,10 @@ class EmployeePlan(Model):
             self._conn.commit()
 
     def insert_with_id(self, employee_id, plan_name, card_token=None):
-
+        
         insert = '''INSERT INTO employee_plan(ep_employee_FK, ep_plan_fk, ep_card_token) 
                     VALUES (
-                    (SELECT token FROM employee WHERE id = %s), 
+                    (SELECT id FROM employee WHERE id = %s), 
                     (SELECT id FROM plan WHERE plan_name = %s),
                     %s)'''
         self._cursor.execute(insert, (employee_id, plan_name, card_token))
