@@ -95,9 +95,9 @@ CREATE TABLE IF NOT EXISTS `mrcdb`.`plan`
 -- -----------------------------------------------------
 CREATE TABLE `mrcdb`.`employee_plan`
 (
-    `ep_employee_FK` int         NOT NULL,
-    `ep_plan_FK`     int         NOT NULL,
-    `ep_card_token`  varchar(50) NOT NULL,
+    `ep_employee_FK` int NOT NULL,
+    `ep_plan_FK`     int NOT NULL,
+    `ep_card_token`  varchar(50) DEFAULT NULL,
     PRIMARY KEY (`ep_employee_FK`, `ep_plan_FK`),
     UNIQUE KEY `ep_card_token_UNIQUE` (`ep_card_token`),
     KEY `ep_plan_FK_idx` (`ep_plan_FK`),
@@ -105,8 +105,7 @@ CREATE TABLE `mrcdb`.`employee_plan`
     CONSTRAINT `ep_plan_FK` FOREIGN KEY (`ep_plan_FK`) REFERENCES `plan` (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
-
+  COLLATE = utf8mb4_0900_ai_ci
 
 -- -----------------------------------------------------
 -- Table `mrcdb`.`manager`

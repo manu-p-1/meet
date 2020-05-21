@@ -161,13 +161,13 @@ class EmployeePlan(Model):
 
         super().__init__(cursor, conn, insert, select, select_where, immediate_commit)
 
-    def insert(self, employee_token, plan_name, card_token):
+    def insert(self, employee_token, plan_name, card_token=None):
         self._cursor.execute(self._generic_insert, (employee_token, plan_name, card_token))
 
         if self.is_immediate_commit:
             self._conn.commit()
 
-    def insert_with_id(self, employee_id, plan_name, card_token):
+    def insert_with_id(self, employee_id, plan_name, card_token=None):
 
         insert = '''INSERT INTO employee_plan(ep_employee_FK, ep_plan_fk, ep_card_token) 
                     VALUES (
