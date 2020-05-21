@@ -105,7 +105,7 @@ CREATE TABLE `mrcdb`.`employee_plan`
     CONSTRAINT `ep_plan_FK` FOREIGN KEY (`ep_plan_FK`) REFERENCES `plan` (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci
+  COLLATE = utf8mb4_0900_ai_ci;
 
 -- -----------------------------------------------------
 -- Table `mrcdb`.`manager`
