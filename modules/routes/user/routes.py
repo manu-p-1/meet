@@ -62,20 +62,12 @@ def create_plan():
     else:
         if form.validate_on_submit():
             print(request.form, file=stderr)
-
-            # the below code is only valid for dept-to-dept transfers as of now
-            # feel free to test because there are 64 different ways
             
             conn = mysql.connect()
             cursor = conn.cursor()
 
             p = Plan(cursor, conn=conn)
             p.insert(form)
-
-            # There needs to be some more logic written here, specifically sending the right id
-
-            ## unckeck the below and restart server to see it work on the plan you make (need more logic as above)
-            #dept_to_emp(1)
 
             return jsonify(
                 status=True,
@@ -112,9 +104,6 @@ def manage_plan():
 
         if form.validate_on_submit():
             print(request.form, file=stderr)
-
-            # the below code is only valid for dept-to-dept transfers as of now
-            # feel free to test because there are 64 different ways
             
             conn = mysql.connect()
             cursor = conn.cursor()
