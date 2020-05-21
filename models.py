@@ -74,6 +74,26 @@ class Plan(Model):
         if self.is_immediate_commit:
             self._conn.commit()
 
+    def update(self,form,plan_id):
+        for field in form:
+            if field.data == '':
+                field.data = None
+
+        update_query = '''UPDATE plan SET (plan_name = %s,funding_amount = %s,plan_justification = %s,memo = %s,start_date = %s,end_date = %s,
+                    source_fund_FK = %s, dest_fund_FK = %s,fund_individuals = %s,control_name = %s, control_window = %s,amount_limit = %s,usage_limit = %s)
+                    WHERE id = %s'''
+        self._cursor.execute(self._generic_insert, (form.planName.data, form.fundingAmount.data,
+                                                    form.planJustification.data, form.memo.data,
+                                                    form.startDate.data,
+                                                    form.endDate.data, form.sourceFund.data, form.destFund.data,
+                                                    form.fundIndivEmployeesToggle.data,
+                                                    form.controlName.data, form.controlWindow.data,
+                                                    form.amountLimit.data,
+                                                    form.usageLimit.data, plan_id))
+        if self.is_immediate_commit:
+            self._conn.commit()
+
+
 
 class Manager(Model):
 

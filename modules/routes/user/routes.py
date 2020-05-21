@@ -102,7 +102,8 @@ def manage_plan():
         ef = get_empty_manage_form(session,client.DEPT_MAPPINGS)
         return render_template('manage_plan/manage_plan_partial.html',current_date=current_date,form=ef)
     else:
-        form = get_plan_form(session['MANAGE_FORM'],session,client.DEPT_MAPPINGS)
+        formatted_plan = session['MANAGE_FORM']
+        form = get_plan_form(formatted_plan,session,client.DEPT_MAPPINGS)
         if form.validate_on_submit():
             print(request.form, file=stderr)
 
@@ -113,3 +114,4 @@ def manage_plan():
             cursor = conn.cursor()
 
             p = Plan(cursor, conn=conn)
+            p.update(form,formatted_plan['id'])
