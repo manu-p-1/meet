@@ -5,14 +5,14 @@ from wtforms.validators import InputRequired, NumberRange, Length
 from wtforms.widgets.html5 import NumberInput
 
 from modules.routes.user.custom_fields import EmployeeInfoTextAreaField
-from modules.routes.user.custom_validators import RequiredIf, DateProper, EmployeeUnique
+from modules.routes.user.custom_validators import RequiredIf, DateProper, EmployeeUnique, NotDuplicate
 
-from server import client
+from server import client,mysql
 
 
 def create_plan_form(sn, fund_choices):
     class CreatePlanForm(FlaskForm):
-        planName = StringField("Plan Name", validators=[InputRequired(message="Enter a plan name.")],
+        planName = StringField("Plan Name", validators=[InputRequired(message="Enter a plan name."),NotDuplicate(mysql=mysql)],
                                render_kw={"placeholder": "Plan Name",
                                           "class": "form-control"})
 

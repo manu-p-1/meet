@@ -62,7 +62,7 @@ def create_plan():
     else:
         if form.validate_on_submit():
             print(request.form, file=stderr)
-            
+
             conn = mysql.connect()
             cursor = conn.cursor()
 
@@ -86,17 +86,17 @@ def create_plan():
 @user_bp.route('/manage_plan/', methods=['GET', 'POST'])
 # @login_required(session)
 def manage_plan():
-    
+
     if request.method == 'GET':
         current_date = date.today()
         current_date_fmt = current_date.strftime("%m/%d/%Y")
-        
-        ef = get_empty_manage_form(session,client.DEPT_MAPPINGS)
-        return render_template('manage_plan/manage_plan_partial.html',current_date=current_date,form=ef)
+
+        ef = get_empty_manage_form(session, client.DEPT_MAPPINGS)
+        return render_template('manage_plan/manage_plan_partial.html', current_date=current_date, form=ef)
     else:
         formatted_plan = session['MANAGE_FORM']
 
-        form = get_plan_form(formatted_plan,session,client.DEPT_MAPPINGS)
+        form = get_plan_form(formatted_plan, session, client.DEPT_MAPPINGS)
         for field in form:
             print(f'printing field data ----> {field.data}')
             print(f'type of field data ----> {type(field.data)}')
@@ -104,15 +104,21 @@ def manage_plan():
 
         if form.validate_on_submit():
             print(request.form, file=stderr)
-            
+
             conn = mysql.connect()
             cursor = conn.cursor()
 
             p = Plan(cursor, conn=conn)
-            p.update(form,formatted_plan['id'])
-            
+            p.update(form, formatted_plan['id'])
+
             return jsonify(
                 status=True,
                 response=render_template(
                     'alert_partial.html', status=True)
+            )
+        else:
+            return jsonify(
+                status=False,
+                response=render_template(
+                    'alert_partial.html', status=False)
             )

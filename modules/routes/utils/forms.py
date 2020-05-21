@@ -5,9 +5,9 @@ from wtforms.validators import InputRequired, NumberRange, Length
 from wtforms.widgets.html5 import NumberInput
 
 from modules.routes.user.custom_fields import EmployeeInfoTextAreaField
-from modules.routes.user.custom_validators import RequiredIf, DateProper, EmployeeUnique
+from modules.routes.user.custom_validators import RequiredIf, DateProper, EmployeeUnique, Active, NotDuplicate
 
-from server import client
+from server import client, mysql
 
 
 def get_plan_form(plan: dict,sn:dict, fund_choices: list):
@@ -19,7 +19,7 @@ def get_plan_form(plan: dict,sn:dict, fund_choices: list):
         plan['control_toggle'] = False
     
     class ManagePlanForm(FlaskForm):
-        planName = StringField("Plan Name", validators=[InputRequired(message="Enter a plan name.")],
+        planName = StringField("Plan Name", validators=[InputRequired(message="Enter a plan name."),Active(mysql=mysql),NotDuplicate(mysql=mysql)],
                                render_kw={"placeholder": "Plan Name",
                                           "class": "form-control",
                                           "value":plan['plan_name']})
