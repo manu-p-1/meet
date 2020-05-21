@@ -135,7 +135,7 @@ def is_duplicate(mysql, field) -> bool:
     conn = mysql.connect()
     cursor = conn.cursor()
     q = '''SELECT plan_name FROM plan WHERE plan_name = %s'''
-    cursor.execute(q, field)
+    cursor.execute(q, field.data)
     if len(cursor.fetchall()) == 0:
         return False
     else:
@@ -148,7 +148,7 @@ def is_active(mysql, field) -> bool:
     now = datetime.now(timezone.utc)
     start_date = now.strftime("%Y-%m-%d %H:%M:%S")
     q = '''SELECT plan_name FROM plan WHERE plan_name = %s AND start_date > %s'''
-    cursor.execute(q, (field, start_date))
+    cursor.execute(q, (field.data, start_date))
     if len(cursor.fetchall()) == 0:
         return False
     else:
