@@ -2,7 +2,9 @@ import sys
 
 from flask import Blueprint, render_template, request, jsonify, redirect, flash, session, url_for
 import json
-from server import mysql
+from server import mysql, client
+from modules.routes.utils.forms import get_plan_form
+from models import Plan
 
 util_bp = Blueprint('util_bp', __name__,
                     template_folder='templates', static_folder='static')
@@ -67,3 +69,47 @@ def overview(ctx=None):
     print(json.dumps(e_payload))
 
     return json.dumps(e_payload)
+
+
+@util_bp.route('/manage_plan/', methods=['GET', 'POST'])
+def manage_plan():
+
+    print('entering route')
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    # p = Plan(cursor, conn=conn)
+
+    fund_choices = client.DEPT_MAPPINGS
+
+    search_query = request.args.get('value')
+    # plan_data = p.select_where('plan_name', search_query)
+    cursor.execute('SELECT * FROM PLAN where plan_name = %s',search_query)
+    plan_data = cursor.fetchall()
+
+    print(plan_data)
+
+    if len(plan_data) != 0:
+        session['CURRENT_PLAN_EDIT'] = plan_data[0][0]
+        
+
+        headers = [desc[0] for desc in cursor.description]
+        plan = zip(headers,plan_data[0])
+        formatted_plan ={table_headers: val for (
+                table_headers, val) in plan}
+        print(formatted_plan)
+
+        dept_code_query = cursor.execute(
+            'SELECT department FROM department_lookup WHERE id = %s', formatted_plan['dest_fund_FK'])
+
+        conn.close()
+        formatted_plan['dest_fund_FK'] = cursor.fetchall()[0][0]
+        formatted_plan['funding_amount'] = float(formatted_plan['funding_amount'])
+
+        form = get_plan_form(formatted_plan, session, fund_choices)
+        session['MANAGE_FORM'] = formatted_plan
+        print(form)
+        print('returning correctly')
+        return render_template('plan_form_partial.html', form=form)
+
+    return ''
