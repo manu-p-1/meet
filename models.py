@@ -79,13 +79,12 @@ class Plan(Model):
             if field.data == '':
                 field.data = None
 
-        update_query = '''UPDATE plan SET (plan_name = %s,funding_amount = %s,plan_justification = %s,memo = %s,start_date = %s,end_date = %s,
-                    source_fund_FK = %s, dest_fund_FK = %s,fund_individuals = %s,control_name = %s, control_window = %s,amount_limit = %s,usage_limit = %s)
+        update_query = '''UPDATE plan SET (plan_name = %s,plan_justification = %s,memo = %s,end_date = %s,
+                    fund_individuals = %s,control_name = %s, control_window = %s,amount_limit = %s,usage_limit = %s)
                     WHERE id = %s'''
-        self._cursor.execute(self._generic_insert, (form.planName.data, form.fundingAmount.data,
+        self._cursor.execute(update_query, (form.planName.data, 
                                                     form.planJustification.data, form.memo.data,
-                                                    form.startDate.data,
-                                                    form.endDate.data, form.sourceFund.data, form.destFund.data,
+                                                    form.endDate.data, 
                                                     form.fundIndivEmployeesToggle.data,
                                                     form.controlName.data, form.controlWindow.data,
                                                     form.amountLimit.data,

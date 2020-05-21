@@ -103,7 +103,9 @@ def manage_plan():
         return render_template('manage_plan/manage_plan_partial.html',current_date=current_date,form=ef)
     else:
         formatted_plan = session['MANAGE_FORM']
+        print(f'formatted_plan ---> {formatted_plan}')
         form = get_plan_form(formatted_plan,session,client.DEPT_MAPPINGS)
+        print(f'model form ----> {form}')
         if form.validate_on_submit():
             print(request.form, file=stderr)
 
@@ -115,3 +117,9 @@ def manage_plan():
 
             p = Plan(cursor, conn=conn)
             p.update(form,formatted_plan['id'])
+            
+            return jsonify(
+                status=True,
+                response=render_template(
+                    'create_plan/alert_partial.html', status=True)
+            )

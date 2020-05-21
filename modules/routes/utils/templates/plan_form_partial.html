@@ -1,4 +1,4 @@
-<form id="newPlanForm" action="{{ url_for('user_bp.create_plan') }}">
+<form id="newPlanForm" method="POST" action="{{ url_for('user_bp.manage_plan') }}">
     {{ form.csrf_token }}
     <div class="form-group">
         {{ form.planName.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
