@@ -106,38 +106,41 @@ class DateProper(object):
         except ValueError as ve:
             raise ValidationError(self.message)
 
+
 class Active(object):
-    def __init__(self,message=None,mysql=None):
+    def __init__(self, message=None, mysql=None):
         if not message:
             message = f'Requested plan is not active.'
         self.message = message
         self.mysql = mysql
-    
-    def __call__(self,form,field):
-        if not is_active(self.mysql,field):
+
+    def __call__(self, form, field):
+        if is_active(self.mysql, field):
             raise ValidationError(message=self.message)
 
+
 class NotDuplicate(object):
-    def __init__(self,message=None,mysql=None):
+    def __init__(self, message=None, mysql=None):
         if not message:
             message = f'Plan name is already in use.'
         self.message = message
         self.mysql = mysql
-    
-    def __call__(self,form,field):
-        if is_duplicate(self.mysql,field):
+
+    def __call__(self, form, field):
+        if is_duplicate(self.mysql, field):
             raise ValidationError(self.message)
-        
+
 
 def is_duplicate(mysql, field) -> bool:
     conn = mysql.connect()
     cursor = conn.cursor()
     q = '''SELECT plan_name FROM plan WHERE plan_name = %s'''
-    cursor.execute(q,(field))
+    cursor.execute(q, field)
     if len(cursor.fetchall()) == 0:
         return False
     else:
         return True
+
 
 def is_active(mysql, field) -> bool:
     conn = mysql.connect()
@@ -145,9 +148,8 @@ def is_active(mysql, field) -> bool:
     now = datetime.now(timezone.utc)
     start_date = now.strftime("%Y-%m-%d %H:%M:%S")
     q = '''SELECT plan_name FROM plan WHERE plan_name = %s AND start_date > %s'''
-    cursor.execute(q,(field, start_date))
+    cursor.execute(q, (field, start_date))
     if len(cursor.fetchall()) == 0:
         return False
     else:
         return True
-        
