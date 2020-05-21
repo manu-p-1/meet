@@ -1,0 +1,47 @@
+{% extends "dash_base.html" %}
+{% block base_title %}Create Plan{% endblock %}
+
+{% block base_head %}
+{{ super() }}
+<link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+<link href="/static/libs/daterangepicker/daterangepicker.css" rel="stylesheet">
+<script src="/static/libs/daterangepicker/moment.min.js"></script>
+<script src="/static/libs/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" href="/static/libs/jqueryui/jquery-ui.css">
+<script src="/static/libs/jqueryui/jquery-ui.min.js"></script>
+
+{% assets "dash_create_plan_css" %}
+<link rel="stylesheet" id="main-stylesheet" href="{{ ASSET_URL }}">
+{% endassets %}
+
+{% endblock %}
+
+{% block dashboard_main %}
+
+<div class="main-content-container container-fluid px-4">
+
+    <!-- Page Header -->
+    <div class="page-header row no-gutters py-4">
+        <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
+            <span class="text-uppercase page-subtitle">Company Planner</span>
+            <h3 class="page-title">Search For a Plan</h3>
+        </div>
+        <div class="input-group mt-3 mb-3">
+            <input id="planSearch" class="form-control nav-search-group" type="text" placeholder="Search"
+                aria-label="Search" name="search_query" aria-describedby="inputGroup-sizing-default">
+            <div class="input-group-append">
+                <button id="mainSearchSysBtn nav-search-group"
+                    class="btn btn-md m-0 px-4 py-2 z-depth-0 waves-effect btn btn-outline-secondary"
+                    type="submit"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+
+    </div>
+    <!-- End Page Header -->
+
+</div>
+{% assets "dash_create_plan_js" %}
+<script src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
+{% endblock dashboard_main %}

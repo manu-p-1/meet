@@ -88,3 +88,9 @@ def create_plan():
                 response=render_template(
                     'create_plan/alert_partial.html', form=form, status=False)
             )
+
+
+@user_bp.route('/manage_plan/', methods=['GET', 'POST'])
+# @login_required(session)
+def manage_plan():
+    return render_template('mange_plan/mange_plan.html')
