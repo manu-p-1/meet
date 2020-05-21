@@ -1,0 +1,108 @@
+<form id="newPlanForm" method="POST" action="{{ url_for('user_bp.manage_plan') }}">
+    {{ form.csrf_token }}
+    <div class="form-group">
+        {{ form.planName.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
+        {{ form.planName }}
+    </div>
+    <div class="form-group">
+        {{ form.fundingAmount.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">$</span>
+            </div>
+            {{ form.fundingAmount }}
+        </div>
+    </div>
+    <div class="form-group">
+        {{ form.planJustification.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
+        {{ form.planJustification }}
+    </div>
+    <div class="form-group">
+        {{ form.memo.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
+        {{ form.memo }}
+        <small class="float-right font-weight-bold" id="count_message"><span id="count_message_amt"></span></small>
+    </div>
+    <div class="form-group">
+        {{ form.startDate.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
+        <div id="blog-overview-date-range" class="input-group" style="">
+            {{ form.startDate }}
+            <span class="input-group-append">
+                <span class="input-group-text">
+                    <i class="material-icons"></i>
+                </span>
+            </span>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            {{ form.sourceFund.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
+            {{ form.sourceFund }}
+        </div>
+        <div class="form-group col-md-6">
+            {{ form.destFund.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
+            {{ form.destFund }}
+        </div>
+    </div>
+    <div class="custom-control custom-toggle custom-toggle-sm mb-3">
+        {{ form.fundIndivEmployeesToggle }}
+        {{ form.fundIndivEmployeesToggle.label(class_="custom-control-label") }}
+    </div>
+    <div id="employeesOnly" class="d-none">
+        <div id="employeeIDBoundary" class="card-specific">
+            <div class="form-row mb-3 position-relative ui-widget input-and-loader">
+                <label for="searchEmployee" class="text-muted font-italic ml-1 mb-0 pre-input-label">Search and Employee
+                    (First and Last Name)</label>
+                <input id="searchEmployee" type="search" class="form-control" placeholder="Enter Full Name">
+                <i class="fas fa-spinner fa-spin" id="employeesLoadingIcon"></i>
+            </div>
+            <div class="form-row mb-3" id="employeeIDBoundaryRow">
+
+            </div>
+        </div>
+        <div class="custom-control custom-toggle custom-toggle-sm mb-3">
+            {{ form.endDateToggle }}
+            {{ form.endDateToggle.label(class_="custom-control-label") }}
+        </div>
+        <div id="endDateGroup" class="form-group d-none">
+            {{ form.endDate.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
+            <div id="blog-overview-date-range" class="input-group" style="">
+                {{ form.endDate(required=False) }}
+                <span class="input-group-append">
+                    <span class="input-group-text">
+                        <i class="material-icons"></i>
+                    </span>
+                </span>
+            </div>
+        </div>
+        <div class="custom-control custom-toggle custom-toggle-sm mb-3">
+            {{ form.controlToggle }}
+            {{ form.controlToggle.label(class_="custom-control-label") }}
+        </div>
+        <div id="fundControls" class="d-none">
+            <small class="text-muted font-italic ml-1">Velocity Controls</small>
+            <div class="card-specific">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        {{ form.controlName.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
+                        {{ form.controlName(required=False) }}
+                    </div>
+                    <div class="form-group col-md-6">
+                        {{ form.controlWindow.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
+                        {{ form.controlWindow(required=False) }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        {{ form.amountLimit.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
+                        {{ form.amountLimit(required=False) }}
+                    </div>
+                    <div class="form-group col-md-6">
+                        {{ form.usageLimit.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
+                        {{ form.usageLimit(required=False) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form.updatePlanButton }}
+</form>

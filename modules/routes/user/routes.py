@@ -6,6 +6,7 @@ from flask import Blueprint, render_template, request, jsonify, redirect, flash,
 from modules.routes.user.forms import create_plan_form
 from modules.decorators.utils import login_required
 from modules.middleware.logic import dept_to_dept, dept_to_emp
+from modules.routes.utils.forms import get_empty_manage_form, get_plan_form
 
 user_bp = Blueprint('user_bp', __name__,
                     template_folder='templates', static_folder='static')
@@ -87,4 +88,38 @@ def create_plan():
                 status=False,
                 response=render_template(
                     'create_plan/alert_partial.html', form=form, status=False)
+            )
+
+
+@user_bp.route('/manage_plan/', methods=['GET', 'POST'])
+# @login_required(session)
+def manage_plan():
+    
+    if request.method == 'GET':
+        current_date = date.today()
+        current_date_fmt = current_date.strftime("%m/%d/%Y")
+        
+        ef = get_empty_manage_form(session,client.DEPT_MAPPINGS)
+        return render_template('manage_plan/manage_plan_partial.html',current_date=current_date,form=ef)
+    else:
+        formatted_plan = session['MANAGE_FORM']
+        print(f'formatted_plan ---> {formatted_plan}')
+        form = get_plan_form(formatted_plan,session,client.DEPT_MAPPINGS)
+        print(f'model form ----> {form}')
+        if form.validate_on_submit():
+            print(request.form, file=stderr)
+
+            # the below code is only valid for dept-to-dept transfers as of now
+            # feel free to test because there are 64 different ways
+            
+            conn = mysql.connect()
+            cursor = conn.cursor()
+
+            p = Plan(cursor, conn=conn)
+            p.update(form,formatted_plan['id'])
+            
+            return jsonify(
+                status=True,
+                response=render_template(
+                    'create_plan/alert_partial.html', status=True)
             )
