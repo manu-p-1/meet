@@ -147,7 +147,7 @@ def complete_employee_plan(plan_id):
             'user_token': et,
             'card_product_token': os.environ['SAM_CARD_PRODUCT_TOKEN']
         }
-        card = client.client_sdk.cards.create(et)
+        card = client.client_sdk.cards.create(payload)
     
     conn.commit()
     conn.close()
