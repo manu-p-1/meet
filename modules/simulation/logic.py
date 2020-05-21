@@ -15,6 +15,7 @@ INT_TO_LABEL = {
     3: "March"
 }
 
+
 def department_alloc():
     conn = mysql.connect()
     cursor = conn.cursor()
@@ -168,14 +169,14 @@ def current_outgoing_transactions(dept_code):
 
     amounts = []
     for e in e_list:
-        print(e,file=stderr)
-        cursor.execute(e_query, (e, twenty_four_ago,start_date))
+        print(e, file=stderr)
+        cursor.execute(e_query, (e, twenty_four_ago, start_date))
         cf = cursor.fetchall()
         print(cf, file=stderr)
-        if cf[0][0] != None:
+        if cf[0][0] is not None:
             amounts.append(cf[0][0])
 
-    cursor.execute(q, (token, twenty_four_ago,start_date))
+    cursor.execute(q, (token, twenty_four_ago, start_date))
 
     cf = cursor.fetchall()
     print(cf)
@@ -267,7 +268,7 @@ def plan_overview_six_months(dept_code):
     ORDER BY start_date DESC
     """
 
-    cursor.execute(q, (six_months_ago,start_date, dept_code))
+    cursor.execute(q, (six_months_ago, start_date, dept_code))
     cf = cursor.fetchall()
 
     plans_over_time = {}
