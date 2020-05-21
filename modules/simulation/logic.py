@@ -160,19 +160,27 @@ def current_outgoing_transactions(dept_code):
     WHERE src_token = %s AND create_time BETWEEN %s AND %s 
     GROUP BY src_token"""
 
+    e_query = '''SELECT SUM(t.amount) FROM transaction t
+    JOIN employee_card ec ON t.src_token = ec.ec_card_token
+    WHERE ec.ec_employee_token = %s
+    AND t.create_time BETWEEN %s AND %s
+    '''
+
     amounts = []
     for e in e_list:
-        cursor.execute(q, (e, twenty_four_ago,start_date))
+        print(e,file=stderr)
+        cursor.execute(e_query, (e, twenty_four_ago,start_date))
         cf = cursor.fetchall()
         print(cf, file=stderr)
-        if len(cf) != 0:
+        if cf[0][0] != None:
             amounts.append(cf[0][0])
 
-    cursor.execute(q, (token, start_date, twenty_four_ago))
+    cursor.execute(q, (token, twenty_four_ago,start_date))
 
     cf = cursor.fetchall()
+    print(cf)
     if len(cf) != 0:
-        amounts.append(cursor.fetchall()[0][0])
+        amounts.append(cf[0][0])
 
     tot = float(sum(amounts))
 
