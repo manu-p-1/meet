@@ -50,6 +50,8 @@ class MarqetaClient:
         self.DEPARTMENT_LIST = ['IT', 'AC', 'MK', 'HR', 'PD', 'RD',
                                 'SC',
                                 'LG']
+        self.READABLE_DEPARTMENTS = ['IT', 'ACCOUNTING', 'MARKETING', 'HUMAN RESOURCES',
+                                     'PRODUCTION', 'RESEARCH & DEVELOPMENT', 'SECURITY', 'LOGISTICS']
 
         self.DEPT_MAPPINGS = [('IT', 'IT'), ('AC', 'ACCOUNTING'), ('MK', 'MARKETING'), ('HR', 'HUMAN RESOURCES'),
                               ('PD', 'PRODUCTION'), ('RD',
@@ -115,7 +117,7 @@ class MarqetaClient:
 
         adjusted_percents = self.generate_percents()
 
-        for i,dep in enumerate(self.departments):
+        for i, dep in enumerate(self.departments):
             self.transactions.append(self.transfer(
                 amount_per_department * adjusted_percents[i], self.business.token, dep.token))
 
@@ -149,7 +151,6 @@ class MarqetaClient:
     def create_business(self, business):
         return self.client_sdk.businesses.create(business)
 
-
     def generate_percents(self):
         rs = []
         s = 0
@@ -157,7 +158,7 @@ class MarqetaClient:
             r = random.random()
             s += r
             rs.append(r)
-        
+
         return [i/s for i in rs]
 
     '''
@@ -227,8 +228,6 @@ class MarqetaClient:
     def retrieve_balance(self, token):
         return self.client_sdk.balances.find_for_user_or_business(token)
 
-    
-
     # CREATE DEPARTMENT USERS (BUSINESSES)
     '''
     Used to create departments (businesses).
@@ -238,7 +237,7 @@ class MarqetaClient:
 
     def create_department(self, department):
         dept_payload = {'token': self.BUSINESS_TOKEN + '_' + department + str(self.DEPT_TOKEN_COUNTER),
-                        'business_name_dba': department
+                        'business_name_dba': self.READABLE_DEPARTMENTS[self.DEPT_TOKEN_COUNTER]
                         }
         # print(f'dept_payload: {dept_payload}')
         self.DEPT_TOKEN_COUNTER += 1
