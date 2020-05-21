@@ -50,8 +50,8 @@ class MarqetaClient:
         self.DEPARTMENT_LIST = ['IT', 'AC', 'MK', 'HR', 'PD', 'RD',
                                 'SC',
                                 'LG']
-        self.READABLE_DEPARTMENTS = ['IT', 'ACCOUNTING', 'MARKETING', 'HUMAN RESOURCES',
-                                     'PRODUCTION', 'RESEARCH & DEVELOPMENT', 'SECURITY', 'LOGISTICS']
+        self.READABLE_DEPARTMENTS = {'IT':'IT', 'AC':'ACCOUNTING', 'MK':'MARKETING', 'HR':'HUMAN RESOURCES',
+                                     'PD':'PRODUCTION', 'RD':'RESEARCH & DEVELOPMENT', 'SC':'SECURITY', 'LG':'LOGISTICS'}
 
         self.DEPT_MAPPINGS = [('IT', 'IT'), ('AC', 'ACCOUNTING'), ('MK', 'MARKETING'), ('HR', 'HUMAN RESOURCES'),
                               ('PD', 'PRODUCTION'), ('RD',
@@ -237,7 +237,7 @@ class MarqetaClient:
 
     def create_department(self, department):
         dept_payload = {'token': self.BUSINESS_TOKEN + '_' + department + str(self.DEPT_TOKEN_COUNTER),
-                        'business_name_dba': self.READABLE_DEPARTMENTS[self.DEPT_TOKEN_COUNTER]
+                        'business_name_dba': department
                         }
         # print(f'dept_payload: {dept_payload}')
         self.DEPT_TOKEN_COUNTER += 1

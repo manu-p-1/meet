@@ -62,7 +62,7 @@ def department_utilization():
     """
 
     for dept in client.departments:
-        name = dept.business_name_dba
+        name = client.READABLE_DEPARTMENTS[dept.business_name_dba]
         cursor.execute(q, dept.token)
         spending[name] = float(cursor.fetchall()[0][0])
 
