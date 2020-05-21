@@ -9,7 +9,11 @@ import requests as r
 from server import client, mysql
 
 MIDS = ['123456890', '111111', '524352', '123421']
-
+INT_TO_LABEL = {
+    1: "January",
+    2: "February",
+    3: "March"
+}
 
 def department_alloc():
     conn = mysql.connect()
@@ -240,11 +244,39 @@ def department_employee__monthly_spending(dept_code):
     return employee_to_spending
 
 
-def weekly_department_transactions():
+def plan_overview_six_months(dept_code):
     conn = mysql.connect()
     cursor = conn.cursor()
 
-    q = """"""
+    now = time_now()
+    start_date = now.strftime("%Y-%m-%d %H:%M:%S")
+    six_months_ago = (now - timedelta(days=365 / 2)).strftime("%Y-%m-%d %H:%M:%S")
+
+    q = """
+    SELECT plan_name, funding_amount, start_date FROM plan
+    WHERE start_date BETWEEN %s AND %s
+    AND source_fund_FK = (SELECT id FROM department_lookup WHERE department = %s)
+    """
+
+    cursor.execute(q, (start_date, six_months_ago, dept_code))
+    cf = cursor.fetchall()
+
+    plans_over_time = {}
+
+    for record in cf:
+        time = datetime.strptime(record[2], '%Y-%m-%d %H:%M:%S')
+        time_month = time.month
+        if time_month not in plans_over_time:
+            plans_over_time[time_month] = [{
+                "plan_name": record[0],
+                "funding_amount": float(record[1])
+            }]
+        else:
+            plans_over_time[time_month].append({
+                "plan_name": record[0],
+                "funding_amount": float(record[1])
+            })
+    return plans_over_time
 
 
 def time_now():
