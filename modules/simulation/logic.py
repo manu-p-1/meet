@@ -162,7 +162,7 @@ def current_outgoing_transactions(dept_code):
 
     amounts = []
     for e in e_list:
-        cursor.execute(q, (e, start_date, twenty_four_ago))
+        cursor.execute(q, (e, twenty_four_ago,start_date))
         cf = cursor.fetchall()
         print(cf, file=stderr)
         if len(cf) != 0:
@@ -256,15 +256,17 @@ def plan_overview_six_months(dept_code):
     SELECT plan_name, funding_amount, start_date FROM plan
     WHERE start_date BETWEEN %s AND %s
     AND source_fund_FK = (SELECT id FROM department_lookup WHERE department = %s)
+    ORDER BY start_date DESC
     """
 
-    cursor.execute(q, (start_date, six_months_ago, dept_code))
+    cursor.execute(q, (six_months_ago,start_date, dept_code))
     cf = cursor.fetchall()
 
     plans_over_time = {}
 
     for record in cf:
-        time = datetime.strptime(record[2], '%Y-%m-%d %H:%M:%S')
+        # time = datetime.strptime(record[2], '%Y-%m-%d %H:%M:%S')
+        time = record[2]
         time_month = time.month
         if time_month not in plans_over_time:
             plans_over_time[time_month] = [{

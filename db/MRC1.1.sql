@@ -162,23 +162,23 @@ CREATE TABLE `mrcdb`.`employee_card`
 
 INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
                  dest_fund_FK, fund_individuals, complete)
-VALUES ('Travel To England', 1400, 'Travel', 'This is a travel plan', "2020-11-25 23:20:20", "2020-11-29 23:20:20", 1,
+VALUES ('Travel To England', 1400, 'Travel', 'This is a travel plan', "2019-11-25 23:20:20", "2019-11-29 23:20:20", 1,
         1, 1, 1);
 
 INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
                  dest_fund_FK, fund_individuals, complete)
-VALUES ('Travel To China', 1600, 'Travel', 'This is a travel plan', "2020-11-21 05:20:20", "2020-01-29 05:20:20", 2, 2,
+VALUES ('Travel To China', 1600, 'Travel', 'This is a travel plan', "2019-11-21 05:20:20", "2020-01-29 05:20:20", 2, 2,
         1, 1);
 
 
 INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
                  dest_fund_FK, fund_individuals, complete)
-VALUES ('Travel To Taiwan', 2250, 'Travel', 'This is a travel plan', "2020-12-25 23:20:20", "2020-12-29 23:20:20", 1, 1,
+VALUES ('Travel To Taiwan', 2250, 'Travel', 'This is a travel plan', "2019-12-25 23:20:20", "2019-12-29 23:20:20", 1, 1,
         1, 1);
 
 INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
                  dest_fund_FK, fund_individuals, complete)
-VALUES ('Travel To India', 3256, 'Travel', 'This is a travel plan', "2020-12-21 05:20:20", "2020-12-29 05:20:20", 2, 2,
+VALUES ('Travel To India', 3256, 'Travel', 'This is a travel plan', "2019-12-21 05:20:20", "2019-12-29 05:20:20", 2, 2,
         1, 1);
 
 
