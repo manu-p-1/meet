@@ -1,10 +1,8 @@
 from modules.decorators.utils import login_required
-from server import mysql
 from flask import Blueprint, render_template, request, jsonify, redirect, flash, session, url_for
-from server import client
 from modules.simulation.logic import department_alloc, department_utilization, current_business_balance, \
     department_balance, department_employee_count, current_outgoing_transactions, active_plans, \
-    department_employee__monthly_spending
+    department_employee__monthly_spending, plan_overview_six_months
 
 widgets_bp = Blueprint('widgets_bp', __name__)
 
@@ -55,3 +53,9 @@ def wid_active_plans():
 @login_required(session)
 def wid_department_employee__monthly_spending():
     return jsonify(department_employee__monthly_spending(session['manager_dept']))
+
+
+@widgets_bp.route('/dash/plan_overview_six_months/', methods=['GET'])
+@login_required(session)
+def wid_plan_overview_six_months():
+    return jsonify(plan_overview_six_months(session['manager_dept']))
