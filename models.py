@@ -21,8 +21,8 @@ class Model(ABC):
         self._cursor.execute(self._generic_select)
         return self._cursor.fetchall()
 
-    def select_where(self, condition1, condition2):
-        self._cursor.execute(self._generic_select_where, (condition1, condition2))
+    def select_where(self, column_name, condition):
+        self._cursor.execute(self._generic_select_where, (column_name, condition))
         return self._cursor.fetchall()
 
     def close_connection(self):
@@ -70,19 +70,6 @@ class Plan(Model):
                                                     form.controlName.data, form.controlWindow.data,
                                                     form.amountLimit.data,
                                                     form.usageLimit.data, False))
-
-        # this is ok for now but what if two plans have the same name? Fetch one probably won't work.
-        v = """SELECT id FROM `plan` WHERE plan_name = (%s)"""
-        self._cursor.execute(v, form.planName.data)
-        plid = self._cursor.fetchone()[0]
-
-        print("EMPLOYEES OPTIONAL", form.employeesOptional.data, file=stderr)
-        if len(form.employeesOptional.data) != 0 and form.employeesOptional.data[0] != '':
-            q = """INSERT INTO `employee_plan`(ep_employee_FK, ep_plan_fk) 
-                                  VALUES ( %s,  %s)"""
-            for employeeField in form.employeesOptional.data:
-                print("EMPLOYEE FIELD", employeeField, file=stderr)
-                self._cursor.execute(q, (employeeField['id'], plid))
 
         if self.is_immediate_commit:
             self._conn.commit()
@@ -176,6 +163,18 @@ class EmployeePlan(Model):
 
     def insert(self, employee_token, plan_name, card_token):
         self._cursor.execute(self._generic_insert, (employee_token, plan_name, card_token))
+
+        if self.is_immediate_commit:
+            self._conn.commit()
+
+    def insert_with_id(self, employee_id, plan_name, card_token):
+
+        insert = '''INSERT INTO employee_plan(ep_employee_FK, ep_plan_fk, ep_card_token) 
+                    VALUES (
+                    (SELECT token FROM employee WHERE id = %s), 
+                    (SELECT id FROM plan WHERE plan_name = %s),
+                    %s)'''
+        self._cursor.execute(insert, (employee_id, plan_name, card_token))
 
         if self.is_immediate_commit:
             self._conn.commit()
