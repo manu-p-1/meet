@@ -143,8 +143,12 @@ def complete_employee_plan(plan_id):
         employee_tokens.append(cursor.fetchone()[0])
 
     for et in employee_tokens:
-        card = client.client_sdk.cards.list_for_user(et)
-        for c in card:
-            print(c)
-        break
+        payload = {
+            'user_token': et,
+            'card_product_token': os.environ['SAM_CARD_PRODUCT_TOKEN']
+        }
+        card = client.client_sdk.cards.create(et)
+    
+    conn.commit()
+    conn.close()
 
