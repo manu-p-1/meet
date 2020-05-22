@@ -28,7 +28,7 @@ body{
 	}
 }
 
-@media (max-width: 576px) {
+@media (max-width: 476px) {
 
     #mainContent {
         width: 100%;
@@ -50,8 +50,7 @@ body{
     min-height: calc(100vh);
 }
 #acctContainer {
-    width: 576px !important;
-
+    width: 476px !important;
     position: absolute;
     left: 50%;
     top: 50%;
@@ -88,4 +87,76 @@ body{
     #forgotLink {
         margin-bottom: 5px;
     }
+}
+
+@media (max-width: 992px) {
+    .footer-explanation {
+        border: none !important;
+        padding-right: 15px !important;
+    }
+
+    .reg-for-free {
+        padding-bottom: 20px;
+    }
+
+    .title-holder {
+        padding-right: 15px !important;
+    }
+
+    .left-border {
+        padding-left: 15px !important;
+    }
+}
+
+@media (min-width: 993px) {
+    footer .rel-links a:hover {
+        border: 1.5px solid;
+        border-radius: 5px;
+        -webkit-transition: all .01s ease;
+    }
+}
+
+footer .rel-links a {
+    padding: 10px;
+}
+
+.right-border {
+    padding-right: 55px;
+}
+
+.left-border {
+    padding-left: 55px;
+}
+
+.main-footer-content {
+    max-width: calc(100vw - 150px) !important;
+}
+
+#amazonLink:hover {
+    color: #028df5;
+}
+
+.fa-bootstrap:hover {
+    color: #602C50 !important;
+    background-color: white;
+}
+
+.fa-mdb:hover, .fa-python:hover {
+    color: #028df5 !important;
+}
+
+.fa-database:hover {
+    color: #cccccc !important;
+}
+
+.fa-microsoft:hover {
+    color: #00A1F1 !important;
+}
+
+.fa-js:hover {
+    color: #f7df1e !important;
+}
+
+.fa-running:hover {
+    color: limegreen !important;
 }
