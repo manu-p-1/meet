@@ -84,9 +84,9 @@ CREATE TABLE IF NOT EXISTS `mrcdb`.`plan`
     CONSTRAINT `source_fund_FK`
         FOREIGN KEY (`source_fund_FK`)
             REFERENCES `mrcdb`.`department_lookup` (`id`)
-)   ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8mb4
-    COLLATE = utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
@@ -125,9 +125,9 @@ CREATE TABLE IF NOT EXISTS `mrcdb`.`manager`
     CONSTRAINT `manager_dept_FK`
         FOREIGN KEY (`manager_dept_FK`)
             REFERENCES `mrcdb`.`department_lookup` (`id`)
-)   ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8mb4
-    COLLATE = utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
 
 
 CREATE TABLE `mrcdb`.`transaction`
@@ -144,12 +144,12 @@ CREATE TABLE `mrcdb`.`transaction`
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
+
 CREATE TABLE `mrcdb`.`employee_card`
 (
     `ec_employee_token` varchar(50) NOT NULL,
     `ec_card_token`     varchar(50) NOT NULL,
-    PRIMARY KEY (`ec_card_token`),
-    UNIQUE KEY `ec_card_token_UNIQUE` (`ec_card_token`),
+    PRIMARY KEY (`ec_employee_token`, `ec_card_token`),
     CONSTRAINT `ec_employee_token` FOREIGN KEY (`ec_employee_token`) REFERENCES `employee` (`token`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
