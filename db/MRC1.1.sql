@@ -146,10 +146,9 @@ CREATE TABLE `mrcdb`.`transaction`
 
 CREATE TABLE `mrcdb`.`employee_card`
 (
-    `id`                int            NOT NULL AUTO_INCREMENT,
     `ec_employee_token` varchar(50) NOT NULL,
     `ec_card_token`     varchar(50) NOT NULL,
-    PRIMARY KEY (`id`),
+    PRIMARY KEY (`ec_card_token`),
     UNIQUE KEY `ec_card_token_UNIQUE` (`ec_card_token`),
     CONSTRAINT `ec_employee_token` FOREIGN KEY (`ec_employee_token`) REFERENCES `employee` (`token`)
 ) ENGINE = InnoDB
