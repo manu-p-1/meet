@@ -85,6 +85,7 @@ def simulate(card_token: str, amount: float, mid: str):
 
     resp = json.loads(r.post('https://sandbox-api.marqeta.com/v3/simulate/authorization', headers=headers,
                              data=payload, auth=(os.environ['MY_APP'], os.environ['MY_ACCESS'])).content)
+    print(json.dumps(resp,indent=4))
 
     return Authorization(resp['transaction'])
 
@@ -97,7 +98,7 @@ def simulate_startup():
 
     for dept, e_list in client.department_employees.items():
 
-        dept_bal = client.retrieve_balance(dept).gpa.available_balance * .1
+        dept_bal = client.retrieve_balance(dept).gpa.available_balance * (random.randint(1,20)/100)
 
         employees = random.sample(e_list, 5)
 

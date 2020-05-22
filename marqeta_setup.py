@@ -121,7 +121,7 @@ class MarqetaClient:
 
         self.business = self.create_business(self.BUSINESS_PAYLOAD)
 
-        master_fund_amount = float(random.randint(100_000, 1_000_000))
+        master_fund_amount = float(random.randint(1_500_000, 10_000_000))
         self.fund(master_fund_amount, gpa_type='business',
                   fund_source_token=self.funding_source.token, dest_token=self.business.token)
 

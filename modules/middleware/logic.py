@@ -153,7 +153,7 @@ def dept_to_emp(plan_id):
     conn.close()
 
     complete_employee_plan(plan_id)
-    #simulate_employee_plan(plan_id)
+    simulate_employee_plan(plan_id)
 
 
 def complete_employee_plan(plan_id):
