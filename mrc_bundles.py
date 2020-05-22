@@ -37,7 +37,8 @@ bundles = {
                       filters=closure,
                       output=f'dist/dash/{gen_uuid()}.js'),
 
-    "dash_css": Bundle('user_bp/css/*.css',
+    "dash_css": Bundle('user_bp/css/dash-base.css',
+                       'user_bp/css/shards-dashboards.1.1.0.css',
                        filters='cssmin',
                        output=f'dist/dash/{gen_uuid()}.css'),
 
