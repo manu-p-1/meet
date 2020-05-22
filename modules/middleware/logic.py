@@ -1,8 +1,11 @@
 from marqeta import Client
 from server import mysql, client
+from datetime import datetime
+from models import EmployeeCard
 import json
 import os
 import random
+
 
 # open Client connection
 def openClient():
@@ -118,12 +121,11 @@ def dept_to_emp(plan_id):
         cursor.execute(query, row[0])
         dest_token = cursor.fetchall()[0][0]
         transfer = client.transfer(funding_amount, source_token, dest_token, dest_token_is_user=True)
-        #print(transfer)
 
     conn.commit()
     conn.close()
 
-    # now we can make a function that adds cards based on the transfer (either here or from transaction table)
+    complete_employee_plan(plan_id)
 
 
 def complete_employee_plan(plan_id):
@@ -136,19 +138,41 @@ def complete_employee_plan(plan_id):
     # list of employees IDs under a plan
     employee_ids = cursor.fetchall()
 
+    query = 'SELECT start_date, end_date FROM plan WHERE id = %s'
+    cursor.execute(query, plan_id)
+    records = cursor.fetchall()
+    # start date
+    start_date = records[0][0]
+    # end date
+    end_date = records[0][1]
+
+    # get the days between
+    if end_date:
+        delta = (end_date) - (start_date)
+        days = delta.days
+
     query = 'SELECT token FROM employee WHERE id = %s'
     employee_tokens = []
     for eid in employee_ids:
         cursor.execute(query,eid[0])
         employee_tokens.append(cursor.fetchone()[0])
 
+    
     for et in employee_tokens:
         payload = {
             'user_token': et,
-            'card_product_token': os.environ['SAM_CARD_PRODUCT_TOKEN']
+            'card_product_token': os.environ['SAM_CARD_PRODUCT_TOKEN'],
         }
+        
+        if end_date:
+            payload['expiration_offset'] = {
+                "unit": "DAYS",
+                "value": days
+            }
+        ec = EmployeeCard(cursor, conn, True)
         card = client.client_sdk.cards.create(payload)
-    
+        ec.insert(et, card.token)
+
     conn.commit()
     conn.close()
 
