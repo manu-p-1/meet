@@ -140,10 +140,9 @@ CREATE TABLE `mrcdb`.`transaction`
     `src_token_is_card` bit(1) DEFAULT b'0',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 49
+  AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
-
 
 CREATE TABLE `mrcdb`.`employee_card`
 (
@@ -192,6 +191,18 @@ VALUES ('Travel To Los Angeles', 500, 'Travel', 'This is a travel plan', "2020-0
 
 INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
                  dest_fund_FK, fund_individuals, complete)
+VALUES ('Travel To Nantucket', 500, 'Travel', 'This is a travel plan', "2020-01-20 23:20:20", "2020-01-22 23:20:20", 2,
+        2,
+        1, 1);
+
+INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
+                 dest_fund_FK, fund_individuals, complete)
+VALUES ('Travel To Austin', 500, 'Travel', 'This is a travel plan', "2020-01-04 05:20:20", "2020-01-15 05:20:20",
+        2, 2, 1, 1);
+
+
+INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
+                 dest_fund_FK, fund_individuals, complete)
 VALUES ('Travel To New York', 400, 'Travel', 'This is a travel plan', "2020-02-05 05:20:20", "2020-01-15 05:20:20", 5,
         5, 1, 1);
 
@@ -209,6 +220,17 @@ VALUES ('Travel To Salt Lake City', 400, 'Travel', 'This is a travel plan', "202
 INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
                  dest_fund_FK, fund_individuals, complete)
 VALUES ('Travel To Chicago', 1235, 'Travel', 'This is a travel plan', "2020-03-20 05:20:20", "2020-03-25 05:20:20", 2,
+        2, 1, 1);
+
+
+INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
+                 dest_fund_FK, fund_individuals, complete)
+VALUES ('Travel To Montgomery', 400, 'Travel', 'This is a travel plan', "2020-03-15 05:20:20",
+        "2020-03-29 05:20:20", 2, 2, 1, 1);
+
+INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
+                 dest_fund_FK, fund_individuals, complete)
+VALUES ('Travel To Miami', 2654, 'Travel', 'This is a travel plan', "2020-03-20 05:20:20", "2020-03-25 05:20:20", 2,
         2, 1, 1);
 
 
