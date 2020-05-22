@@ -52,6 +52,7 @@ def login(ctx=None):
                     session['manager_dept'] = department
                     session['manager_title'] = manager[4]
                     session['manager_gender'] = manager[6]
+                    print(session)
                     return redirect(url_for('user_bp.overview'))
                 else:
                     flash("Account could not be found", category='err')

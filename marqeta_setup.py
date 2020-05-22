@@ -71,7 +71,7 @@ class MarqetaClient:
                 l_name = self.fake.last_name_male()
             else:
                 f_name = self.fake.first_name_female()
-                l_name - self.fake.last_name_female()
+                l_name = self.fake.last_name_female()
             self.MANAGERS[dept] = {
                 'first_name': f_name,
                 'last_name' : l_name,
