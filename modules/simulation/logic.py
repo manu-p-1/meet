@@ -136,7 +136,7 @@ def department_balance(dept_code):
                     "available_balance": float(bal.gpa.available_balance),
                     "ledger_balance": float(bal.gpa.ledger_balance)
                 }
-    raise Exception("Idiot. There isn't even a department with this name")
+    raise Exception("The department code passed matches to no known department")
 
 
 def department_employee_count(dept_code):
@@ -147,7 +147,7 @@ def department_employee_count(dept_code):
             if dept_token == token:
                 return len(e_list)
 
-    raise Exception("Idiot. There isn't even a department with this name")
+    raise Exception("The department code passed matches to no known department")
 
 
 def current_outgoing_transactions(dept_code):
@@ -254,49 +254,51 @@ def department_employee__monthly_spending(dept_code):
 
     for record in cf:
         employee_to_spending[record[0]] = {
+            "id": record[0],
             "name": record[1] + ' ' + record[2],
-            "current_gpa_bal": client.retrieve_balance(record[3]).gpa.available_balance,
-            "weekly_spending": float(record[4])
+            "gpa_bal": client.retrieve_balance(record[3]).gpa.available_balance,
+            "monthly_spending": float(record[4])
         }
 
     return employee_to_spending
 
 
-def plan_overview_six_months(dept_code):
+def plan_avg_six_months(dept_code):
     conn = mysql.connect()
     cursor = conn.cursor()
 
+    """
+        January: {
+            avg: 1515
+        },
+        February: {
+            avg: 3256
+        }
+    
+    """
     now = time_now()
     start_date = now.strftime("%Y-%m-%d %H:%M:%S")
     six_months_ago = (now - timedelta(days=365 / 2)).strftime("%Y-%m-%d %H:%M:%S")
 
     q = """
-    SELECT plan_name, funding_amount, start_date FROM plan
-    WHERE start_date BETWEEN %s AND %s
-    AND source_fund_FK = (SELECT id FROM department_lookup WHERE department = %s)
-    ORDER BY start_date DESC
+        SELECT avg(funding_amount), month(start_date) FROM plan
+        WHERE start_date BETWEEN %s AND %s
+        AND source_fund_FK = (SELECT id FROM department_lookup WHERE department = %s)
+        GROUP BY month(start_date)
+        ORDER BY start_date DESC;
     """
 
     cursor.execute(q, (six_months_ago, start_date, dept_code))
     cf = cursor.fetchall()
 
-    plans_over_time = {}
+    plan_avg = {}
 
     for record in cf:
-        # time = datetime.strptime(record[2], '%Y-%m-%d %H:%M:%S')
-        time = record[2]
-        time_month = time.month
-        if time_month not in plans_over_time:
-            plans_over_time[time_month] = [{
-                "plan_name": record[0],
-                "funding_amount": float(record[1])
-            }]
-        else:
-            plans_over_time[time_month].append({
-                "plan_name": record[0],
-                "funding_amount": float(record[1])
-            })
-    return plans_over_time
+        plan_avg[INT_MONTHS[record[1]]] = {
+            "avg": float(record[0])
+        }
+
+    return plan_avg
 
 
 def time_now():
