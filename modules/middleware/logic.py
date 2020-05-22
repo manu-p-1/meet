@@ -5,8 +5,10 @@ from models import EmployeeCard, Transaction
 import json
 import os
 import random
-
 from modules.simulation.logic import simulate_employee_plan, MIDS
+from apscheduler.schedulers.background import BackgroundScheduler
+import time
+import atexit
 
 # open Client connection
 def openClient():
@@ -21,16 +23,21 @@ def openClient():
                          client_payload['access_token'], client_payload['timeout'])
     return client
 
-def BackgroundScheduler():
-    pass
 
-
+def createBackgroundScheduler():
+    scheduler = BackgroundScheduler(daemon=True)
+    scheduler.add_job(func=executeOrders, trigger="interval", seconds=10)
+    scheduler.start()
+    print("!!!@@@               Running Backgroun Scheduler @@@                 !!!")
+    # Shut down the scheduler when exiting the app
+    atexit.register(lambda: scheduler.shutdown())
 
 # executeOrders
 # the plan_ids should be a list of plan ids, as stored in the db
 # This will come from some func that queries the db for all
 # past due and store them as a list
-def executerOrders():
+def executeOrders():
+    #print("Executing Orders")
     conn = mysql.connect()
     cursor = conn.cursor()
     query = 'SELECT id, fund_individuals FROM plan WHERE start_date < NOW() AND complete = 0'
@@ -91,17 +98,16 @@ def dept_to_dept(plan_id):
     cursor.execute(query, dest_fund_FK)
     dest_token = cursor.fetchall()[0][0]
 
-    # conn.commit()
-    # conn.close()
-
     transfer = client.transfer(funding_amount, source_token, dest_token, dest_token_is_user=False)
     
     t = Transaction(cursor,conn=conn)
     t.insert(source_token,dest_token,Transaction.current_time(transfer.created_time),funding_amount)
+
+    query = 'UPDATE plan SET complete = 1 WHERE id = %s'
+    cursor.execute(query, plan_id)
+
     conn.commit()
     conn.close()
-
-    #print(transfer)
 
 def dept_to_emp(plan_id):
     conn = mysql.connect()
@@ -147,7 +153,7 @@ def dept_to_emp(plan_id):
     conn.close()
 
     complete_employee_plan(plan_id)
-    simulate_employee_plan(plan_id)
+    #simulate_employee_plan(plan_id)
 
 
 def complete_employee_plan(plan_id):
@@ -195,7 +201,8 @@ def complete_employee_plan(plan_id):
         card = client.client_sdk.cards.create(payload)
         ec.insert(et, card.token)
 
+    query = 'UPDATE plan SET complete = 1 WHERE id = %s'
+    cursor.execute(query, plan_id)
+
     conn.commit()
     conn.close()
-
-
