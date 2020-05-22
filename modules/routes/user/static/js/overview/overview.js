@@ -5,102 +5,79 @@ $(document).ready(function () {
 
     //
     // Small Stats
-    //
 
-    // Datasets
-    var boSmallStatsDatasets = [
-        {
-            backgroundColor: 'rgba(0, 184, 216, 0.1)',
-            borderColor: 'rgb(0, 184, 216)',
-            data: [1, 2, 1, 3, 5, 4, 0],
-        },
-        {
-            backgroundColor: 'rgba(23,198,113,0.1)',
-            borderColor: 'rgb(23,198,113)',
-            data: [1, 2, 3, 3, 3, 4, 4]
-        },
-        {
-            backgroundColor: 'rgba(255,180,0,0.1)',
-            borderColor: 'rgb(255,180,0)',
-            data: [2, 3, 3, 3, 4, 3, 3]
-        },
-        {
-            backgroundColor: 'rgba(255,65,105,0.1)',
-            borderColor: 'rgb(255,65,105)',
-            data: [1, 7, 1, 3, 1, 4, 8]
-        },
-        {
-            backgroundColor: 'rgb(0,123,255,0.1)',
-            borderColor: 'rgb(0,123,255)',
-            data: [3, 2, 3, 2, 4, 5, 4]
-        }
-    ];
+    const ERROR = "An error occurred.";
 
-    // Options
-    function boSmallStatsOptions(max) {
-        return {
-            maintainAspectRatio: true,
-            responsive: true,
-            // Uncomment the following line in order to disable the animations.
-            // animation: false,
-            legend: {
-                display: false
-            },
-            tooltips: {
-                enabled: false,
-                custom: false
-            },
-            elements: {
-                point: {
-                    radius: 0
-                },
-                line: {
-                    tension: 0.3
-                }
-            },
-            scales: {
-                xAxes: [{
-                    gridLines: false,
-                    scaleLabel: false,
-                    ticks: {
-                        display: false
-                    }
-                }],
-                yAxes: [{
-                    gridLines: false,
-                    scaleLabel: false,
-                    ticks: {
-                        display: false,
-                        // Avoid getting the graph line cut of at the top of the canvas.
-                        // Chart.min.js bug link: https://github.com/chartjs/Chart.js/issues/4790
-                        suggestedMax: max
-                    }
-                }],
-            },
-        };
+    function businessBalance() {
+        let ref = $("#businessBalance");
+        let loader = $("#businessBalanceLoading");
+        let loaderText = $("#businessBalanceLoadingText");
+        $.getJSON('/user/widgets/dash/current_business_balance/', function (data) {
+            ref.text(data["available_balance"]);
+            ref.removeClass("d-none");
+            loader.remove();
+        }).fail(function () {
+            loaderText.text(ERROR);
+        });
     }
 
-    // Generate the small charts
-    boSmallStatsDatasets.map(function (el, index) {
-        var chartOptions = boSmallStatsOptions(Math.max.apply(Math, el.data) + 1);
-        var ctx = document.getElementsByClassName('blog-overview-stats-small-' + (index + 1));
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ["Label 1", "Label 2", "Label 3", "Label 4", "Label 5", "Label 6", "Label 7"],
-                datasets: [{
-                    label: 'Today',
-                    fill: 'start',
-                    data: el.data,
-                    backgroundColor: el.backgroundColor,
-                    borderColor: el.borderColor,
-                    borderWidth: 1.5,
-                }]
-            },
-            options: chartOptions
+    function departmentBalance() {
+        let ref = $("#departmentBalance");
+        let loader = $("#departmentBalanceLoading");
+        let loaderText = $("#departmentBalanceLoadingText");
+        $.getJSON('/user/widgets/dash/department_balance/', function (data) {
+            ref.text(data["available_balance"]);
+            ref.removeClass("d-none");
+            loader.remove();
+        }).fail(function () {
+            loaderText.text(ERROR);
         });
-    });
+    }
 
+    function employeeCount() {
+        let ref = $("#employeeCount");
+        let loader = $("#employeeCountLoading");
+        let loaderText = $("#employeeCountLoadingText");
+        $.getJSON('/user/widgets/dash/department_employee_count/', function (data) {
+            ref.text(data["amount"]);
+            ref.removeClass("d-none");
+            loader.remove();
+        }).fail(function () {
+            loaderText.text(ERROR);
+        });
+    }
+
+    function outgoingTransactions() {
+        let ref = $("#outgoingTransactions");
+        let loader = $("#outgoingTransactionsLoading");
+        let loaderText = $("#outgoingTransactionsText");
+        $.getJSON('/user/widgets/dash/current_outgoing_transactions/', function (data) {
+            ref.text(data["number_transactions"]);
+            ref.removeClass("d-none");
+            loader.remove();
+        }).fail(function () {
+            loaderText.text(ERROR);
+        });
+    }
+
+    function activePlans() {
+        let ref = $("#activePlans");
+        let loader = $("#activePlansLoading");
+        let loaderText = $("#activePlansText");
+        $.getJSON('/user/widgets/dash/active_plans/', function (data) {
+            ref.text(data["total"]);
+            ref.removeClass("d-none");
+            loader.remove();
+        }).fail(function () {
+            loaderText.text(ERROR);
+        });
+    }
+
+    businessBalance();
+    departmentBalance();
+    employeeCount();
+    outgoingTransactions();
+    activePlans();
 
     //
     // Blog Overview Users
@@ -210,70 +187,190 @@ $(document).ready(function () {
     // Render the chart.
     window.BlogOverviewUsers.render();
 
+
+    //
+    // Plan avg line graph
+    //
+
+    var planDepartment = undefined;
+    var xyData = [];
+    var xyDataLabels = [];
+    $.getJSON('/user/widgets/dash/plan_avg_six_months/', function (data, status, xhr) {
+        xyDataLabels = Object.keys(data['data']);
+        planDepartment = data['department'];
+        $.each(data['data'], function (key, val) {
+            console.log(key, val);
+            let point = {};
+            point["x"] = key;
+            point["y"] = val['avg'];
+            xyData.push(point)
+        });
+        $("#planAvgSixMonthsLoading").remove();
+        loadAvgData();
+    }).fail(function () {
+        let ref = $("planAvgSixMonthsLoadingText");
+        ref.text(ERROR);
+        ref.prev().remove()
+    });
+
+    console.info("XYDATA", xyData);
+
+    function loadAvgData() {
+        var config = {
+            type: 'line',
+            data: {
+                labels: xyDataLabels,
+                datasets: [{
+                    label: `${planDepartment} Plans`,
+                    backgroundColor: "rgba(103, 58, 183, 1)",
+                    borderColor: "rgba(139,69,230,0.76)",
+                    data: xyData,
+                    fill: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Plan Average Overview'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Month'
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Amount'
+                        }
+                    }]
+                }
+            }
+        };
+
+        window.planOverview = new Chart($("#planAvgSixMonths")[0], config);
+    }
+
     //
     // Department Allocation Pie Chart
     //
 
-    var deptList = [];
-    var amountList = [];
+    const deptList = [];
+    const amountList = [];
     $.getJSON('/user/widgets/dash/department_allocation/', function (data, status, xhr) {
-        console.log(data);
         $.each(data, function (key, val) {
             deptList.push(key.replace(/^\w/, c => c.toUpperCase()));
             amountList.push(parseFloat(val));
         });
-        $("#deptAllocLoading").addClass("d-none");
-        setDeptAllocOptions();
+        $("#deptAllocLoading").remove();
+        setDepartmentOptions(deptList, amountList, $("#deptAllocFunds")[0]);
     });
 
-    function setDeptAllocOptions() {
-        console.log(deptList);
+    const deptUtilizationList = [];
+    const utilizationList = [];
+    $.getJSON('/user/widgets/dash/department_utilization/', function (data, status, xhr) {
+        $.each(data, function (key, val) {
+            deptUtilizationList.push(key.replace(/^\w/, c => c.toUpperCase()));
+            utilizationList.push(parseFloat(val));
+        });
+        $("#deptUtilizationLoading").addClass("d-none");
+        setDepartmentOptions(deptUtilizationList, utilizationList, $("#deptUtilization")[0]);
+    });
+
+    const ubdOptions = {
+        legend: {
+            position: 'bottom',
+            labels: {
+                padding: 20,
+                boxWidth: 15
+            }
+        },
+        cutoutPercentage: 0,
+        // Uncomment the following line in order to disable the animations.
+        // animation: false,
+        tooltips: {
+            custom: false,
+            mode: 'index',
+            position: 'nearest'
+        }
+    };
+
+    function setDepartmentOptions(departmentList, amountList, chartCanvasSelection) {
+        console.log(departmentList);
         console.log(amountList);
 
         let backgroundColor = [];
-        let alphaBase = deptList.length * 0.15;
-        for (let i = 0; i < deptList.length; i++) {
+        let alphaBase = departmentList.length * 0.15;
+        for (let i = 0; i < departmentList.length; i++) {
             backgroundColor.push(`rgba(94,23,235,${alphaBase})`);
             alphaBase /= 1.3
         }
 
         // Data
-        var ubdData = {
+        const ubdData = {
             datasets: [{
                 hoverBorderColor: '#ffffff',
                 data: amountList,
                 backgroundColor: backgroundColor
             }],
-            labels: deptList
+            labels: departmentList
         };
-
-        // Options
-        var ubdOptions = {
-            legend: {
-                position: 'bottom',
-                labels: {
-                    padding: 20,
-                    boxWidth: 15
-                }
-            },
-            cutoutPercentage: 0,
-            // Uncomment the following line in order to disable the animations.
-            // animation: false,
-            tooltips: {
-                custom: false,
-                mode: 'index',
-                position: 'nearest'
-            }
-        };
-
-        var ubdCtx = $('#deptAllocFunds')[0];
 
         // Generate the users by device chart.
-        window.ubdChart = new Chart(ubdCtx, {
+        window.ubdChart = new Chart(chartCanvasSelection, {
             type: 'pie',
             data: ubdData,
             options: ubdOptions
         });
+    }
+
+    //
+    // EMPLOYEE SPENDING
+    //
+    const table = $('#spendingTable').DataTable({
+        paging: false,
+        info: false,
+        searching: false,
+        scrollY: "400px",
+        scrollCollapse: true,
+        responsive: true,
+        "initComplete": function (settings, json) {
+            loadSpending();
+        }
+    });
+
+
+    function loadSpending() {
+        $.getJSON('/user/widgets/dash/department_employee__monthly_spending/', function (data, status, xhr) {
+            $("#monthlySpendingLoading").remove();
+            $.each(data, function (index, value) {
+                table.row.add([
+                    value["id"],
+                    value['name'].toUpperCase(),
+                    value['gpa_bal'],
+                    value['monthly_spending']
+                ]).draw();
+            })
+
+        }).fail(function () {
+            let ref = $("#monthlySpendingLoadingText");
+            ref.prev().remove();
+            table.row.add([ERROR])
+        });
+
     }
 });
 
