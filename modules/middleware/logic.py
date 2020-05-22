@@ -1,11 +1,12 @@
 from marqeta import Client
 from server import mysql, client
 from datetime import datetime
-from models import EmployeeCard
+from models import EmployeeCard, Transaction
 import json
 import os
 import random
 
+from modules.simulation.logic import simulate_employee_plan, MIDS
 
 # open Client connection
 def openClient():
@@ -90,10 +91,15 @@ def dept_to_dept(plan_id):
     cursor.execute(query, dest_fund_FK)
     dest_token = cursor.fetchall()[0][0]
 
-    conn.commit()
-    conn.close()
+    # conn.commit()
+    # conn.close()
 
     transfer = client.transfer(funding_amount, source_token, dest_token, dest_token_is_user=False)
+    
+    t = Transaction(cursor,conn=conn)
+    t.insert(source_token,dest_token,Transaction.current_time(transfer.created_time),funding_amount)
+    conn.commit()
+    conn.close()
 
     #print(transfer)
 
@@ -128,16 +134,20 @@ def dept_to_emp(plan_id):
     cursor.execute(query, plan_id)
     records = cursor.fetchall()
 
+    t = Transaction(cursor,conn)
+
     for row in records:
         query = 'SELECT token FROM employee WHERE id = %s'
         cursor.execute(query, row[0])
         dest_token = cursor.fetchall()[0][0]
         transfer = client.transfer(funding_amount, source_token, dest_token, dest_token_is_user=True)
+        t.insert(source_token,dest_token,Transaction.current_time(transfer.created_time),funding_amount)
 
     conn.commit()
     conn.close()
 
     complete_employee_plan(plan_id)
+    simulate_employee_plan(plan_id)
 
 
 def complete_employee_plan(plan_id):
@@ -187,4 +197,5 @@ def complete_employee_plan(plan_id):
 
     conn.commit()
     conn.close()
+
 

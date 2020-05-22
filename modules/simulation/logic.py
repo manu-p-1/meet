@@ -118,6 +118,25 @@ def simulate_startup():
 
     conn.close()
 
+def simulate_employee_plan(plan_id):
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    query = '''SELECT ep_employee_FK, ep_card_token FROM employee_plan WHERE ep_plan_FK = %s'''
+    t = Transaction(cursor,conn=conn)
+
+    # THIS WILL RETURN ALL EMPLOYEES AND THEIR ASSOCIATED CARDS WITH AN ACCORDING PLAN
+    cursor.execute(query,(plan_id))
+    for employee_card_pair in cursor.fetchall():
+        mid_identifer = random.choice(MIDS)
+        employee_token = employee_card_pair[0]
+        card_token = employee_card_pair[1]
+        # NEED TO FIND BALANCE OF THE USER AND TIMES THAT BY SOME PERCENTAGE
+        e_balance = client.retrieve_balance(employee_token).gpa.available_balance * .1
+        employee_transaction = simulate(card_token,amount=e_balance,mid=mid_identifer)
+        t.insert(card_token,mid_identifer,Transaction.current_time(employee_transaction.created_time),employee_transaction.amount,is_card=True)
+    
+    conn.close()
+
 
 def current_business_balance():
     bal = client.retrieve_balance(client.business.token)
