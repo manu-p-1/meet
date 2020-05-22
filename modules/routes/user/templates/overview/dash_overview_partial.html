@@ -7,6 +7,7 @@
     {% assets "dash_overview_css" %}
         <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
     {% endassets %}
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
 {% endblock %}
 
 {% block dashboard_main %}
@@ -22,31 +23,38 @@
         <!-- Small Stats Blocks -->
         <div class="row">
             <div class="col-lg col-md-6 col-sm-6 mb-4">
-                <div class="stats-small stats-small--1 card card-small">
-                    <div class="card-body p-0 d-flex">
+                <div class="stats-small stats-small--1 card card-small balance-card">
+                    <div class="card-body p-0 d-flex loader-content">
                         <div class="d-flex flex-column m-auto">
                             <div class="stats-small__data text-center">
-                                <span class="stats-small__label text-uppercase">Posts</span>
-                                <h6 class="stats-small__value count my-3">2,390</h6>
+                                <span class="stats-small__label text-uppercase text-white">Business Balance</span>
+                                <h6 class="stats-small__value count my-3 d-none text-white" id="businessBalance"></h6>
                             </div>
-                            <div class="stats-small__data">
-                                <span class="stats-small__percentage stats-small__percentage--increase">4.7%</span>
+                            <div class="stats-small__data text-center" id="businessBalanceLoading">
+                                <span class="mt-2 text-white" id="businessBalanceLoadingText">Loading... <i
+                                        class="fas fa-spinner fa-pulse mb-2"></i></span>
                             </div>
+                            {#<div class="stats-small__data">#}
+                            {#   <span class="stats-small__percentage stats-small__percentage--increase">4.7%</span>#}
+                            {#</div>#}
                         </div>
+
+
                         <canvas height="120" class="blog-overview-stats-small-1"></canvas>
                     </div>
                 </div>
             </div>
             <div class="col-lg col-md-6 col-sm-6 mb-4">
-                <div class="stats-small stats-small--1 card card-small">
+                <div class="stats-small stats-small--1 card card-small balance-card">
                     <div class="card-body p-0 d-flex">
                         <div class="d-flex flex-column m-auto">
                             <div class="stats-small__data text-center">
-                                <span class="stats-small__label text-uppercase">Pages</span>
-                                <h6 class="stats-small__value count my-3">182</h6>
+                                <span class="stats-small__label text-uppercase text-white">Department Balance</span>
+                                <h6 class="stats-small__value count my-3 d-none text-white" id="departmentBalance"></h6>
                             </div>
-                            <div class="stats-small__data">
-                                <span class="stats-small__percentage stats-small__percentage--increase">12.4%</span>
+                            <div class="stats-small__data text-center" id="departmentBalanceLoading">
+                                <span class="mt-2 text-white" id="departmentBalanceLoadingText">Loading... <i
+                                        class="fas fa-spinner fa-pulse mb-2"></i></span>
                             </div>
                         </div>
                         <canvas height="120" class="blog-overview-stats-small-2"></canvas>
@@ -54,15 +62,16 @@
                 </div>
             </div>
             <div class="col-lg col-md-6 col-sm-6 mb-4">
-                <div class="stats-small stats-small--1 card card-small">
+                <div class="stats-small stats-small--1 card card-small number-card">
                     <div class="card-body p-0 d-flex">
                         <div class="d-flex flex-column m-auto">
                             <div class="stats-small__data text-center">
-                                <span class="stats-small__label text-uppercase">Comments</span>
-                                <h6 class="stats-small__value count my-3">8,147</h6>
+                                <span class="stats-small__label text-uppercase">Department Employee Count</span>
+                                <h6 class="stats-small__value count my-3 d-none" id="employeeCount"></h6>
                             </div>
-                            <div class="stats-small__data">
-                                <span class="stats-small__percentage stats-small__percentage--decrease">3.8%</span>
+                            <div class="stats-small__data text-center" id="employeeCountLoading">
+                                <span class="mt-2" id="employeeCountLoadingText">Loading... <i
+                                        class="fas fa-spinner fa-pulse mb-2"></i></span>
                             </div>
                         </div>
                         <canvas height="120" class="blog-overview-stats-small-3"></canvas>
@@ -70,15 +79,33 @@
                 </div>
             </div>
             <div class="col-lg col-md-6 col-sm-6 mb-4">
-                <div class="stats-small stats-small--1 card card-small">
+                <div class="stats-small stats-small--1 card card-small number-card">
                     <div class="card-body p-0 d-flex">
                         <div class="d-flex flex-column m-auto">
                             <div class="stats-small__data text-center">
-                                <span class="stats-small__label text-uppercase">Users</span>
-                                <h6 class="stats-small__value count my-3">2,413</h6>
+                                <span class="stats-small__label text-uppercase">Current Outgoing Transactions</span>
+                                <h6 class="stats-small__value count my-3 d-none" id="outgoingTransactions"></h6>
                             </div>
-                            <div class="stats-small__data">
-                                <span class="stats-small__percentage stats-small__percentage--increase">12.4%</span>
+                            <div class="stats-small__data text-center" id="outgoingTransactionsLoading">
+                                <span class="mt-2" id="outgoingTransactionsText">Loading... <i
+                                        class="fas fa-spinner fa-pulse mb-2"></i></span>
+                            </div>
+                        </div>
+                        <canvas height="120" class="blog-overview-stats-small-4"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg col-md-6 col-sm-6 mb-4">
+                <div class="stats-small stats-small--1 card card-small number-card">
+                    <div class="card-body p-0 d-flex">
+                        <div class="d-flex flex-column m-auto">
+                            <div class="stats-small__data text-center">
+                                <span class="stats-small__label text-uppercase">Active Plans</span>
+                                <h6 class="stats-small__value count my-3 d-none" id="activePlans"></h6>
+                            </div>
+                            <div class="stats-small__data text-center" id="activePlansLoading">
+                                <span class="mt-2" id="activePlansText">Loading... <i
+                                        class="fas fa-spinner fa-pulse mb-2"></i></span>
                             </div>
                         </div>
                         <canvas height="120" class="blog-overview-stats-small-4"></canvas>
@@ -92,34 +119,16 @@
             <div class="col-lg-8 col-md-12 col-sm-12 mb-4">
                 <div class="card card-small">
                     <div class="card-header border-bottom">
-                        <h6 class="m-0">Users</h6>
+                        <h6 class="m-0">Plan Fund Average <span class="font-italic text-muted font-small">6 month overview</span>
+                        </h6>
                     </div>
-                    <div class="card-body pt-0">
-                        <div class="row border-bottom py-2 bg-light">
-                            <div class="col-12 col-sm-6">
-                                <div id="blog-overview-date-range"
-                                     class="input-daterange input-group input-group-sm my-auto ml-auto mr-auto ml-sm-auto mr-sm-0"
-                                     style="max-width: 350px;">
-                                    <input type="text" class="input-sm form-control" name="start"
-                                           placeholder="Start Date" id="blog-overview-date-range-1">
-                                    <input type="text" class="input-sm form-control" name="end"
-                                           placeholder="End Date" id="blog-overview-date-range-2">
-                                    <span class="input-group-append">
-                            <span class="input-group-text">
-                              <i class="material-icons"></i>
-                            </span>
-                          </span>
-                                </div>
-                            </div>
-                            <div class="col-12 col-sm-6 d-flex mb-2 mb-sm-0">
-                                <button type="button"
-                                        class="btn btn-sm btn-white ml-auto mr-auto ml-sm-auto mr-sm-0 mt-3 mt-sm-0">
-                                    View Full Report &rarr;
-                                </button>
-                            </div>
+                    <div class="card-body pt-0 loader-content">
+                        <div class="loader" id="planAvgSixMonthsLoading">
+                            <i class="fas fa-spinner fa-pulse fa-4x mb-2"></i>
+                            <p id="planAvgSixMonthsLoadingText">Loading...</p>
                         </div>
-                        <canvas height="130" style="max-width: 100% !important;"
-                                class="blog-overview-users"></canvas>
+                        <canvas height="150" style="max-width: 100% !important;"
+                                id="planAvgSixMonths"></canvas>
                     </div>
                 </div>
             </div>
@@ -133,7 +142,7 @@
                     <div class="card-body d-flex py-0 loader-content">
                         <div class="loader" id="deptAllocLoading">
                             <i class="fas fa-spinner fa-pulse fa-4x mb-2"></i>
-                            <p>Loading...</p>
+                            <p id="deptAllocLoadingText">Loading...</p>
                         </div>
                         <canvas height="220" id="deptAllocFunds" class="m-auto">
                         </canvas>
@@ -145,213 +154,69 @@
             </div>
 
 
+            <div class="col-lg-8 col-md-6 col-sm-12 mb-4">
+                <div class="card h-100">
+                    <div class="card-header border-bottom">
+                        <h6 class="m-0">Monthly Spending</h6>
+                    </div>
+                    <div class="card-body p-2 loader-content w-100">
+                        <div class="loader" id="monthlySpendingLoading">
+                            <i class="fas fa-spinner fa-pulse fa-4x mb-2"></i>
+                            <p id="monthlySpendingLoadingText">Loading...</p>
+                        </div>
+                        <table id="spendingTable" class="table table-responsive-sm responsive hover font-weight-normal"
+                               style="width:100% !important; height: 100% !important;">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>GPA Balance</th>
+                                <th>Spending ($)</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!--PER DEPT UTILIZATION PIE CHART-->
             <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-                <!-- Quick Post -->
                 <div class="card card-small h-100">
                     <div class="card-header border-bottom">
-                        <h6 class="m-0">New Draft</h6>
+                        <h6 class="m-0">Per Department Utilization</h6>
                     </div>
-                    <div class="card-body d-flex flex-column">
-                        <form class="quick-post-form">
-                            <div class="form-group">
-                                <input type="email" class="form-control" id="exampleInputEmail1"
-                                       aria-describedby="emailHelp" placeholder="Brave New World"></div>
-                            <div class="form-group">
-                                        <textarea class="form-control"
-                                                  placeholder="Words can be like X-rays if you use them properly..."></textarea>
-                            </div>
-                            <div class="form-group mb-0">
-                                <button type="submit" class="btn btn-accent">Create Draft</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <!-- End Quick Post -->
-            </div>
-            <!-- End New Draft Component -->
-            <!-- Discussions Component -->
-            <div class="col-lg-5 col-md-12 col-sm-12 mb-4">
-                <div class="card card-small blog-comments">
-                    <div class="card-header border-bottom">
-                        <h6 class="m-0">Discussions</h6>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="blog-comments__item d-flex p-3">
-                            <div class="blog-comments__avatar mr-3">
-                                <img src="{{ url_for('user_bp.static', filename='images/avatars/1.jpg') }}"
-                                     alt="User avatar"/></div>
-                            <div class="blog-comments__content">
-                                <div class="blog-comments__meta text-muted">
-                                    <a class="text-secondary" href="#">James Johnson</a> on
-                                    <a class="text-secondary" href="#">Hello World!</a>
-                                    <span class="text-muted">– 3 days ago</span>
-                                </div>
-                                <p class="m-0 my-1 mb-2 text-muted">Well, the way they make shows is, they make
-                                    one show ...</p>
-                                <div class="blog-comments__actions">
-                                    <div class="btn-group btn-group-sm">
-                                        <button type="button" class="btn btn-white">
-                              <span class="text-success">
-                                <i class="material-icons">check</i>
-                              </span> Approve
-                                        </button>
-                                        <button type="button" class="btn btn-white">
-                              <span class="text-danger">
-                                <i class="material-icons">clear</i>
-                              </span> Reject
-                                        </button>
-                                        <button type="button" class="btn btn-white">
-                              <span class="text-light">
-                                <i class="material-icons">more_vert</i>
-                              </span> Edit
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="card-body d-flex py-0 loader-content">
+                        <div class="loader" id="deptUtilizationLoading">
+                            <i class="fas fa-spinner fa-pulse fa-4x mb-2"></i>
+                            <p>Loading...</p>
                         </div>
-                        <div class="blog-comments__item d-flex p-3">
-                            <div class="blog-comments__avatar mr-3">
-                                <img src="{{ url_for('user_bp.static', filename='images/avatars/2.jpg') }}"
-                                     alt="User avatar"/></div>
-                            <div class="blog-comments__content">
-                                <div class="blog-comments__meta text-muted">
-                                    <a class="text-secondary" href="#">James Johnson</a> on
-                                    <a class="text-secondary" href="#">Hello World!</a>
-                                    <span class="text-muted">– 4 days ago</span>
-                                </div>
-                                <p class="m-0 my-1 mb-2 text-muted">After the avalanche, it took us a week to
-                                    climb out. Now...</p>
-                                <div class="blog-comments__actions">
-                                    <div class="btn-group btn-group-sm">
-                                        <button type="button" class="btn btn-white">
-                              <span class="text-success">
-                                <i class="material-icons">check</i>
-                              </span> Approve
-                                        </button>
-                                        <button type="button" class="btn btn-white">
-                              <span class="text-danger">
-                                <i class="material-icons">clear</i>
-                              </span> Reject
-                                        </button>
-                                        <button type="button" class="btn btn-white">
-                              <span class="text-light">
-                                <i class="material-icons">more_vert</i>
-                              </span> Edit
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="blog-comments__item d-flex p-3">
-                            <div class="blog-comments__avatar mr-3">
-                                <img src="{{ url_for('user_bp.static', filename='images/avatars/3.jpg') }}"
-                                     alt="User avatar"/></div>
-                            <div class="blog-comments__content">
-                                <div class="blog-comments__meta text-muted">
-                                    <a class="text-secondary" href="#">James Johnson</a> on
-                                    <a class="text-secondary" href="#">Hello World!</a>
-                                    <span class="text-muted">– 5 days ago</span>
-                                </div>
-                                <p class="m-0 my-1 mb-2 text-muted">My money's in that office, right? If she
-                                    start giving me...</p>
-                                <div class="blog-comments__actions">
-                                    <div class="btn-group btn-group-sm">
-                                        <button type="button" class="btn btn-white">
-                              <span class="text-success">
-                                <i class="material-icons">check</i>
-                              </span> Approve
-                                        </button>
-                                        <button type="button" class="btn btn-white">
-                              <span class="text-danger">
-                                <i class="material-icons">clear</i>
-                              </span> Reject
-                                        </button>
-                                        <button type="button" class="btn btn-white">
-                              <span class="text-light">
-                                <i class="material-icons">more_vert</i>
-                              </span> Edit
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <canvas height="220" id="deptUtilization" class="m-auto">
+                        </canvas>
                     </div>
                     <div class="card-footer border-top">
-                        <div class="row">
-                            <div class="col text-center view-report">
-                                <button type="submit" class="btn btn-white">View All Comments</button>
-                            </div>
-                        </div>
+                        <p class="text-muted font-italic">Represents Semi-Yearly Funds</p>
                     </div>
                 </div>
             </div>
-            <!-- End Discussions Component -->
-            <!-- Top Referrals Component -->
-            <div class="col-lg-3 col-md-12 col-sm-12 mb-4">
+
+            <div class="col-lg-12 col-md-12 col-sm-12 mb-4">
                 <div class="card card-small">
                     <div class="card-header border-bottom">
-                        <h6 class="m-0">Top Referrals</h6>
+                        <h6 class="m-0">Employee Spending</h6>
                     </div>
-                    <div class="card-body p-0">
-                        <ul class="list-group list-group-small list-group-flush">
-                            <li class="list-group-item d-flex px-3">
-                                <span class="text-semibold text-fiord-blue">GitHub</span>
-                                <span class="ml-auto text-right text-semibold text-reagent-gray">19,291</span>
-                            </li>
-                            <li class="list-group-item d-flex px-3">
-                                <span class="text-semibold text-fiord-blue">Stack Overflow</span>
-                                <span class="ml-auto text-right text-semibold text-reagent-gray">11,201</span>
-                            </li>
-                            <li class="list-group-item d-flex px-3">
-                                <span class="text-semibold text-fiord-blue">Hacker News</span>
-                                <span class="ml-auto text-right text-semibold text-reagent-gray">9,291</span>
-                            </li>
-                            <li class="list-group-item d-flex px-3">
-                                <span class="text-semibold text-fiord-blue">Reddit</span>
-                                <span class="ml-auto text-right text-semibold text-reagent-gray">8,281</span>
-                            </li>
-                            <li class="list-group-item d-flex px-3">
-                                <span class="text-semibold text-fiord-blue">The Next Web</span>
-                                <span class="ml-auto text-right text-semibold text-reagent-gray">7,128</span>
-                            </li>
-                            <li class="list-group-item d-flex px-3">
-                                <span class="text-semibold text-fiord-blue">Tech Crunch</span>
-                                <span class="ml-auto text-right text-semibold text-reagent-gray">6,218</span>
-                            </li>
-                            <li class="list-group-item d-flex px-3">
-                                <span class="text-semibold text-fiord-blue">YouTube</span>
-                                <span class="ml-auto text-right text-semibold text-reagent-gray">1,218</span>
-                            </li>
-                            <li class="list-group-item d-flex px-3">
-                                <span class="text-semibold text-fiord-blue">Adobe</span>
-                                <span class="ml-auto text-right text-semibold text-reagent-gray">827</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="card-footer border-top">
-                        <div class="row">
-                            <div class="col">
-                                <label for="blogTimeSelect" class="d-none"></label>
-                                <select id="blogTimeSelect" class="custom-select custom-select-sm">
-                                    <option selected>Last Week</option>
-                                    <option value="1">Today</option>
-                                    <option value="2">Last Month</option>
-                                    <option value="3">Last Year</option>
-                                </select>
-                            </div>
-                            <div class="col text-right view-report">
-                                <a href="#">Full report &rarr;</a>
-                            </div>
-                        </div>
+                    <div class="card-body pt-0">
+                        <canvas height="130" style="max-width: 100% !important;"
+                                class="blog-overview-users"></canvas>
                     </div>
                 </div>
             </div>
-            <!-- End Top Referrals Component -->
+
         </div>
     </div>
 
     {% assets "dash_overview_js" %}
         <script src="{{ ASSET_URL }}"></script>
     {% endassets %}
-
+    <script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
 {% endblock dashboard_main %}
