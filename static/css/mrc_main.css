@@ -12,6 +12,11 @@
     font-size: 1.4em;
 }
 
+.primary-footer {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2em;
+}
+
 .primary-lg {
     font-family: 'Oswald', sans-serif;
     font-size: 4em;
@@ -36,14 +41,6 @@
     font-weight: bold;
 }
 
-.our-color {
-    background-color: #f9f9f9;
-}
-
-.card-contextual-info {
-    background: linear-gradient(27deg, rgba(69, 165, 252, 0.9304096638655462) 0%, rgba(33, 33, 33, 0.8491771708683473) 100%);
-}
-
 .btn-rounded-complement {
     border-radius: 15px !important;
 }
@@ -61,59 +58,3 @@ body {
     scroll-behavior: smooth;
 }
 
-.pinned-button {
-    position: fixed;
-    bottom: 20px;
-    right: 30px;
-    z-index: 99;
-    border: none;
-    cursor: pointer;
-    text-align: center;
-    border-radius: 50%;
-    align-items: center;
-    justify-content: center;
-    padding: .25em;
-    width: 80px;
-    height: 80px;
-}
-
-.main-content-container .form-group input, .main-content-container .form-group select {
-    height: 45px !important;
-    border-radius: 3px !important;
-}
-
-.rounded {
-    border-radius: 10px !important;
-}
-
-.btn-circle.btn-sm {
-    width: 30px;
-    height: 30px;
-    padding: 6px 0;
-    border-radius: 15px;
-    font-size: 8px;
-    text-align: center;
-}
-
-.btn-circle.btn-md {
-    width: 50px;
-    height: 50px;
-    padding: 7px 10px;
-    border-radius: 25px;
-    font-size: 10px;
-    text-align: center;
-}
-
-.mrc-yellow-gradient {
-    background: linear-gradient(315deg, #fbb034 0%, #ffdd00 74%);
-}
-
-.mrc-red-gradient {
-    color: white;
-    background: linear-gradient(90deg, rgba(241, 106, 102, 1) 0%, rgba(220, 28, 19, 1) 100%);
-}
-
-.mrc-red-gradient-rev {
-    color: white;
-    background: linear-gradient(180deg, rgba(241, 106, 102, 1) 0%, rgba(220, 28, 19, 1) 100%);
-}
