@@ -73,7 +73,7 @@ class Plan(Model):
 
         if len(form.employeesOptional.data) != 0 and form.employeesOptional.data[0] != '':
                 for employeeField in form.employeesOptional.data:
-                    ep = EmployeePlan(self.get_cursor, self.get_conn)
+                    ep = EmployeePlan(self.get_cursor, self.get_conn, True)
                     ep.insert_with_id(employeeField['id'],form.planName.data)
 
         if self.is_immediate_commit:
