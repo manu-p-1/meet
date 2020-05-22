@@ -9,7 +9,7 @@ Imagine yourself as the manager of your accounting department at Einberg and Yin
 
 There are two ways to view our project:
 
-1. [www.einbergandying.com](www.einbergandying.com)
+1. www.einbergandying.com
 
 If you choose to go to our website, here are is list of available login details:
 
