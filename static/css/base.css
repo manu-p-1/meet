@@ -1,108 +1,16 @@
-@media (min-width: 1400px) {
-    .main-content-container > .container, #titleGroup1 {
-        max-width: 1300px !important;
-    }
+body::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 0;
+    background-color: #b9b9b9;
 }
 
-@media (min-width: 1500px) {
-    .main-content-container > .container, #titleGroup1 {
-        max-width: 1400px !important;
-    }
+body::-webkit-scrollbar {
+    width: 8px;
+    background-color: #b9b9b9;
 }
 
-@media (min-width: 1600px) {
-    .main-content-container > .container, #titleGroup1 {
-        max-width: 1500px !important;
-    }
-}
-
-@media (min-width: 1700px) {
-    .main-content-container > .container, #titleGroup1 {
-        max-width: 1600px !important;
-    }
-}
-
-@media (min-width: 1800px) {
-    .main-content-container > .container, #titleGroup1 {
-        max-width: 1700px !important;
-    }
-}
-
-@media (min-width: 1900px) {
-    .main-content-container > .container, #titleGroup1 {
-        max-width: 1800px !important;
-    }
-}
-
-@media (max-width: 992px) {
-    .footer-explanation {
-        border: none !important;
-        padding-right: 15px !important;
-    }
-
-    .reg-for-free {
-        padding-bottom: 20px;
-    }
-
-    .title-holder {
-        padding-right: 15px !important;
-    }
-
-    .left-border {
-        padding-left: 15px !important;
-    }
-}
-
-@media (min-width: 993px) {
-    footer .rel-links a:hover {
-        border: 1.5px solid;
-        border-radius: 5px;
-        -webkit-transition: all .01s ease;
-    }
-}
-
-footer .rel-links a {
-    padding: 10px;
-}
-
-.right-border {
-    padding-right: 55px;
-}
-
-.left-border {
-    padding-left: 55px;
-}
-
-.main-footer-content {
-    max-width: calc(100vw - 150px) !important;
-}
-
-
-#amazonLink:hover {
-    color: #028df5;
-}
-
-.fa-bootstrap:hover {
-    color: #602C50 !important;
-    background-color: white;
-}
-
-.fa-mdb:hover, .fa-python:hover {
-    color: #028df5 !important;
-}
-
-.fa-database:hover {
-    color: #cccccc !important;
-}
-
-.fa-microsoft:hover {
-    color: #00A1F1 !important;
-}
-
-.fa-js:hover {
-    color: #f7df1e !important;
-}
-
-.fa-running:hover {
-    color: limegreen !important;
+body::-webkit-scrollbar-thumb {
+    border-radius: 0;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    background-color: #555;
 }
