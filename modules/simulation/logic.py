@@ -121,7 +121,7 @@ def simulate_startup():
 def simulate_employee_plan(plan_id):
     conn = mysql.connect()
     cursor = conn.cursor()
-    query = '''SELECT ep_employee_FK, ep_card_token FROM employee_plan WHERE ep_plan_FK = %s'''
+    query = '''SELECT e.token, ep_card_token FROM employee_plan ep JOIN employee e ON ep.ep_employee_FK = e.id WHERE ep_plan_FK = %s'''
     t = Transaction(cursor,conn=conn)
 
     # THIS WILL RETURN ALL EMPLOYEES AND THEIR ASSOCIATED CARDS WITH AN ACCORDING PLAN

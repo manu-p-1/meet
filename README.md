@@ -5,7 +5,30 @@ MEET is made for the company willing to forego tradition and move to a tool that
 
 Imagine yourself as the manager of your accounting department at Einberg and Ying LLP, your traditional company of today. MEET enables you to keep track of all the expenses in your department, whether they be department wide or down to the minute employee expenditure. With transparency built into MEET as an expectation, losing track of money and having to snoop around to see what went where is a thing of the past.
 
+One of the primary use cases of MEET is that it allows companies to follow a plan-based approach of how they want their funds to be distibuted. MEET enables managers to create plans for when they want money to be distributed to their department's employees or whether they need to transfer funds to another department. Once these plans are crated 
+
+## Marqeta API Utilization
+
+Our [demo](#demo) is a web application using the following technologies:
+
+Backend:
+
+- Flask (Python)
+- mySQL
+
+Frontend:
+
+- HTML
+- CSS
+- Javascript
+
+We simulate the creation of Einberg and Ying LLP using the Marqeta Python SDK along with some of our own additions to it. Funding of the company account to the funding of department/employee accounts are all done automatically.
+
+The Marqeta Python SDK is used extensively to simulate Einberg and Ying LLP's company top-down, enabling funding of the master GPA balance of Einberg and Ying down to the employee GPA's of Einberg and Ying.
+
 ## Demo
+
+Our demo follows the fake company called Einberg and Ying LLP who has moved their corporate expense tracking online to a tool integrating with Marqeta's API, allowing for funds to dispersed on a schedule, or at-will.
 
 There are two ways to view our project:
 
