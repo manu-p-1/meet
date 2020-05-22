@@ -4436,7 +4436,8 @@ a.text-accent:hover, a.text-accent:focus {
   .stats-small--1 .stats-small__percentage {
     margin: 0 auto; }
   .stats-small--1 .stats-small__value {
-    font-size: 2.0625rem; }
+    font-size: 1.7rem !important;
+  }
   .stats-small--1 .stats-small__label {
     font-size: 0.75rem; }
   .stats-small--1 .stats-small__percentage {
