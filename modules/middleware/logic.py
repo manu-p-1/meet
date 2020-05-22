@@ -20,23 +20,35 @@ def openClient():
                          client_payload['access_token'], client_payload['timeout'])
     return client
 
+def BackgroundScheduler():
+    pass
+
+
+
 # executeOrders
 # the plan_ids should be a list of plan ids, as stored in the db
 # This will come from some func that queries the db for all
 # past due and store them as a list
-def executerOrders(plan_ids):
-    # Implement: for-each over plan_ids, sorting them,
-    # then sending each id to the appropriate func
-    # (either dept_to_dept or dept_to_emp)
+def executerOrders():
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    query = 'SELECT id, fund_individuals FROM plan WHERE start_date < NOW() AND complete = 0'
+    cursor.execute(query)
+    records = cursor.fetchall()
 
+    if records and records[0][0]:
+        for row in records:
+            plan_id = row[0]
+            fund_individuals = row[1]
+            print(row)
+            print(fund_individuals)
+            if fund_individuals:
+                dept_to_emp(plan_id)
+            else:
+                dept_to_dept(plan_id)
 
-    #if(fund_individuals == False and completed == False) {
-    #    # send plan to dep_to_dep order
-    #} else {
-    #    # send pan to dep_to_emps order
-    #}
-
-    pass
+    conn.commit()
+    conn.close()
 
 
 def dept_to_dept(plan_id):
