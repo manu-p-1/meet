@@ -37,7 +37,8 @@ def load_values():
             client.MANAGERS[dept]['last_name'],
             'Sr. Division Manager',
             desc,
-            client.MANAGERS[dept]['manager_dept_FK'])
+            client.MANAGERS[dept]['manager_dept_FK'],
+            client.MANAGERS[dept]['gender'])
 
     trans = Transaction(cursor, conn, immediate_commit=False)
     for t in client.transactions:

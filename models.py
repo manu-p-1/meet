@@ -101,16 +101,16 @@ class Plan(Model):
 class Manager(Model):
 
     def __init__(self, cursor, conn, immediate_commit=True):
-        insert = '''INSERT INTO manager(email, pass, first_name, last_name, title, description, manager_dept_FK) VALUES 
-                    (%s,%s,%s,%s,%s,%s,%s)'''
+        insert = '''INSERT INTO manager(email, pass, first_name, last_name, title, description, manager_dept_FK, gender) VALUES 
+                    (%s,%s,%s,%s,%s,%s,%s, %s)'''
         select = """SELECT * FROM manager"""
         select_where = """SELECT * FROM manager where %s = %s"""
 
         super().__init__(cursor, conn, insert, select, select_where, immediate_commit)
 
-    def insert(self, email, pass_, first_name, last_name, title, description, manager_dept_FK, loop=False):
+    def insert(self, email, pass_, first_name, last_name, title, description, manager_dept_FK,gender, loop=False):
         self._cursor.execute(self._generic_insert,
-                             (email, pass_, first_name, last_name, title, description, manager_dept_FK))
+                             (email, pass_, first_name, last_name, title, description, manager_dept_FK,gender))
 
         if self.is_immediate_commit:
             self._conn.commit()

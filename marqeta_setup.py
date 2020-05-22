@@ -58,13 +58,28 @@ class MarqetaClient:
                                                      'RESEARCH & DEVELOPMENT'), ('SC', 'SECURITY'),
                               ('LG', 'LOGISTICS')]
         self.CURRENT_DEPT = None
-        self.MANAGERS = {
-            dept: {
-                'first_name': self.fake.first_name(),
-                'last_name': self.fake.last_name(),
+
+        self.MANAGERS = {}
+        GENDERS = ['FEMALE','MALE']
+        for i,dept in enumerate(self.DEPARTMENT_LIST):
+            m_gender = random.choice(GENDERS)
+            f_name = ''
+            l_name = ''
+            email = ''
+            if m_gender == 'MALE':
+                f_name = self.fake.first_name_male()
+                l_name = self.fake.last_name_male()
+            else:
+                f_name = self.fake.first_name_female()
+                l_name - self.fake.last_name_female()
+            self.MANAGERS[dept] = {
+                'first_name': f_name,
+                'last_name' : l_name,
+                'gender' : m_gender,
                 'email': dept + '@eay.com', 'pass': 'root', 'manager_dept_FK': i + 1
-            } for i, dept in enumerate(self.DEPARTMENT_LIST)
-        }
+            }
+
+        
 
         self.BUSINESS_NAME = 'Einberg & Ying LLP'
         self.BUSINESS_TOKEN = ''.join(

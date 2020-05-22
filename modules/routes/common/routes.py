@@ -34,7 +34,7 @@ def login(ctx=None):
         if form.validate_on_submit():
             conn = mysql.connect()
             cursor = conn.cursor()
-            query = '''SELECT manager_dept_FK,first_name, last_name, email, title, pass FROM manager WHERE email = %s'''
+            query = '''SELECT manager_dept_FK,first_name, last_name, email, title, pass, gender FROM manager WHERE email = %s'''
             cursor.execute(query, (request.form.get('email')))
 
             try:
@@ -51,6 +51,7 @@ def login(ctx=None):
                     session['manager_email'] = manager[3]
                     session['manager_dept'] = department
                     session['manager_title'] = manager[4]
+                    session['manager_gender'] = manager[6]
                     return redirect(url_for('user_bp.overview'))
                 else:
                     flash("Account could not be found", category='err')

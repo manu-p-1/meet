@@ -116,6 +116,7 @@ CREATE TABLE IF NOT EXISTS `mrcdb`.`manager`
     `pass`            VARCHAR(128) NOT NULL,
     `first_name`      VARCHAR(45)  NOT NULL,
     `last_name`       VARCHAR(45)  NOT NULL,
+    `gender`          VARCHAR(45) NOT NULL,
     `title`           VARCHAR(50)  NOT NULL,
     `description`     VARCHAR(500) NULL DEFAULT NULL,
     `manager_dept_FK` INT          NOT NULL,
