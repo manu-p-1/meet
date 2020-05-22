@@ -9,3 +9,41 @@
 .loader-content {
     position: relative;
 }
+
+.balance-card {
+    /*background-color: rgba(137, 112, 203, 0.08);*/
+    background-color: #673ab7;
+}
+
+.number-card {
+    /*background-color: rgba(65, 105, 247, 0.07);*/
+    background-color: rgba(103, 58, 183, 0.11);
+}
+
+#spendingTable_wrapper .dataTables_scrollBody {
+    border-bottom: none !important;
+}
+
+#spendingTable_wrapper thead tr th {
+    border-bottom: 1px solid darkgrey !important;
+}
+
+#spendingTable_wrapper thead tr th {
+    border-top: none !important;
+}
+
+#spendingTable tr {
+    height: 75px;
+}
+
+th, td {
+    white-space: nowrap;
+}
+
+div.dataTables_wrapper {
+    margin: 0 auto;
+}
+
+#monthlySpendingLoading {
+    margin-top: 1px;
+}
