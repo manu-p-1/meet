@@ -19,6 +19,7 @@ closure = "*"
 packaging = "*"
 faker = "*"
 sqlacodegen = "*"
+apscheduler = "*"
 
 [scripts]
 server = "./start.sh"
