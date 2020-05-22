@@ -118,7 +118,7 @@ if [[ -z "${MY_APP}" ]]; then
 fi
 
 if [[ -z "${SAM_CARD_PRODUCT_TOKEN}" ]]; then
-  export SAM_CARD_PRODUCT_TOKEN=9044a8cd-ee94-4ed9-a6b4-16d688820f90
+  export SAM_CARD_PRODUCT_TOKEN=f39eb05d-76c0-48dd-ac50-d1e4d20b7eab
   printf "===exported SAM_CARD_PRODUCT_TOKEN===\n\n"
 fi
 
