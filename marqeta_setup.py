@@ -9,7 +9,6 @@ import requests as r
 from sdk.ext import PeerTransfer, Authorization
 import random
 
-
 '''
 HIERARCHY
 
@@ -50,8 +49,9 @@ class MarqetaClient:
         self.DEPARTMENT_LIST = ['IT', 'AC', 'MK', 'HR', 'PD', 'RD',
                                 'SC',
                                 'LG']
-        self.READABLE_DEPARTMENTS = {'IT':'IT', 'AC':'ACCOUNTING', 'MK':'MARKETING', 'HR':'HUMAN RESOURCES',
-                                     'PD':'PRODUCTION', 'RD':'RESEARCH & DEVELOPMENT', 'SC':'SECURITY', 'LG':'LOGISTICS'}
+        self.READABLE_DEPARTMENTS = {'IT': 'IT', 'AC': 'ACCOUNTING', 'MK': 'MARKETING', 'HR': 'HUMAN RESOURCES',
+                                     'PD': 'PRODUCTION', 'RD': 'RESEARCH & DEVELOPMENT', 'SC': 'SECURITY',
+                                     'LG': 'LOGISTICS'}
 
         self.DEPT_MAPPINGS = [('IT', 'IT'), ('AC', 'ACCOUNTING'), ('MK', 'MARKETING'), ('HR', 'HUMAN RESOURCES'),
                               ('PD', 'PRODUCTION'), ('RD',
@@ -113,7 +113,7 @@ class MarqetaClient:
         self.departments = [self.create_department(
             dept) for dept in self.DEPARTMENT_LIST]
 
-        amount_per_department = master_fund_amount/(len(self.departments) * 3)
+        amount_per_department = master_fund_amount / (len(self.departments) * 3)
 
         adjusted_percents = self.generate_percents()
 
@@ -159,7 +159,7 @@ class MarqetaClient:
             s += r
             rs.append(r)
 
-        return [i/s for i in rs]
+        return [i / s for i in rs]
 
     '''
     Used to fund the main business account.
@@ -200,7 +200,8 @@ class MarqetaClient:
     currency_code: str - the currency type.
     '''
 
-    def transfer(self, amount: float, source_token: str, dest_token: str, dest_token_is_user: bool = False, token: str = None, currency_code: str = 'USD'):
+    def transfer(self, amount: float, source_token: str, dest_token: str, dest_token_is_user: bool = False,
+                 token: str = None, currency_code: str = 'USD'):
 
         payload = {
             'sender_business_token': source_token,
@@ -223,7 +224,8 @@ class MarqetaClient:
         }
 
         return PeerTransfer(json.loads(r.post('https://sandbox-api.marqeta.com/v3/peertransfers', headers=headers,
-                                              data=payload, auth=(os.environ['MY_APP'], os.environ['MY_ACCESS'])).content))
+                                              data=payload,
+                                              auth=(os.environ['MY_APP'], os.environ['MY_ACCESS'])).content))
 
     def retrieve_balance(self, token):
         return self.client_sdk.balances.find_for_user_or_business(token)
@@ -365,6 +367,7 @@ class MarqetaClient:
             v(u.__str__()) for u in self.client_sdk.account_holder_groups.stream()]
 
     # def print_hierarchy(self):
+
 
 # ESTABLISH THE DEPARTMENTS AS CONSTANTS/ACCOUNT HOLDER GROUPS
 
