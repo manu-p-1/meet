@@ -14,7 +14,8 @@ class RequiredIf(DataRequired):
     def __call__(self, form, field):
         other_field = form._fields.get(self.other_field_name)
         if other_field.data is None:
-            raise Exception('no field named "%s" in form' % self.other_field_name)
+            raise Exception('no field named "%s" in form' %
+                            self.other_field_name)
 
         if bool(other_field.data):
             super(RequiredIf, self).__call__(form, field)
@@ -78,7 +79,8 @@ class EmployeeUnique(object):
         for f in list_:
 
             if type(f) is not EmployeeInfoTextAreaField:
-                raise Exception("EmployeeUnique cannot be used with a non EmployeeInfoTextAreaField type")
+                raise Exception(
+                    "EmployeeUnique cannot be used with a non EmployeeInfoTextAreaField type")
 
             if f.data['id'] in seen:
                 return True
@@ -119,6 +121,19 @@ class Active(object):
             raise ValidationError(message=self.message)
 
 
+def is_active(mysql, field) -> bool:
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    now = datetime.now(timezone.utc)
+    start_date = now.strftime("%Y-%m-%d %H:%M:%S")
+    q = '''SELECT plan_name FROM plan WHERE plan_name = %s AND start_date > %s'''
+    cursor.execute(q, (field.data, start_date))
+    if len(cursor.fetchall()) == 0:
+        return False
+    else:
+        return True
+
+
 class NotDuplicate(object):
     def __init__(self, message=None, mysql=None):
         if not message:
@@ -142,14 +157,35 @@ def is_duplicate(mysql, field) -> bool:
         return True
 
 
-def is_active(mysql, field) -> bool:
-    conn = mysql.connect()
-    cursor = conn.cursor()
-    now = datetime.now(timezone.utc)
-    start_date = now.strftime("%Y-%m-%d %H:%M:%S")
-    q = '''SELECT plan_name FROM plan WHERE plan_name = %s AND start_date > %s'''
-    cursor.execute(q, (field.data, start_date))
-    if len(cursor.fetchall()) == 0:
-        return False
+class DeptBalance(object):
+    def __init__(self, message=None, client=None, sn=None, employee_field=False):
+        if not message:
+            message = f'Funding amount is greater than the current department balance.'
+        self.message = message
+        self.client = client
+        self.sn = sn
+        self.employee_field = employee_field
+
+    def __call__(self, form, field):
+        if self.employee_field:
+            if not valid_balance(client=self.client,sn=self.sn,field=field,field_len=len(field)):
+                pass
+        elif not valid_balance(client=self.client,sn=self.sn,field=field):
+            raise ValidationError(self.message)
+
+
+def valid_balance(client, sn, field,field_len=None) -> bool:
+    dept_balance = client.retrieve_balance(
+        client.DEPARTMENT_TOKEN_TO_OBJECTS[sn['manager_dept']]).gpa.available_balance * .8
+    
+    if field_len:
+        if (field_len*sn['form_balance']) > dept_balance:
+            return False
+        else:
+            return True
     else:
-        return True
+        sn['form_balance'] = field.data
+        if field.data > dept_balance:
+            return False
+        else:
+            return True
