@@ -74,7 +74,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link " href="{{ url_for('user_bp.manage_plan') }}">
+                        <a class="nav-link {%- if request.path == url_for('user_bp.manage_plan') %} active {% endif %}"
+                           href="{{ url_for('user_bp.manage_plan') }}">
                             <i class="material-icons">note_add</i>
                             <span>Manage Plans</span>
                         </a>
@@ -108,9 +109,15 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-nowrap px-3" data-toggle="dropdown" href="#"
                                role="button" aria-haspopup="true" aria-expanded="false">
-                                <img class="user-avatar rounded-circle mr-2"
-                                     src="{{ url_for('user_bp.static', filename='images/avatars/1.jpg') }}"
-                                     alt="User Avatar">
+                                {% if session['manager_gender'] == 'MALE' %}
+                                    <img class="user-avatar rounded-circle mr-2"
+                                         src="{{ url_for('user_bp.static', filename='images/avatars/1.jpg') }}"
+                                         alt="Picture of {{ session['manager_fname'] }} {{ session['manager_lname'] }}">
+                                {% else %}
+                                    <img class="user-avatar rounded-circle mr-2"
+                                         src="{{ url_for('user_bp.static', filename='images/avatars/0.jpg') }}"
+                                         alt="Picture of {{ session['manager_fname'] }} {{ session['manager_lname'] }}">
+                                {% endif %}
                                 <span class="d-none d-md-inline-block">{{ session['manager_fname'] }} {{ session['manager_lname'] }}</span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-small">
@@ -152,7 +159,7 @@
                     </li>
                 </ul>
                 <span class="copyright ml-auto my-auto mr-2">Copyright © 2020
-              <a href="https://designrevision.com" rel="nofollow">MRC</a>
+              <a href="#" rel="nofollow">MEET</a>
             </span>
             </footer>
         </main>
