@@ -1,17 +1,18 @@
 import sys
-
-from flask import Blueprint, render_template, request, jsonify, redirect, flash, session, url_for
+from flask import Blueprint, render_template, request, jsonify, session
 import json
-from server import mysql, client
-from modules.routes.utils.forms import get_plan_form
-from models import Plan
-from datetime import datetime, timezone
+
+from modules.decorators.utils import login_required
+from modules.routes.utils.classes.class_utils import ManipulationType
+from modules.routes.utils.functions.function_utils import is_active_plan
+from server import mysql
 
 util_bp = Blueprint('util_bp', __name__,
                     template_folder='templates', static_folder='static')
 
 
-@util_bp.route('/department_employees/', methods=['GET'])
+@util_bp.route('plans/find/department_employees/', methods=['GET'])
+@login_required(session)
 def overview(ctx=None):
     """
         Given a department (?department), return all the employees in that department
@@ -34,7 +35,6 @@ def overview(ctx=None):
             ]
         }
     """
-
     conn = mysql.connect()
     cursor = conn.cursor()
 
@@ -67,48 +67,115 @@ def overview(ctx=None):
             for e in employee if name in e[1].lower() or name in e[2].lower()
         ]
 
-    print(json.dumps(e_payload))
-
     return json.dumps(e_payload)
 
 
-@util_bp.route('/manage_plan/', methods=['GET', 'POST'])
+@util_bp.route('plans/find/manage_plan/', methods=['GET'])
+@login_required(session)
 def manage_plan():
-
     print('entering route')
     conn = mysql.connect()
     cursor = conn.cursor()
 
-    fund_choices = client.DEPT_MAPPINGS
-
     search_query = request.args.get('value')
 
-    cursor.execute('SELECT * FROM PLAN where plan_name = %s',(search_query))
+    cursor.execute('SELECT * FROM PLAN where plan_name = %s', search_query)
     plan_data = cursor.fetchall()
-
-    print(plan_data)
 
     if len(plan_data) != 0:
         session['CURRENT_PLAN_EDIT'] = plan_data[0][0]
-        
 
         headers = [desc[0] for desc in cursor.description]
-        plan = zip(headers,plan_data[0])
-        formatted_plan ={table_headers: val for (
-                table_headers, val) in plan}
-        print(formatted_plan)
+        plan = zip(headers, plan_data[0])
+        plan_fmt = {
+            table_headers: val for (table_headers, val) in plan
+        }
 
-        dept_code_query = cursor.execute(
-            'SELECT department FROM department_lookup WHERE id = %s', formatted_plan['dest_fund_FK'])
+        cursor.execute('SELECT department FROM department_lookup WHERE id = %s', plan_fmt['dest_fund_FK'])
 
+        plan_fmt['dest_fund_FK'] = cursor.fetchall()[0][0]
+        plan_fmt['funding_amount'] = float("{:.2f}".format(float(plan_fmt['funding_amount'])))
+        plan_fmt['start_date'] = plan_fmt['start_date'].strftime("%Y-%m-%d %H:%M")
+
+        if plan_fmt['amount_limit'] is not None:
+            plan_fmt['amount_limit'] = float("{:.2f}".format(float(plan_fmt['amount_limit'])))
+
+        if plan_fmt['end_date'] is not None:
+            plan_fmt['end_date'] = plan_fmt['end_date'].strftime("%Y-%m-%d %H:%M")
+
+        plan_fmt['fund_individuals'] = bool(plan_fmt['fund_individuals'])
+        plan_fmt['is_active'] = True if is_active_plan(mysql, plan_fmt['plan_name']) else False
+
+        employees_list = []
+        if plan_fmt['fund_individuals']:
+            get_employees_query = """
+            SELECT id, CONCAT(first_name, ' ', last_name) AS name FROM employee 
+            JOIN employee_plan ep on employee.id = ep.ep_employee_FK WHERE ep_plan_FK = %s
+            """
+            cursor.execute(get_employees_query, session['CURRENT_PLAN_EDIT'])
+            cf = cursor.fetchall()
+            for employee in cf:
+                employees_list.append({
+                    "id": employee[0],
+                    "name": employee[1]
+                })
+
+        session['MANAGE_FORM'] = plan_fmt
         conn.close()
-        formatted_plan['dest_fund_FK'] = cursor.fetchall()[0][0]
-        formatted_plan['funding_amount'] = float(formatted_plan['funding_amount'])
 
-        form = get_plan_form(formatted_plan, session, fund_choices)
-        session['MANAGE_FORM'] = formatted_plan
-        print(form)
-        print('returning correctly')
-        return render_template('plan_form_partial.html', form=form)
+        return jsonify(
+            response_status="success",
+            active=plan_fmt['is_active'],
+            response={
+                "plan_name": plan_fmt['plan_name'],
+                "funding_amount": plan_fmt['funding_amount'],
+                "justification": plan_fmt['plan_justification'],
+                "memo": plan_fmt['memo'],
+                "start_date": plan_fmt['start_date'],
+                "dest_fund": plan_fmt['dest_fund_FK'],
+                "has_employee_specific": True if plan_fmt['fund_individuals'] else False,
+                "employees_list": employees_list,
+                "has_end_date": True if plan_fmt['end_date'] is not None else False,
+                "end_date": plan_fmt['end_date'],
+                "has_velocity_control": True if plan_fmt['control_name'] is not None else False,
+                "control_name": plan_fmt['control_name'],
+                "control_window": plan_fmt['control_window'],
+                "amount_limit": plan_fmt['amount_limit'],
+                "usage_limit": plan_fmt['usage_limit']
+            }
+        )
 
-    return ''
+    return jsonify(
+        response_status="error",
+        response=render_template('alert_partial.html',
+                                 status=False,
+                                 err_list=['A plan with this name could not be found.'])
+    )
+
+
+@util_bp.route('plans/find/delete_plan/', methods=['POST'])
+@login_required(session)
+def delete_plan():
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    q = """DELETE FROM employee_plan WHERE ep_plan_FK = %s"""
+    q2 = """DELETE FROM plan WHERE id = %s"""
+
+    try:
+        cursor.execute(q, session['MANAGE_FORM']['id'])
+        cursor.execute(q2, session['MANAGE_FORM']['id'])
+        conn.commit()
+        conn.close()
+        return jsonify(
+            response_status="success",
+            response=render_template('alert_partial.html', status=True, manip_type=ManipulationType.DELETED.value)
+        )
+    except Exception as e:
+        # An exception here shouldn't really occur, so log it
+        return jsonify(
+            response_status="error",
+            response=render_template('alert_partial.html',
+                                     status=False,
+                                     err_list=['Something went wrong. Please try again.'])
+        )
