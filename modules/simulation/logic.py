@@ -281,11 +281,11 @@ def plan_avg_six_months(dept_code):
     six_months_ago = (now - timedelta(days=365 / 2)).strftime("%Y-%m-%d %H:%M:%S")
 
     q = """
-        SELECT avg(funding_amount), month(start_date) FROM plan
+        SELECT avg(funding_amount) AS avg, month(start_date) AS mstd FROM plan
         WHERE start_date BETWEEN %s AND %s
         AND source_fund_FK = (SELECT id FROM department_lookup WHERE department = %s)
-        GROUP BY month(start_date)
-        ORDER BY start_date DESC;
+        GROUP BY mstd
+        ORDER BY mstd DESC;
     """
 
     cursor.execute(q, (six_months_ago, start_date, dept_code))
