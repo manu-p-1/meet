@@ -1,0 +1,30 @@
+<div class='card card-small mb-3'>
+    <div class="card-header border-bottom">
+        <h6 class="m-0">Overview</h6>
+    </div>
+    <div class='card-body p-0'>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item p-3">
+                            <span class="d-flex mb-2">
+                                <i class="material-icons mr-1">account_circle</i>
+                                <strong class="mr-1">Initiator:</strong> {{ session['manager_fname'] }}
+                                {{ session['manager_lname'] }}
+                            </span>
+                <span class="d-flex mb-2">
+                                <i class="material-icons mr-1">event</i>
+                                <strong class="mr-1">Date:</strong>{{ current_date }}
+                            </span>
+                <span class="d-flex mb-2">
+                                <i class="material-icons mr-1">calendar_today</i>
+                                <strong class="mr-1">Priority:</strong> <strong class="text-success">Low</strong>
+                                <a class="ml-auto" href="#">Edit</a>
+                            </span>
+            </li>
+            <li class="list-group-item d-flex px-3">
+                <button class="btn btn-sm btn-outline-accent btn-block" onclick="print();">
+                    <i class="material-icons">print</i> Print Plan
+                </button>
+            </li>
+        </ul>
+    </div>
+</div>
