@@ -1,0 +1,6 @@
+<form id="managePlanForm" class="plan-form" method="POST" action="{{ url_for('user_bp.manage_plan') }}">
+    {% include "plans/plan_form.html" %}
+    {{ form.updatePlanButton }}
+    <input value="Delete Plan" class="btn btn-danger btn-block" type="button" name="deletePlanButton"
+           id="deletePlanButton">
+</form>
