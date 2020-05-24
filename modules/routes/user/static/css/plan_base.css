@@ -58,3 +58,40 @@
     right: 40px;
     bottom: 12px;
 }
+
+@media print {
+
+    html, body {
+        height: 100%;
+    }
+
+    html {
+        display: table;
+        margin: auto;
+    }
+
+    body {
+        line-height: 1.4em;
+        word-spacing: 1px;
+        letter-spacing: 0.2px;
+        font: 13px Arial, Helvetica, "Lucida Grande", serif;
+        color: #000;
+
+        margin: 0 auto;
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+    aside {
+        display: none;
+    }
+
+    .btn {
+        display: none;
+    }
+
+    a {
+        color: black;
+        text-decoration: none;
+    }
+}
