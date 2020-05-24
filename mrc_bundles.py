@@ -50,15 +50,17 @@ bundles = {
                                 filters='cssmin',
                                 output=f'dist/dash/overview/{gen_uuid()}.css'),
 
-    "dash_create_plan_css": Bundle('user_bp/css/create_plan/*.css',
-                                   filters='cssmin',
-                                   output=f'dist/dash/create_plan/{gen_uuid()}.css'),
+    "dash_plan_css": Bundle('user_bp/css/plan_base.css',
+                            filters='cssmin',
+                            output=f'dist/dash/{gen_uuid()}.css'),
 
-    "dash_create_plan_js": Bundle('user_bp/js/create_plan/*.js',
+    "dash_create_plan_js": Bundle('user_bp/js/form_common.js',
+                                  'user_bp/js/create_plan/*.js',
                                   filters=closure,
                                   output=f'dist/dash/create_plan/{gen_uuid()}.js'),
 
-    "dash_manage_plan_js": Bundle('user_bp/js/manage_plan/*.js',
+    "dash_manage_plan_js": Bundle('user_bp/js/form_common.js',
+                                  'user_bp/js/manage_plan/*.js',
                                   filters=closure,
                                   output=f'dist/dash/manage_plan/{gen_uuid()}.js')
 }
