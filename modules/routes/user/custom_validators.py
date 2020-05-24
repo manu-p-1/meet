@@ -1,5 +1,6 @@
 import sys
-from datetime import datetime, timezone
+import pytz
+from datetime import datetime, timezone, timedelta
 from wtforms import FieldList, StringField
 from wtforms.validators import Optional, DataRequired, ValidationError
 from modules.routes.user.custom_fields import EmployeeInfoTextAreaField
@@ -87,69 +88,107 @@ class EmployeeUnique(object):
 
 
 class DateProper(object):
+    fmt = "%Y-%m-%d %H:%M:%S"
+
     def __init__(self, message=None):
         if not message:
-            message = f'Date range is malformed. Follow the format YYYY-MM-DD HH:MM:SS.'
+            message = f'Date range is malformed. Follow the format YYYY-MM-DD HH:MM.'
         else:
-            message = message + " Follow the format YYYY-MM-DD HH:MM:SS. Hour's are in 24-hour format."
+            message = message + " Follow the format YYYY-MM-DD HH:MM. Hour's are in 24-hour format."
         self.message = message
 
     def __call__(self, form, field):
+        self.timeZone = form.timeZone.data
         if type(field) is not StringField:
             raise ValidationError(self.message)
 
         if field.data is None:
             raise Exception('no field named "%s" in form' % field)
-        print("FIELDDATA", field.data, file=sys.stderr)
+
+        field.data += ":00"
+        print("FIELD SHORT NAME", field.short_name, file=sys.stderr)
+        print("FIELD BEFORE CONVERT", field.data, file=sys.stderr)
+
+        dtobj = self.check_field(field.data)
+
+        """
+        Choose the function depending on what kind of date it is 
+        """
+        if field.short_name == 'startDate':
+            field.data = self.normalize_start(dtobj)
+        else:
+            field.data = self.normalize_end(dtobj)
+
+        print("FIELD AFTER CONVERT", field.data, file=sys.stderr)
+
+    def check_field(self, against):
+        """
+        Check if the date is valid, otherwise return a validation error
+        :param against: The date as a string to be checked
+        :return: a datetime object otherwise raise a ValidationError
+        """
         try:
-            datetime.strptime(field.data, "%Y-%m-%d %H:%M:%S")
+            naive = datetime.strptime(against, self.fmt)
+            return naive
         except ValueError as ve:
-            raise ValidationError(self.message)
-
-
-class Active(object):
-    def __init__(self, message=None, mysql=None):
-        if not message:
-            message = f'Requested plan is not active.'
-        self.message = message
-        self.mysql = mysql
-
-    def __call__(self, form, field):
-        if is_active(self.mysql, field):
             raise ValidationError(message=self.message)
 
+    def normalize_start(self, dtobj):
+        """
 
-class NotDuplicate(object):
-    def __init__(self, message=None, mysql=None):
-        if not message:
-            message = f'Plan name is already in use.'
-        self.message = message
-        self.mysql = mysql
+        Given a start date time as a datetime object, we make sure that the time the user
+        submitted is between the current utc time and the current utc time - 1 hour
 
-    def __call__(self, form, field):
-        if is_duplicate(self.mysql, field):
-            raise ValidationError(self.message)
+        If the plan start time on the form is older than 1 hour before the current UTC time:
+            -> Send a Request Timeout
 
+        If the plan start time is between the current utc time and 1 hour before the current UTC time:
+            -> Adjust the plan start time to the current UTC time
 
-def is_duplicate(mysql, field) -> bool:
-    conn = mysql.connect()
-    cursor = conn.cursor()
-    q = '''SELECT plan_name FROM plan WHERE plan_name = %s'''
-    cursor.execute(q, field.data)
-    if len(cursor.fetchall()) == 0:
-        return False
-    else:
-        return True
+        If the plan start time is ahead of the current utc time (future plan):
+            -> Do nothing - convert it to a string with strftime
 
 
-def is_active(mysql, field) -> bool:
-    conn = mysql.connect()
-    cursor = conn.cursor()
-    now = datetime.now(timezone.utc)
-    start_date = now.strftime("%Y-%m-%d %H:%M:%S")
-    q = '''SELECT plan_name FROM plan WHERE plan_name = %s AND start_date > %s'''
-    cursor.execute(q, (field.data, start_date))
-    if len(cursor.fetchall()) == 0:
-        return False
-    else:
-        return True
+        :param dtobj: The datetime object representing the normalized start time
+        :return: A string value of the UTC converted time, or a ValidationError otherwise
+        """
+        utc_dt = self.normalize(dtobj)
+
+        now = datetime.utcnow().replace(tzinfo=pytz.utc)
+        one_hour_back = now - timedelta(hours=1)
+
+        if utc_dt <= one_hour_back:
+            raise ValidationError("The request timed out.")
+        elif now >= utc_dt >= one_hour_back:
+            return now.strftime(self.fmt)
+        return utc_dt.strftime(self.fmt)
+
+    def normalize_end(self, dtobj):
+        """
+        Given an end time as a datetime object, we make sure that the end date is not greater
+        than 5 years from now. We put a cap that a plan cannot last more than 5 years.
+
+        :param dtobj: The datetime object representing the normalized end time
+        :return: A string value of the UTC converted time, or a ValidationError otherwise
+        """
+        utc_dt = self.normalize(dtobj)
+        now = datetime.utcnow().replace(tzinfo=pytz.utc)
+        five_years_fw = now + timedelta(days=1825)
+
+        if utc_dt > five_years_fw:
+            raise ValidationError("A plan can only extend for a maximum of 5 years.")
+
+        return utc_dt.strftime(self.fmt)
+
+    def normalize(self, dtobj):
+        """
+        Returns the current UTC time given a datetime object and its time zone.
+        Converts the local time of the client that submitted into UTC
+        :param dtobj:
+        :return:
+        """
+        local = pytz.timezone(self.timeZone)
+        local_dt = local.localize(dtobj, is_dst=None)
+        utc_dt = local_dt.astimezone(pytz.utc)
+
+        return utc_dt
