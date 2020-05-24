@@ -7,7 +7,7 @@ from sys import stderr
 from flask import Blueprint, render_template, request, jsonify, redirect, flash, session, url_for
 from modules.routes.user.forms import create_plan_form, get_plan_form
 from modules.decorators.utils import login_required
-from modules.middleware.logic import executerOrders
+from modules.middleware.logic import executeOrders
 
 user_bp = Blueprint('user_bp', __name__,
                     template_folder='templates', static_folder='static')
@@ -70,7 +70,7 @@ def create_plan():
             p = Plan(cursor, conn=conn)
             p.insert(form)
 
-            executerOrders()
+            executeOrders()
 
             return jsonify(
                 response_status="success",
