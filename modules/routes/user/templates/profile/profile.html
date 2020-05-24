@@ -19,9 +19,18 @@
                 <div class="card card-small mb-4 pt-3">
                     <div class="card-header border-bottom text-center">
                         <div class="mb-3 mx-auto">
-                            <img class="rounded-circle"
-                                 src="{{ url_for('user_bp.static', filename='images/avatars/1.jpg') }}"
-                                 alt="User Avatar" width="110"></div>
+                            {% if session['manager_gender'] == 'MALE' %}
+                                <img class="rounded-circle"
+                                     src="{{ url_for('user_bp.static', filename='images/avatars/1.jpg') }}"
+                                     alt="Picture of {{ session['manager_fname'] }} {{ session['manager_lname'] }}"
+                                     width="110">
+                            {% else %}
+                                <img class="rounded-circle"
+                                     src="{{ url_for('user_bp.static', filename='images/avatars/0.jpg') }}"
+                                     alt="Picture of {{ session['manager_fname'] }} {{ session['manager_lname'] }}"
+                                     width="110">
+                            {% endif %}
+                        </div>
                         <h4 class="mb-1">{{ session['manager_fname'] }} {{ session['manager_lname'] }}</h4>
                         <span class="text-muted d-block mb-2">{{ session['manager_title'] }}</span>
                         <span class="text-muted d-block mb-2">{{ session['manager_dept'] }}</span>
@@ -46,13 +55,15 @@
                                     <form>
                                         <div class="form-row">
                                             <div class="form-group col-md-6">
-                                                <label for="feFirstName">First Name</label>
+                                                <label for="feFirstName">{{ session['manager_fname'] }}</label>
                                                 <input type="text" class="form-control" id="feFirstName"
-                                                       placeholder="First Name" value="Max"></div>
+                                                       placeholder="First Name" value="{{ session['manager_fname'] }}">
+                                            </div>
                                             <div class="form-group col-md-6">
-                                                <label for="feLastName">Last Name</label>
+                                                <label for="feLastName">{{ session['manager_lname'] }}</label>
                                                 <input type="text" class="form-control" id="feLastName"
-                                                       placeholder="Last Name" value="Williams"></div>
+                                                       placeholder="Last Name" value="{{ session['manager_lname'] }}">
+                                            </div>
                                         </div>
                                         <div class="form-row">
                                             <div class="form-group col-md-6">
@@ -67,9 +78,9 @@
                                         </div>
                                         <div class="form-row">
                                             <div class="form-group col">
-                                                <label for="feEmailAddress">Email</label>
+                                                <label for="feEmailAddress">{{ session['manager_email'] }}</label>
                                                 <input type="email" class="form-control" id="feEmailAddress"
-                                                       placeholder="Email" value="maxwilliams@eay.com">
+                                                       placeholder="Email" value="{{ session['manager_email'] }}">
                                             </div>
                                         </div>
                                         <div class="form-row">
@@ -79,7 +90,7 @@
                                                           rows="5">{{ description }}</textarea>
                                             </div>
                                         </div>
-                                        <button type="submit" class="btn btn-accent">Update Account</button>
+                                        <button type="submit" class="btn btn-accent" disabled>Update Account</button>
                                     </form>
                                 </div>
                             </div>
