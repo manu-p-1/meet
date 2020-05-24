@@ -53,6 +53,8 @@ class MarqetaClient:
                                      'PD': 'PRODUCTION', 'RD': 'RESEARCH & DEVELOPMENT', 'SC': 'SECURITY',
                                      'LG': 'LOGISTICS'}
 
+        self.DEPARTMENT_TOKEN_TO_OBJECTS = {}
+
         self.DEPT_MAPPINGS = [('IT', 'IT'), ('AC', 'ACCOUNTING'), ('MK', 'MARKETING'), ('HR', 'HUMAN RESOURCES'),
                               ('PD', 'PRODUCTION'), ('RD',
                                                      'RESEARCH & DEVELOPMENT'), ('SC', 'SECURITY'),
@@ -121,12 +123,14 @@ class MarqetaClient:
 
         self.business = self.create_business(self.BUSINESS_PAYLOAD)
 
-        master_fund_amount = float(random.randint(100_000, 1_000_000))
+        master_fund_amount = float(random.randint(1_500_000, 10_000_000))
         self.fund(master_fund_amount, gpa_type='business',
                   fund_source_token=self.funding_source.token, dest_token=self.business.token)
 
         self.departments = [self.create_department(
             dept) for dept in self.DEPARTMENT_LIST]
+
+        self.DEPARTMENT_TOKEN_TO_OBJECTS = dict(zip(self.DEPARTMENT_LIST,self.departments))
 
         amount_per_department = master_fund_amount / (len(self.departments) * 3)
 

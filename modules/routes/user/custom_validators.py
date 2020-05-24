@@ -192,3 +192,37 @@ class DateProper(object):
         utc_dt = local_dt.astimezone(pytz.utc)
 
         return utc_dt
+
+
+class DeptBalance(object):
+    def __init__(self, message=None, client=None, sn=None, employee_field=False):
+        if not message:
+            message = f'Funding amount is greater than the current department balance.'
+        self.message = message
+        self.client = client
+        self.sn = sn
+        self.employee_field = employee_field
+
+    def __call__(self, form, field):
+        if self.employee_field:
+            if not valid_balance(client=self.client, sn=self.sn, field=field, field_len=len(field)):
+                pass
+        elif not valid_balance(client=self.client, sn=self.sn, field=field):
+            raise ValidationError(self.message)
+
+
+def valid_balance(client, sn, field, field_len=None) -> bool:
+    dept_balance = client.retrieve_balance(
+        client.DEPARTMENT_TOKEN_TO_OBJECTS[sn['manager_dept']]).gpa.available_balance * .8
+
+    if field_len:
+        if (field_len * sn['form_balance']) > dept_balance:
+            return False
+        else:
+            return True
+    else:
+        sn['form_balance'] = field.data
+        if field.data > dept_balance:
+            return False
+        else:
+            return True

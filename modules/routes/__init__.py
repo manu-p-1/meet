@@ -5,7 +5,7 @@ from server import client, mysql
 from sys import stderr
 
 from datetime import datetime
-
+from modules.middleware.logic import createBackgroundScheduler
 
 def load_values():
     conn = mysql.connect()
@@ -60,3 +60,4 @@ def load_values():
     session['db_init'] = True
     conn.commit()
     conn.close()
+    createBackgroundScheduler()
