@@ -70,7 +70,7 @@ def create_plan():
             p = Plan(cursor, conn=conn)
             p.insert(form)
 
-            executerOrders()
+            executeOrders()
 
             return jsonify(
                 response_status="success",
@@ -99,7 +99,11 @@ def manage_plan():
     if request.method == 'GET':
         return render_template('plans/manage_plan/manage_plan_partial.html', form=form, current_date=time_now())
     else:
-        formatted_plan = session['MANAGE_FORM']
+        formatted_plan = session.get('MANAGE_FORM')
+
+        if formatted_plan is None:
+            return jsonify(response="A search query must be made to update it")
+
         form = get_plan_form(session, client.DEPT_MAPPINGS)
 
         if form.validate_on_submit():
