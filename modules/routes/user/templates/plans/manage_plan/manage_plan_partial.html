@@ -1,0 +1,49 @@
+{% extends "plans/plan_base.html" %}
+{% block base_title %}Manage Plans{% endblock %}
+
+{% block base_head %}
+    {{ super() }}
+{% endblock %}
+
+{% block plan_main %}
+    <div class="main-content-container container-fluid px-4">
+        <div class="page-header row no-gutters py-4">
+            <div class="col-lg-9 text-center text-sm-left mb-0">
+                <span class="text-uppercase page-subtitle">Company Planner</span>
+                <h3 class="page-title">Manage a Plan</h3>
+                <form id="searchForm" action="">
+                    <div class="form-group">
+                        <div class="input-group mt-3 mb-1">
+                            <input id="planSearch" class="form-control " type="text" placeholder="Search for a plan"
+                                   aria-label="Search"
+                                   name="search_query" aria-describedby="inputGroup-sizing-default">
+                            <div class="input-group-append">
+                                <button id="mainSearchSysBtn" style="border-color: #d7d7d7; !important;"
+                                        class="btn btn-md m-0 px-4 py-2 z-depth-0 waves-effect btn btn-outline-secondary"
+                                        type="submit"><i class="fas fa-search"></i></button>
+                            </div>
+                        </div>
+                        <p class="text-danger active-danger d-none">This is an active plan and cannot be modified</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-9 col-md-12">
+                <!-- Add New Post Form -->
+                <div class="card card-small mb-3">
+                    <div id="managePlan" class="card-body">
+                        {% include 'plans/manage_plan/manage_form_partial.html' %}
+                    </div>
+                </div>
+                <!-- / Add New Post Form -->
+            </div>
+            <div class="col-lg-3 col-md-12">
+                {% include "plans/plan_sidebar_partial.html" %}
+            </div>
+        </div>
+    </div>
+    {% assets "dash_manage_plan_js" %}
+        <script src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+{% endblock plan_main %}
