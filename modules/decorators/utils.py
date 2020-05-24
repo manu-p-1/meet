@@ -1,6 +1,5 @@
 from functools import wraps
 from flask import flash, redirect, url_for
-from sqlalchemy import exc
 
 
 def login_required(session):
@@ -22,4 +21,3 @@ def check_login(session) -> bool:
         return True
     else:
         return False
-
