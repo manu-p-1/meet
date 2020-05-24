@@ -5,14 +5,23 @@
     </button>
     {% if status %}
         <i class="fa fa-info mx-2"></i>
-        <strong>Your plan has been created</strong>
+        <strong>Your plan has been {{ manip_type }}</strong>
     {% else %}
-        {% for field, errors in form.errors.items() %}
-            {% for error in form.errors[field] %}
-                <i class="fa fa-times mx-2"></i>
-                <strong>{{ error }}</strong>
-                <br>
+        {% if form is defined %}
+            {% for field, errors in form.errors.items() %}
+                {% for error in form.errors[field] %}
+                    <i class="fa fa-times mx-2"></i>
+                    <strong>{{ error }}</strong>
+                    <br>
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
+        {% else %} {# List of custom errors non-form related #}
+            {% if err_list is defined %}
+                {% for error in err_list %}
+                    <i class="fa fa-times mx-2"></i>
+                    <strong>{{ error }}</strong>
+                {% endfor %}
+            {% endif %}
+        {% endif %}
     {% endif %}
 </div>
