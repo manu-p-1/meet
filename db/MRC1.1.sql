@@ -198,6 +198,13 @@ VALUES ('Travel To Nantucket', 500, 'Travel', 'This is a travel plan', "2020-01-
 
 INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
                  dest_fund_FK, fund_individuals, complete)
+VALUES ('Travel To New Jersey', 2410, 'Travel', 'This is a travel plan', "2020-02-20 23:20:20", "2020-02-22 23:20:20",
+        2,
+        2,
+        1, 1);
+
+INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
+                 dest_fund_FK, fund_individuals, complete)
 VALUES ('Travel To Austin', 500, 'Travel', 'This is a travel plan', "2020-01-04 05:20:20", "2020-01-15 05:20:20",
         2, 2, 1, 1);
 
@@ -254,6 +261,12 @@ VALUES ('Travel To Seattle', 1000, 'Travel', 'This is a travel plan', "2020-04-1
 INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
                  dest_fund_FK, fund_individuals, complete)
 VALUES ('Travel To Omaha', 1000, 'Travel', 'This is a travel plan', "2020-04-13 05:20:20", "2020-04-17 23:20:20", 4, 4,
+        1, 1);
+
+INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
+                 dest_fund_FK, fund_individuals, complete)
+VALUES ('Travel To Phoenix', 1100, 'Travel', 'This is a travel plan', "2020-04-20 23:20:20", "2020-04-22 23:20:20", 2,
+        2,
         1, 1);
 
 
