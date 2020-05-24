@@ -1,8 +1,7 @@
 import locale
-from sys import stderr
 
 from modules.decorators.utils import login_required
-from flask import Blueprint, render_template, request, jsonify, redirect, flash, session, url_for
+from flask import Blueprint, jsonify, session
 from modules.simulation.logic import department_alloc, department_utilization, current_business_balance, \
     department_balance, department_employee_count, current_outgoing_transactions, active_plans, \
     department_employee__monthly_spending, plan_avg_six_months
