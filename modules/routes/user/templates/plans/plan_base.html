@@ -1,0 +1,22 @@
+{% extends "dash_base.html" %}
+{% block base_title %}{% endblock %}
+
+{% block base_head %}
+    {{ super() }}
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <link href="/static/libs/daterangepicker/daterangepicker.css" rel="stylesheet">
+    <script src="/static/libs/daterangepicker/moment.min.js"></script>
+    <script src="/static/libs/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" href="/static/libs/jqueryui/jquery-ui.css">
+    <script src="/static/libs/jqueryui/jquery-ui.min.js"></script>
+
+    {% assets "dash_plan_css" %}
+        <link rel="stylesheet" id="main-stylesheet" href="{{ ASSET_URL }}">
+    {% endassets %}
+{% endblock %}
+
+{% block dashboard_main %}
+    {% block plan_main %}
+
+    {% endblock %}
+{% endblock dashboard_main %}
