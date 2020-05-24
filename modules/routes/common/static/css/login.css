@@ -7,25 +7,25 @@ body{
 
 @-webkit-keyframes gradientBG {
 	0% {
-		background-position: 0% 50%;
-	}
+        background-position: 0 50%;
+    }
 	50% {
 		background-position: 100% 50%;
 	}
 	100% {
-		background-position: 0% 50%;
-	}
+        background-position: 0 50%;
+    }
 }
 @keyframes gradientBG {
 	0% {
-		background-position: 0% 50%;
-	}
+        background-position: 0 50%;
+    }
 	50% {
 		background-position: 100% 50%;
 	}
 	100% {
-		background-position: 0% 50%;
-	}
+        background-position: 0 50%;
+    }
 }
 
 @media (max-width: 476px) {
@@ -67,7 +67,7 @@ body{
 }
 
 .custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
-    background: linear-gradient(40deg, #45cafc, #303f9f) !important;
+    background: linear-gradient(40deg, #007bff, #5e17eb) !important;
 }
 
 #footSep {
@@ -159,4 +159,14 @@ footer .rel-links a {
 
 .fa-running:hover {
     color: limegreen !important;
+}
+
+.valid {
+    border-color: #007bff !important;
+    -webkit-box-shadow: inset 0 0 0 1px #007bff !important;
+    box-shadow: inset 0 0 0 1px #007bff !important;
+}
+
+.md-form.md-outline label.active {
+    border-radius: 10px;
 }
