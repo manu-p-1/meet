@@ -36,7 +36,7 @@ def createBackgroundScheduler():
 # the plan_ids should be a list of plan ids, as stored in the db
 # This will come from some func that queries the db for all
 # past due and store them as a list
-def executeOrders(mysql):
+def executeOrders():
     #print("Executing Orders")
     conn = mysql.connect()
     cursor = conn.cursor()

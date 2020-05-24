@@ -99,6 +99,7 @@ def simulate_startup():
     for dept, e_list in client.department_employees.items():
 
         dept_bal = client.retrieve_balance(dept).gpa.available_balance * (random.randint(1,19)/100)
+        print(f'dept_bal --> {dept_bal}')
 
         employees = random.sample(e_list, 5)
 
@@ -111,8 +112,8 @@ def simulate_startup():
 
             mid_identifer = random.choice(MIDS)
             employee_transaction = simulate(
-                card, amount=dept_bal * (random.randint(1,20)/100), mid=mid_identifer)
-
+                card, amount=dept_bal * (random.randint(1,19)/100), mid=mid_identifer)
+            print(f'employee authorization --> {employee_transaction}')
             t.insert(card, mid_identifer, Transaction.current_time(
                 employee_transaction.created_time), employee_transaction.amount, is_card=True)
             ec.insert(e, card)

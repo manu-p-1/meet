@@ -18,6 +18,7 @@ def login(ctx=None):
     if not session.get('db_init'):
         try:
             load_values()
+            print('starting simulation....')
             simulate_startup()
         except Exception as e:
             print(e)
