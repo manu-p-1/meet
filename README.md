@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://www.einbergandying.com" target="_blank">
+    <img src="static/images/MEET_Landscape.png">
+  </a>
+  https://www.einbergandying.com
+</p>
 
 # Marqeta Extended Expense Tracker (MEET)
 
