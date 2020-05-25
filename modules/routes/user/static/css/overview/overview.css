@@ -47,3 +47,14 @@ div.dataTables_wrapper {
 #monthlySpendingLoading {
     margin-top: 1px;
 }
+
+
+#spendingTable_filter {
+    float: left !important;
+    margin-left: 5px;
+}
+
+
+#spendingTable_filter input[type=search] {
+    width: 350px;
+}
