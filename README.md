@@ -24,7 +24,19 @@
    <a href="https://github.com/manu-p-1/Note/graphs/contributors" target="_blank">
     <img src="https://forthebadge.com/images/badges/gluten-free.svg">
   </a>
+  
+  <br>
+  
+  <a href="https://github.com/manu-p-1/mrc/commits/master" target="_blank">
+    <img src="https://img.shields.io/github/last-commit/manu-p-1/mrc/master.svg?style=for-the-badge">
+  </a>
+  
+  <a href="https://github.com/manu-p-1/mrc/graphs/contributors" target="_blank">
+    <img src="https://img.shields.io/github/contributors/manu-p-1/mrc.svg?style=for-the-badge">
+  </a>
 <p>
+<br>
+<br>
 
 For the **Marqeta Spring Payments Hackathon**, we wanted to demonstrate the flexibility and practicality of the Marqeta API and the Marqeta Python SDK with our demo, MEET.
 
