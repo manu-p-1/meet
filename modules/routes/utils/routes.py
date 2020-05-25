@@ -119,6 +119,7 @@ def manage_plan():
                     "id": employee[0],
                     "name": employee[1]
                 })
+        plan_fmt['employees_list'] = employees_list
 
         session['MANAGE_FORM'] = plan_fmt
         conn.close()
@@ -134,7 +135,7 @@ def manage_plan():
                 "start_date": plan_fmt['start_date'],
                 "dest_fund": plan_fmt['dest_fund_FK'],
                 "has_employee_specific": True if plan_fmt['fund_individuals'] else False,
-                "employees_list": employees_list,
+                "employees_list": plan_fmt['employees_list'],
                 "has_end_date": True if plan_fmt['end_date'] is not None else False,
                 "end_date": plan_fmt['end_date'],
                 "has_velocity_control": True if plan_fmt['control_name'] is not None else False,
