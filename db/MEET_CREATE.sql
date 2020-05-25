@@ -9,20 +9,20 @@ SET @OLD_SQL_MODE = @@SQL_MODE, SQL_MODE =
 -- Schema mydb
 -- -----------------------------------------------------
 -- -----------------------------------------------------
--- Schema mrcdb
+-- Schema meetdb
 -- -----------------------------------------------------
-DROP SCHEMA IF EXISTS `mrcdb`;
+DROP SCHEMA IF EXISTS `meetdb`;
 
 -- -----------------------------------------------------
--- Schema mrcdb
+-- Schema meetdb
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mrcdb` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
-USE `mrcdb`;
+CREATE SCHEMA IF NOT EXISTS `meetdb` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+USE `meetdb`;
 
 -- -----------------------------------------------------
--- Table `mrcdb`.`department_lookup`
+-- Table `meetdb`.`department_lookup`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mrcdb`.`department_lookup`
+CREATE TABLE IF NOT EXISTS `meetdb`.`department_lookup`
 (
     `id`         INT          NOT NULL AUTO_INCREMENT,
     `token`      VARCHAR(200) NOT NULL,
@@ -37,9 +37,9 @@ CREATE TABLE IF NOT EXISTS `mrcdb`.`department_lookup`
 
 
 -- -----------------------------------------------------
--- Table `mrcdb`.`employee`
+-- Table `meetdb`.`employee`
 -- -----------------------------------------------------
-CREATE TABLE `mrcdb`.`employee`
+CREATE TABLE `meetdb`.`employee`
 (
     `id`               int          NOT NULL AUTO_INCREMENT,
     `token`            varchar(50)  NOT NULL,
@@ -55,9 +55,9 @@ CREATE TABLE `mrcdb`.`employee`
   COLLATE = utf8mb4_0900_ai_ci;
 
 -- -----------------------------------------------------
--- Table `mrcdb`.`plan`
+-- Table `meetdb`.`plan`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mrcdb`.`plan`
+CREATE TABLE IF NOT EXISTS `meetdb`.`plan`
 (
     `id`                 INT            NOT NULL AUTO_INCREMENT,
     `plan_name`          VARCHAR(200)   NOT NULL,
@@ -80,19 +80,19 @@ CREATE TABLE IF NOT EXISTS `mrcdb`.`plan`
     INDEX `dest_fund_FK_idx1` (`dest_fund_FK` ASC) VISIBLE,
     CONSTRAINT `dest_fund_FK`
         FOREIGN KEY (`dest_fund_FK`)
-            REFERENCES `mrcdb`.`department_lookup` (`id`),
+            REFERENCES `meetdb`.`department_lookup` (`id`),
     CONSTRAINT `source_fund_FK`
         FOREIGN KEY (`source_fund_FK`)
-            REFERENCES `mrcdb`.`department_lookup` (`id`)
+            REFERENCES `meetdb`.`department_lookup` (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `mrcdb`.`employee_plan`
+-- Table `meetdb`.`employee_plan`
 -- -----------------------------------------------------
-CREATE TABLE `mrcdb`.`employee_plan`
+CREATE TABLE `meetdb`.`employee_plan`
 (
     `ep_employee_FK` int NOT NULL,
     `ep_plan_FK`     int NOT NULL,
@@ -107,16 +107,16 @@ CREATE TABLE `mrcdb`.`employee_plan`
   COLLATE = utf8mb4_0900_ai_ci;
 
 -- -----------------------------------------------------
--- Table `mrcdb`.`manager`
+-- Table `meetdb`.`manager`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mrcdb`.`manager`
+CREATE TABLE IF NOT EXISTS `meetdb`.`manager`
 (
     `id`              INT          NOT NULL AUTO_INCREMENT,
     `email`           VARCHAR(255) NOT NULL,
     `pass`            VARCHAR(128) NOT NULL,
     `first_name`      VARCHAR(45)  NOT NULL,
     `last_name`       VARCHAR(45)  NOT NULL,
-    `gender`          VARCHAR(45) NOT NULL,
+    `gender`          VARCHAR(45)  NOT NULL,
     `title`           VARCHAR(50)  NOT NULL,
     `description`     VARCHAR(500) NULL DEFAULT NULL,
     `manager_dept_FK` INT          NOT NULL,
@@ -125,13 +125,13 @@ CREATE TABLE IF NOT EXISTS `mrcdb`.`manager`
     INDEX `manager_dept_FK_idx` (`manager_dept_FK` ASC) VISIBLE,
     CONSTRAINT `manager_dept_FK`
         FOREIGN KEY (`manager_dept_FK`)
-            REFERENCES `mrcdb`.`department_lookup` (`id`)
+            REFERENCES `meetdb`.`department_lookup` (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
 
-CREATE TABLE `mrcdb`.`transaction`
+CREATE TABLE `meetdb`.`transaction`
 (
     `id`                int            NOT NULL AUTO_INCREMENT,
     `src_token`         varchar(50)    NOT NULL,
@@ -145,7 +145,7 @@ CREATE TABLE `mrcdb`.`transaction`
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
-CREATE TABLE `mrcdb`.`employee_card`
+CREATE TABLE `meetdb`.`employee_card`
 (
     `ec_employee_token` varchar(50) NOT NULL,
     `ec_card_token`     varchar(50) NOT NULL,
