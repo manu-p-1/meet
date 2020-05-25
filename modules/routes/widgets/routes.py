@@ -4,7 +4,7 @@ from modules.decorators.utils import login_required
 from flask import Blueprint, jsonify, session
 from modules.simulation.logic import department_alloc, department_utilization, current_business_balance, \
     department_balance, department_employee_count, current_outgoing_transactions, active_plans, \
-    department_employee__monthly_spending, plan_avg_six_months
+    department_employee__monthly_spending, plan_avg_six_months, generate_employee_spending_graph
 from server import client
 
 widgets_bp = Blueprint('widgets_bp', __name__)
@@ -77,4 +77,11 @@ def wid_plan_avg_six_months():
     return jsonify(
         data=plan_avg_six_months(session['manager_dept']),
         department=client.READABLE_DEPARTMENTS[session['manager_dept']]
+    )
+
+@widgets_bp.route('/dash/monthly_employee_spending/', methods=['GET'])
+@login_required(session)
+def wid_monthly_employee_spending():
+    return jsonify(
+        data=generate_employee_spending_graph(session['manager_dept'])
     )

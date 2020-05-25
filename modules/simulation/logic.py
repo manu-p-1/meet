@@ -32,7 +32,6 @@ def department_alloc():
     q = """
         SELECT amount, dest_token FROM transaction WHERE src_token = %s
     """
-    print(client.business.token, file=stderr)
     cursor.execute(q, client.business.token)
     conn.close()
     funds = cursor.fetchall()
@@ -85,7 +84,6 @@ def simulate(card_token: str, amount: float, mid: str):
 
     resp = json.loads(r.post('https://sandbox-api.marqeta.com/v3/simulate/authorization', headers=headers,
                              data=payload, auth=(os.environ['MY_APP'], os.environ['MY_ACCESS'])).content)
-    print(json.dumps(resp,indent=4))
 
     return Authorization(resp['transaction'])
 
@@ -98,8 +96,8 @@ def simulate_startup():
 
     for dept, e_list in client.department_employees.items():
 
-        dept_bal = client.retrieve_balance(dept).gpa.available_balance * (random.randint(1,19)/100)
-        print(f'dept_bal --> {dept_bal}')
+        dept_bal = client.retrieve_balance(
+            dept).gpa.available_balance * (random.randint(1, 19)/100)
 
         employees = random.sample(e_list, 5)
 
@@ -112,8 +110,8 @@ def simulate_startup():
 
             mid_identifer = random.choice(MIDS)
             employee_transaction = simulate(
-                card, amount=dept_bal * (random.randint(1,19)/100), mid=mid_identifer)
-            print(f'employee authorization --> {employee_transaction}')
+                card, amount=dept_bal * (random.randint(1, 19)/100), mid=mid_identifer)
+
             t.insert(card, mid_identifer, Transaction.current_time(
                 employee_transaction.created_time), employee_transaction.amount, is_card=True)
             ec.insert(e, card)
@@ -125,19 +123,22 @@ def simulate_employee_plan(plan_id):
     conn = mysql.connect()
     cursor = conn.cursor()
     query = '''SELECT e.token, ep_card_token FROM employee_plan ep JOIN employee e ON ep.ep_employee_FK = e.id WHERE ep_plan_FK = %s'''
-    t = Transaction(cursor,conn=conn)
+    t = Transaction(cursor, conn=conn)
 
     # THIS WILL RETURN ALL EMPLOYEES AND THEIR ASSOCIATED CARDS WITH AN ACCORDING PLAN
-    cursor.execute(query,(plan_id))
+    cursor.execute(query, (plan_id))
     for employee_card_pair in cursor.fetchall():
         mid_identifer = random.choice(MIDS)
         employee_token = employee_card_pair[0]
         card_token = employee_card_pair[1]
         # NEED TO FIND BALANCE OF THE USER AND TIMES THAT BY SOME PERCENTAGE
-        e_balance = client.retrieve_balance(employee_token).gpa.available_balance * .1
-        employee_transaction = simulate(card_token,amount=e_balance,mid=mid_identifer)
-        t.insert(card_token,mid_identifer,Transaction.current_time(employee_transaction.created_time),employee_transaction.amount,is_card=True)
-    
+        e_balance = client.retrieve_balance(
+            employee_token).gpa.available_balance * .1
+        employee_transaction = simulate(
+            card_token, amount=e_balance, mid=mid_identifer)
+        t.insert(card_token, mid_identifer, Transaction.current_time(
+            employee_transaction.created_time), employee_transaction.amount, is_card=True)
+
     conn.close()
 
 
@@ -158,7 +159,8 @@ def department_balance(dept_code):
                     "available_balance": float(bal.gpa.available_balance),
                     "ledger_balance": float(bal.gpa.ledger_balance)
                 }
-    raise Exception("The department code passed matches to no known department")
+    raise Exception(
+        "The department code passed matches to no known department")
 
 
 def department_employee_count(dept_code):
@@ -169,7 +171,8 @@ def department_employee_count(dept_code):
             if dept_token == token:
                 return len(e_list)
 
-    raise Exception("The department code passed matches to no known department")
+    raise Exception(
+        "The department code passed matches to no known department")
 
 
 def current_outgoing_transactions(dept_code):
@@ -200,17 +203,14 @@ def current_outgoing_transactions(dept_code):
 
     amounts = []
     for e in e_list:
-        print(e, file=stderr)
         cursor.execute(e_query, (e, twenty_four_ago, start_date))
         cf = cursor.fetchall()
-        print(cf, file=stderr)
         if cf[0][0] is not None:
             amounts.append(cf[0][0])
 
     cursor.execute(q, (token, twenty_four_ago, start_date))
 
     cf = cursor.fetchall()
-    print(cf)
     if len(cf) != 0:
         amounts.append(cf[0][0])
 
@@ -285,6 +285,53 @@ def department_employee__monthly_spending(dept_code):
     return employee_to_spending
 
 
+def generate_employee_spending_graph(dept_code):
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    dept_token = find_department_token(dept_code)
+
+    now = time_now()
+    start_date = now.strftime("%Y-%m-%d %H:%M:%S")
+    month_ago = (now - timedelta(days=31)).strftime("%Y-%m-%d %H:%M:%S")
+    prev_month = (now-timedelta(days=62)).strftime("%Y-%m-%d %H:%M:%S")
+
+    q = """SELECT sum(t.amount), day(t.create_time) as e_sum FROM employee e
+    JOIN employee_card ec on e.token = ec.ec_employee_token
+    JOIN transaction t on src_token = ec.ec_card_token
+    WHERE e.employee_dept_FK = %s
+    AND t.create_time >= %s AND t.create_time <= %s
+    GROUP BY e_sum"""
+
+    prev_query = """SELECT sum(t.amount), day(t.create_time) as e_sum FROM employee e
+    JOIN employee_card ec on e.token = ec.ec_employee_token
+    JOIN transaction t on src_token = ec.ec_card_token
+    WHERE e.employee_dept_FK = %s
+    AND t.create_time >= %s AND t.create_time <= %s
+    GROUP BY e_sum"""
+
+    cursor.execute(q, (dept_token, month_ago, start_date))
+    cf = cursor.fetchall()
+
+    employee_sum = {}
+
+    for record in cf:
+        employee_sum[record[1]] = {
+            "sum": float(record[0])
+        }
+
+    prev_sum = {}
+    
+    cursor.execute(prev_query, (dept_token, prev_month, month_ago))
+    cf = cursor.fetchall()
+
+    for record in cf:
+        prev_sum[record[1]] = {
+            "sum": float(record[0])
+        }
+
+    return {'current_month':employee_sum,'previous_month':prev_sum}
+
+
 def plan_avg_six_months(dept_code):
     conn = mysql.connect()
     cursor = conn.cursor()
@@ -300,7 +347,8 @@ def plan_avg_six_months(dept_code):
     """
     now = time_now()
     start_date = now.strftime("%Y-%m-%d %H:%M:%S")
-    six_months_ago = (now - timedelta(days=365 / 2)).strftime("%Y-%m-%d %H:%M:%S")
+    six_months_ago = (now - timedelta(days=365 / 2)
+                      ).strftime("%Y-%m-%d %H:%M:%S")
 
     q = """
         SELECT avg(funding_amount) AS avg, month(start_date) AS mstd FROM plan
