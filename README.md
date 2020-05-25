@@ -2,10 +2,41 @@
   <a href="https://www.einbergandying.com" target="_blank">
     <img src="static/images/MEET_Landscape.png">
   </a>
-  https://www.einbergandying.com
+  <a href="https://www.einbergandying.com" target="_blank">Einberg & Ying LLP</a>
 </p>
 
-# Marqeta Extended Expense Tracker (MEET)
+<div align="center">
+  <h1>Marqeta Extended Expense Tracker (MEET)</h1>
+</div>
+
+<p align="center">
+    <img src="https://forthebadge.com/images/badges/made-with-python.svg">
+  </a>
+  
+  <a href="https://github.com/manu-p-1/Note/graphs/contributors" target="_blank">
+    <img src="https://forthebadge.com/images/badges/built-with-love.svg">  
+  </a>
+  
+  <a href="https://github.com/manu-p-1/Note/graphs/contributors" target="_blank">
+    <img src="https://forthebadge.com/images/badges/built-by-developers.svg">
+  </a>
+  
+   <a href="https://github.com/manu-p-1/Note/graphs/contributors" target="_blank">
+    <img src="https://forthebadge.com/images/badges/gluten-free.svg">
+  </a>
+  
+  <br>
+  
+  <a href="https://github.com/manu-p-1/mrc/commits/master" target="_blank">
+    <img src="https://img.shields.io/github/last-commit/manu-p-1/mrc/master.svg?style=for-the-badge">
+  </a>
+  
+  <a href="https://github.com/manu-p-1/mrc/graphs/contributors" target="_blank">
+    <img src="https://img.shields.io/github/contributors/manu-p-1/mrc.svg?style=for-the-badge">
+  </a>
+<p>
+<br>
+<br>
 
 For the **Marqeta Spring Payments Hackathon**, we wanted to demonstrate the flexibility and practicality of the Marqeta API and the Marqeta Python SDK with our demo, MEET.
 
@@ -18,11 +49,17 @@ Imagine yourself as the manager of your accounting department at Einberg and Yin
 One of the primary use cases of MEET is that it allows companies to follow a plan-based approach of how they want their funds to be distibuted. MEET enables managers to create plans for when they want money to be distributed to their department's employees or whether they need to transfer funds to another department. Once these plans are crated 
 
 ## Key advantages and Benefits
-benefits
+- Simplicity: A big benefit of MEET is its user-friendly functionalities and design. By accessing the dashboard view, a user can see all the important data and statistics of company's expenses. Additionally, for a managerial perspective, creating plans is also an easy process with a few fields to fill.
+
+- Transparency: Business executives or department managers have viewing access to the flow of money within the departments and employees. Business executives can see how money from the business GPA is distributed to different departments. Both business executives and department managers can view the transactions made by employees.
+
+- Accountability: Because each department and individual employees spending is recorded and accessible by a business executive or department head, any misuse of company's fund or irregularities can be easily traced to its source, thus encouraging employees to handle money more responsibly. 
+
+- Illustrative: In adddition to providing expense tracking, there are various statistics, graphs, tables, and data visible to users. Each of these display illustrates a general standing of company's exepenses. For example, a pie chart exhibits the allocation of funds whether proportionally or disproportionally. Averages are used to encapsulate a comprehensive insight into the use of company's funds by departments, users, plans, etc. A time graph graph illustrates the change in expenses over time. 
 
 
 ## Audience
-audience
+The intended audience is any person with a leadership position within a business who desires a streamline perspective of cashflow within different departments or individuals. 
 
 
 ## How we utilized Marqeta's API
