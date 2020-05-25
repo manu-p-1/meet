@@ -1,5 +1,4 @@
 import sys
-from typing import Dict, Any
 
 from wtforms import TextAreaField
 
@@ -24,6 +23,6 @@ class EmployeeInfoTextAreaField(TextAreaField):
         if len(splitted) == 1:
             return ''
         return {
-            "name": splitted[0],
-            "id": splitted[1]
+            "id": int(splitted[1]),
+            "name": splitted[0].strip()
         }
