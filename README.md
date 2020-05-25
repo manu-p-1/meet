@@ -5,7 +5,9 @@
   <a href="https://www.einbergandying.com" target="_blank">Einberg & Ying LLP</a>
 </p>
 
-# Marqeta Extended Expense Tracker (MEET)
+<div align="center">
+  <h1>Marqeta Extended Expense Tracker (MEET)</h1>
+</div>
 
 For the **Marqeta Spring Payments Hackathon**, we wanted to demonstrate the flexibility and practicality of the Marqeta API and the Marqeta Python SDK with our demo, MEET.
 
