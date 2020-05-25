@@ -1,16 +1,13 @@
 import os
-import sys
-from sys import stderr
 
-from flask import Flask, session
+from flask import Flask
 from flaskext.mysql import MySQL
 from flask_assets import Environment
 
-from mrc_bundles import bundles
+from meet_bundles import bundles
 from flask_wtf.csrf import CSRFProtect
 from marqeta_setup import MarqetaClient
 import secrets
-import subprocess
 import platform
 
 mysql = MySQL()
@@ -57,6 +54,3 @@ def create_server():
         app.register_blueprint(widget_routes.widgets_bp, url_prefix="/user/widgets")
 
     return app
-
-
-    
