@@ -9,6 +9,23 @@
   <h1>Marqeta Extended Expense Tracker (MEET)</h1>
 </div>
 
+<p align="center">
+    <img src="https://forthebadge.com/images/badges/made-with-python.svg">
+  </a>
+  
+  <a href="https://github.com/manu-p-1/Note/graphs/contributors" target="_blank">
+    <img src="https://forthebadge.com/images/badges/built-with-love.svg">  
+  </a>
+  
+  <a href="https://github.com/manu-p-1/Note/graphs/contributors" target="_blank">
+    <img src="https://forthebadge.com/images/badges/built-by-developers.svg">
+  </a>
+  
+   <a href="https://github.com/manu-p-1/Note/graphs/contributors" target="_blank">
+    <img src="https://forthebadge.com/images/badges/gluten-free.svg">
+  </a>
+<p>
+
 For the **Marqeta Spring Payments Hackathon**, we wanted to demonstrate the flexibility and practicality of the Marqeta API and the Marqeta Python SDK with our demo, MEET.
 
 ## Introduction
