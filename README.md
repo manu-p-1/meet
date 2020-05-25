@@ -18,11 +18,17 @@ Imagine yourself as the manager of your accounting department at Einberg and Yin
 One of the primary use cases of MEET is that it allows companies to follow a plan-based approach of how they want their funds to be distibuted. MEET enables managers to create plans for when they want money to be distributed to their department's employees or whether they need to transfer funds to another department. Once these plans are crated 
 
 ## Key advantages and Benefits
-benefits
+- Simplicity: A big benefit of MEET is its user-friendly functionalities and design. By accessing the dashboard view, a user can see all the important data and statistics of company's expenses. Additionally, for a managerial perspective, creating plans is also an easy process with a few fields to fill.
+
+- Transparency: Business executives or department managers have viewing access to the flow of money within the departments and employees. Business executives can see how money from the business GPA is distributed to different departments. Both business executives and department managers can view the transactions made by employees.
+
+- Accountability: Because each department and individual employees spending is recorded and accessible by a business executive or department head, any misuse of company's fund or irregularities can be easily traced to its source, thus encouraging employees to handle money more responsibly. 
+
+- Illustrative: In adddition to providing expense tracking, there are various statistics, graphs, tables, and data visible to users. Each of these display illustrates a general standing of company's exepenses. For example, a pie chart exhibits the allocation of funds whether proportionally or disproportionally. Averages are used to encapsulate a comprehensive insight into the use of company's funds by departments, users, plans, etc. A time graph graph illustrates the change in expenses over time. 
 
 
 ## Audience
-audience
+The intended audience is any person with a leadership position within a business who desires a streamline perspective of cashflow within different departments or individuals. 
 
 
 ## How we utilized Marqeta's API
