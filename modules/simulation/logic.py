@@ -120,6 +120,7 @@ def simulate_startup():
 
     conn.close()
 
+
 def simulate_employee_plan(plan_id):
     conn = mysql.connect()
     cursor = conn.cursor()
