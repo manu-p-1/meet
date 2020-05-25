@@ -343,15 +343,41 @@ $(document).ready(function () {
     const table = $('#spendingTable').DataTable({
         paging: false,
         info: false,
-        searching: false,
+        searching: true,
         scrollY: "400px",
         scrollCollapse: true,
         responsive: true,
+        dom: "<'myfilter'f><'mylength'l>t",
         "initComplete": function (settings, json) {
             loadSpending();
         }
     });
 
+    var buttons = new $.fn.dataTable.Buttons(table, {
+        buttons: [
+            {
+                extend: 'copyHtml5'
+            },
+            {
+                extend: 'excelHtml5',
+                title: 'Monthly Spending Excel Report - EAY'
+            },
+            {
+                extend: 'pdfHtml5',
+                title: 'Monthly Spending PDF Report - EAY'
+            },
+            {
+                extend: 'csvHtml5',
+                title: 'Monthly Spending CSV Report - EAY'
+            },
+        ]
+    }).container().children().each(function () {
+        $(this).addClass("dropdown-item");
+        console.log($(this))
+    });
+
+    console.log(buttons);
+    $("#exportOptionDropDown").append(buttons);
 
     function loadSpending() {
         $.getJSON('/user/widgets/dash/department_employee__monthly_spending/', function (data, status, xhr) {
@@ -370,7 +396,8 @@ $(document).ready(function () {
             ref.prev().remove();
             table.row.add([ERROR])
         });
-
     }
+
+    $("#spendingTable_filter input[type=search]").addClass("form-control d-inline-block")
 });
 

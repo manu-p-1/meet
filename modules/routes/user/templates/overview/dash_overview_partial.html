@@ -157,14 +157,23 @@
             <div class="col-lg-8 col-md-6 col-sm-12 mb-4">
                 <div class="card h-100">
                     <div class="card-header border-bottom">
-                        <h6 class="m-0">Monthly Spending</h6>
+                        <h6 class="m-0 d-inline-block">Monthly Spending</h6>
+                        <div class="dropdown d-inline-block float-right">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="exportOptions"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Export Data
+                            </button>
+                            <div class="dropdown-menu" id="exportOptionDropDown" aria-labelledby="exportOptions">
+                            </div>
+                        </div>
                     </div>
                     <div class="card-body p-2 loader-content w-100">
                         <div class="loader" id="monthlySpendingLoading">
                             <i class="fas fa-spinner fa-pulse fa-4x mb-2"></i>
                             <p id="monthlySpendingLoadingText">Loading...</p>
                         </div>
-                        <table id="spendingTable" class="table table-responsive-sm responsive hover font-weight-normal"
+                        <table id="spendingTable"
+                               class="table table-responsive-sm responsive hover font-weight-normal"
                                style="width:100% !important; height: 100% !important;">
                             <thead>
                             <tr>
@@ -217,6 +226,12 @@
     {% assets "dash_overview_js" %}
         <script src="{{ ASSET_URL }}"></script>
     {% endassets %}
-    <script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
-    <script src="//cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/static/libs/datatables/dataTables.min.js"></script>
+    <script src="/static/libs/datatables/dataTables.buttons.min.js"></script>
+    <script src="/static/libs/datatables/pdfmake.min.js"></script>
+    <script src="/static/libs/datatables/buttons.print.min.js"></script>
+    <script src="/static/libs/datatables/jszip.min.js"></script>
+    <script src="/static/libs/datatables/vfs_fonts.js"></script>
+    <script src="/static/libs/datatables/vfs_fonts.js"></script>
+    <script src="/static/libs/datatables/buttons.html5.min.js"></script>
 {% endblock dashboard_main %}
