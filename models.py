@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from sys import stderr
 from datetime import datetime
 
 
