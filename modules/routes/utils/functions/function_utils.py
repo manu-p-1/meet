@@ -2,6 +2,8 @@ from datetime import datetime, timezone
 
 from flask import render_template, jsonify
 
+from modules.routes.utils.classes.class_utils import ManipulationType
+
 
 def gather_form_errors(form):
     ll = []
@@ -55,3 +57,14 @@ def short_error(form=None, err_list=None):
             )
         )
     raise Exception('form and err_list are mutually exclusive')
+
+
+def short_success(manip_type: ManipulationType):
+    return jsonify(
+        response_status="success",
+        response=render_template(
+            'alert_partial.html',
+            status=True,
+            manip_type=manip_type
+        )
+    )
