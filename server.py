@@ -23,7 +23,7 @@ def create_server():
     app = Flask(__name__)
 
     # update app config from file config.py
-    app.config.from_object('config.DevelopmentConfig')
+    app.config.from_object('config.ProductionConfig')
 
     # IN A PRODUCTION ENVIRONMENT
     # app.config.from_object(config)

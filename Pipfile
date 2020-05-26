@@ -20,6 +20,7 @@ packaging = "*"
 faker = "*"
 sqlacodegen = "*"
 apscheduler = "*"
+python-dotenv = "*"
 
 [scripts]
 server = "./start.sh"
