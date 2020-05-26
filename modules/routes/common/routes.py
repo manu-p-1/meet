@@ -19,7 +19,7 @@ def login(ctx=None):
         try:
             load_values()
             print('starting simulation....')
-            simulate_startup()
+            # simulate_startup()
         except Exception as e:
             print(e)
 
