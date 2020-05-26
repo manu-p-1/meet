@@ -55,16 +55,14 @@ class MarqetaClient:
 
         self.DEPARTMENT_TOKEN_TO_OBJECTS = {}
 
-        self.DEPT_MAPPINGS = [('IT', 'IT'), ('AC', 'ACCOUNTING'), ('MK', 'MARKETING'), ('HR', 'HUMAN RESOURCES'),
-                              ('PD', 'PRODUCTION'), ('RD',
-                                                     'RESEARCH & DEVELOPMENT'), ('SC', 'SECURITY'),
-                              ('LG', 'LOGISTICS')]
         self.CURRENT_DEPT = None
 
         self.MANAGERS = {}
-        GENDERS = ['FEMALE','MALE']
-        for i,dept in enumerate(self.DEPARTMENT_LIST):
-            m_gender = random.choice(GENDERS)
+
+        self.GENDERS = ['FEMALE', 'MALE']
+
+        for i, dept in enumerate(self.DEPARTMENT_LIST):
+            m_gender = random.choice(self.GENDERS)
             f_name = ''
             l_name = ''
             email = ''
@@ -76,12 +74,10 @@ class MarqetaClient:
                 l_name = self.fake.last_name_female()
             self.MANAGERS[dept] = {
                 'first_name': f_name,
-                'last_name' : l_name,
-                'gender' : m_gender,
+                'last_name': l_name,
+                'gender': m_gender,
                 'email': dept + '@eay.com', 'pass': 'root', 'manager_dept_FK': i + 1
             }
-
-        
 
         self.BUSINESS_NAME = 'Einberg & Ying LLP'
         self.BUSINESS_TOKEN = ''.join(
@@ -130,7 +126,7 @@ class MarqetaClient:
         self.departments = [self.create_department(
             dept) for dept in self.DEPARTMENT_LIST]
 
-        self.DEPARTMENT_TOKEN_TO_OBJECTS = dict(zip(self.DEPARTMENT_LIST,self.departments))
+        self.DEPARTMENT_TOKEN_TO_OBJECTS = dict(zip(self.DEPARTMENT_LIST, self.departments))
 
         amount_per_department = master_fund_amount / (len(self.departments) * 3)
 
