@@ -97,7 +97,7 @@ def simulate_startup():
     for dept, e_list in client.department_employees.items():
 
         dept_bal = client.retrieve_balance(
-            dept).gpa.available_balance * (random.randint(1, 19)/100)
+            dept).gpa.available_balance * (random.randint(1, 19) / 100)
 
         employees = random.sample(e_list, 5)
 
@@ -110,7 +110,7 @@ def simulate_startup():
 
             mid_identifer = random.choice(MIDS)
             employee_transaction = simulate(
-                card, amount=dept_bal * (random.randint(1, 19)/100), mid=mid_identifer)
+                card, amount=dept_bal * (random.randint(1, 19) / 100), mid=mid_identifer)
 
             t.insert(card, mid_identifer, Transaction.current_time(
                 employee_transaction.created_time), employee_transaction.amount, is_card=True)
@@ -293,7 +293,7 @@ def generate_employee_spending_graph(dept_code):
     now = time_now()
     start_date = now.strftime("%Y-%m-%d %H:%M:%S")
     month_ago = (now - timedelta(days=31)).strftime("%Y-%m-%d %H:%M:%S")
-    prev_month = (now-timedelta(days=62)).strftime("%Y-%m-%d %H:%M:%S")
+    prev_month = (now - timedelta(days=62)).strftime("%Y-%m-%d %H:%M:%S")
 
     q = """SELECT sum(t.amount), day(t.create_time) as e_sum FROM employee e
     JOIN employee_card ec on e.token = ec.ec_employee_token
@@ -319,17 +319,15 @@ def generate_employee_spending_graph(dept_code):
     for record in cf:
         employee_sum[record[1]] = float(record[0])
 
-
     prev_sum = {}
-    
+
     cursor.execute(prev_query, (dept_token, prev_month, month_ago))
     cf = cursor.fetchall()
 
     for record in cf:
         prev_sum[record[1]] = float(record[0])
-        
 
-    return {'current_month':employee_sum,'previous_month':prev_sum}
+    return {'current_month': employee_sum, 'previous_month': prev_sum}
 
 
 def plan_avg_six_months(dept_code):
