@@ -317,9 +317,8 @@ def generate_employee_spending_graph(dept_code):
     employee_sum = {}
 
     for record in cf:
-        employee_sum[record[1]] = {
-            "sum": float(record[0])
-        }
+        employee_sum[record[1]] = float(record[0])
+
 
     prev_sum = {}
     
@@ -327,9 +326,8 @@ def generate_employee_spending_graph(dept_code):
     cf = cursor.fetchall()
 
     for record in cf:
-        prev_sum[record[1]] = {
-            "sum": float(record[0])
-        }
+        prev_sum[record[1]] = float(record[0])
+        
 
     return {'current_month':employee_sum,'previous_month':prev_sum}
 
