@@ -9,40 +9,43 @@ from modules.routes.user.custom_validators import RequiredIf, DateProper, Employ
 
 from server import client
 
+DEPT_MAPPINGS = [
+    ('', 'Please Choose a fund Destination'),
+    ('IT', 'IT'), ('AC', 'ACCOUNTING'), ('MK', 'MARKETING'), ('HR', 'HUMAN RESOURCES'),
+    ('PD', 'PRODUCTION'), ('RD', 'RESEARCH & DEVELOPMENT'), ('SC', 'SECURITY'), ('LG', 'LOGISTICS')
+]
 
-def create_plan_form(sn, fund_choices):
+
+def create_plan_form(sn):
     """
     CREATE PLAN FORM
     :param sn: Session Dictionary
-    :param fund_choices: Destination Fund Sources
     :return: A Create Plan Form
     """
 
-    class CreatePlanForm(get_plan_base(sn, fund_choices)):
+    class CreatePlanForm(get_plan_base(sn)):
         createPlanButton = SubmitField("Create Plan", render_kw={"class": "btn btn-primary btn-block"})
 
     return CreatePlanForm()
 
 
-def get_plan_form(sn: dict, fund_choices: list):
+def get_plan_form(sn: dict):
     """
     GET PLAN FORM
     :param sn: Session Dictionary
-    :param fund_choices: Destination Fund Sources
     :return: A Manage Plan Form
     """
 
-    class ManagePlanForm(get_plan_base(sn, fund_choices)):
+    class ManagePlanForm(get_plan_base(sn)):
         updatePlanButton = SubmitField("Update Plan", render_kw={"class": "btn btn-primary btn-block"})
 
     return ManagePlanForm()
 
 
-def get_plan_base(sn: dict, fund_choices: list):
+def get_plan_base(sn: dict):
     """
     GET REFERENCE TO PLAN BASE FORM
     :param sn: Session Dictionary
-    :param fund_choices: Destination Fund Sources
     :return: A Plan Form
     """
 
@@ -94,14 +97,14 @@ def get_plan_base(sn: dict, fund_choices: list):
                                  choices=[
                                      (
                                          sn['manager_dept'],
-                                         [x for x in client.DEPT_MAPPINGS if x[0] == sn['manager_dept']][0][1]
+                                         client.READABLE_DEPARTMENTS[sn['manager_dept']]
                                      )
                                  ],
                                  render_kw={"class": "form-control"})
 
         destFund = SelectField('Fund Destination',
                                validators=[InputRequired(message="A funding destination department is required.")],
-                               choices=fund_choices,
+                               choices=DEPT_MAPPINGS,
                                render_kw={"class": "form-control"})
 
         fundIndivEmployeesToggle = BooleanField('Employee specific disbursement',
@@ -168,7 +171,7 @@ def get_plan_base(sn: dict, fund_choices: list):
                                               "class": "form-control"},
                                    widget=NumberInput())
 
-        usageLimit = IntegerField('Usage Limit',
+        usageLimit = IntegerField('Usage Limit (0 - 100)',
                                   validators=[
                                       RequiredIf('controlToggle',
                                                  message="The velocity control usage limit is required."),
