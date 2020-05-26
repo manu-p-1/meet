@@ -67,6 +67,7 @@ def overview(ctx=None):
             for e in employee if name in e[1].lower() or name in e[2].lower()
         ]
 
+    conn.close()
     return json.dumps(e_payload)
 
 
@@ -174,6 +175,7 @@ def delete_plan():
         )
     except Exception as e:
         # An exception here shouldn't really occur, so log it
+        conn.close()
         return jsonify(
             response_status="error",
             response=render_template('alert_partial.html',
