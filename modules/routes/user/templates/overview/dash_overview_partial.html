@@ -211,11 +211,15 @@
             <div class="col-lg-12 col-md-12 col-sm-12 mb-4">
                 <div class="card card-small">
                     <div class="card-header border-bottom">
-                        <h6 class="m-0">Employee Spending</h6>
+                        <h6 class="m-0">Monthly Overall Employee Spending</h6>
                     </div>
-                    <div class="card-body pt-0">
+                    <div class="card-body pt-0 loader-content">
+                        <div class="loader" id="overallEmployeeSpendingLoading">
+                            <i class="fas fa-spinner fa-pulse fa-4x mb-2"></i>
+                            <p id="overallEmployeeSpendingText">Loading...</p>
+                        </div>
                         <canvas height="130" style="max-width: 100% !important;"
-                                class="blog-overview-users"></canvas>
+                                id="overallEmployeeSpending"></canvas>
                     </div>
                 </div>
             </div>
@@ -226,12 +230,4 @@
     {% assets "dash_overview_js" %}
         <script src="{{ ASSET_URL }}"></script>
     {% endassets %}
-    <script src="/static/libs/datatables/dataTables.min.js"></script>
-    <script src="/static/libs/datatables/dataTables.buttons.min.js"></script>
-    <script src="/static/libs/datatables/pdfmake.min.js"></script>
-    <script src="/static/libs/datatables/buttons.print.min.js"></script>
-    <script src="/static/libs/datatables/jszip.min.js"></script>
-    <script src="/static/libs/datatables/vfs_fonts.js"></script>
-    <script src="/static/libs/datatables/vfs_fonts.js"></script>
-    <script src="/static/libs/datatables/buttons.html5.min.js"></script>
 {% endblock dashboard_main %}
