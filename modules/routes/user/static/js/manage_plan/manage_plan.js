@@ -32,7 +32,7 @@ searchForm.on("submit", function (e) {
                     $("#endDateToggle").trigger("click");
                     $("#endDate").val(data['end_date']);
                 }
-                if (data['has_velocity_controls']) {
+                if (data['has_velocity_control']) {
                     $("#controlToggle").trigger("click");
                     $("#controlName").val(data['control_name']);
                     $("#controlWindow").val(data['control_window']);
