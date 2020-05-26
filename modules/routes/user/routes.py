@@ -51,13 +51,8 @@ def logout(ctx=None):
 @user_bp.route('/create_plan/', methods=['GET', 'POST'])
 @login_required(session)
 def create_plan():
-    fund_choices = client.DEPT_MAPPINGS
 
-    if not session.get('create_plan_visited'):
-        session['create_plan_visited'] = True
-        fund_choices.insert(0, ('', 'Please choose a fund destination'))
-
-    form = create_plan_form(session, fund_choices)
+    form = create_plan_form(session)
 
     if request.method == 'GET':
         return render_template('plans/create_plan/create_plan_partial.html', form=form, current_date=time_now())
@@ -84,12 +79,8 @@ def create_plan():
 @user_bp.route('/manage_plan/', methods=['GET', 'POST'])
 @login_required(session)
 def manage_plan():
-    fund_choices = client.DEPT_MAPPINGS
-    if not session.get('create_plan_visited'):
-        session['create_plan_visited'] = True
-        fund_choices.insert(0, ('', 'Please choose a fund destination'))
 
-    form = get_plan_form(session, fund_choices)
+    form = get_plan_form(session)
 
     if request.method == 'GET':
         return render_template('plans/manage_plan/manage_plan_partial.html', form=form, current_date=time_now())
@@ -99,7 +90,7 @@ def manage_plan():
         if plan_fmt is None:
             return jsonify(response="A search query must be made to update it")
 
-        form = get_plan_form(session, client.DEPT_MAPPINGS)
+        form = get_plan_form(session)
 
         if form.validate_on_submit():
             print(request.form, file=stderr)
