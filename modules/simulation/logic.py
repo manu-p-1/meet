@@ -83,7 +83,7 @@ def simulate(card_token: str, amount: float, mid: str):
     }
 
     resp = json.loads(r.post('https://sandbox-api.marqeta.com/v3/simulate/authorization', headers=headers,
-                             data=payload, auth=(os.environ['MY_APP'], os.environ['MY_ACCESS'])).content)
+                             data=payload, auth=(os.getenv('MY_APP'), os.getenv('MY_ACCESS'))).content)
 
     return Authorization(resp['transaction'])
 

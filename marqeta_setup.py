@@ -38,8 +38,8 @@ class MarqetaClient:
         # Marqeta Client
         client_payload = {
             'base_url': "https://sandbox-api.marqeta.com/v3/",
-            'application_token': os.environ['MY_APP'],
-            'access_token': os.environ['MY_ACCESS'],
+            'application_token': os.getenv('MY_APP'),
+            'access_token': os.getenv('MY_ACCESS'),
             'timeout': 60
         }
         self.client_sdk = Client(client_payload['base_url'], client_payload['application_token'],
@@ -244,7 +244,7 @@ class MarqetaClient:
 
         return PeerTransfer(json.loads(r.post('https://sandbox-api.marqeta.com/v3/peertransfers', headers=headers,
                                               data=payload,
-                                              auth=(os.environ['MY_APP'], os.environ['MY_ACCESS'])).content))
+                                              auth=(os.getenv('MY_APP'), os.getenv('MY_ACCESS'))).content))
 
     def retrieve_balance(self, token):
         return self.client_sdk.balances.find_for_user_or_business(token)
@@ -314,7 +314,7 @@ class MarqetaClient:
             }
             card_payload = {
                 'user_token': e_payload['token'],
-                'card_product_token': os.environ['SAM_CARD_PRODUCT_TOKEN']
+                'card_product_token': os.getenv('SAM_CARD_PRODUCT_TOKEN')
             }
             self.EMPLOYEE_TOKEN_COUNTER += 1
 
