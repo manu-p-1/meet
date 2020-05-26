@@ -57,9 +57,9 @@ def load_values():
                 Transaction.current_time(t.created_time),
                 t.amount,
             )
-
-    simulate_startup()
-    session['db_init'] = True
     conn.commit()
     conn.close()
+    simulate_startup()
+    session['db_init'] = True
+
     createBackgroundScheduler()

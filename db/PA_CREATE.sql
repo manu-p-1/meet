@@ -1,27 +1,10 @@
--- MySQL Workbench Forward Engineering
 
 SET @OLD_UNIQUE_CHECKS = @@UNIQUE_CHECKS, UNIQUE_CHECKS = 0;
 SET @OLD_FOREIGN_KEY_CHECKS = @@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS = 0;
 SET @OLD_SQL_MODE = @@SQL_MODE, SQL_MODE =
         'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
--- -----------------------------------------------------
--- Schema mydb
--- -----------------------------------------------------
--- -----------------------------------------------------
--- Schema meetdb
--- -----------------------------------------------------
-DROP SCHEMA IF EXISTS `meetdb`;
 
--- -----------------------------------------------------
--- Schema meetdb
--- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `meetdb` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
-USE `meetdb`;
-
--- -----------------------------------------------------
--- Table `meetdb`.`department_lookup`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `department_lookup`
 (
     `id`         INT          NOT NULL AUTO_INCREMENT,
@@ -33,9 +16,7 @@ CREATE TABLE IF NOT EXISTS `department_lookup`
 );
 
 
--- -----------------------------------------------------
--- Table `meetdb`.`employee`
--- -----------------------------------------------------
+
 CREATE TABLE `employee`
 (
     `id`               int          NOT NULL AUTO_INCREMENT,
@@ -49,9 +30,7 @@ CREATE TABLE `employee`
     CONSTRAINT `employee_dept_FK` FOREIGN KEY (`employee_dept_FK`) REFERENCES `department_lookup` (`token`)
 );
 
--- -----------------------------------------------------
--- Table `meetdb`.`plan`
--- -----------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS `plan`
 (
     `id`                 INT            NOT NULL AUTO_INCREMENT,
@@ -82,9 +61,6 @@ CREATE TABLE IF NOT EXISTS `plan`
 );
 
 
--- -----------------------------------------------------
--- Table `meetdb`.`employee_plan`
--- -----------------------------------------------------
 CREATE TABLE `employee_plan`
 (
     `ep_employee_FK` int NOT NULL,
@@ -97,9 +73,6 @@ CREATE TABLE `employee_plan`
     CONSTRAINT `ep_plan_FK` FOREIGN KEY (`ep_plan_FK`) REFERENCES `plan` (`id`)
 );
 
--- -----------------------------------------------------
--- Table `meetdb`.`manager`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `manager`
 (
     `id`              INT          NOT NULL AUTO_INCREMENT,
