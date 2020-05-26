@@ -79,6 +79,7 @@ def wid_plan_avg_six_months():
         department=client.READABLE_DEPARTMENTS[session['manager_dept']]
     )
 
+
 @widgets_bp.route('/dash/monthly_employee_spending/', methods=['GET'])
 @login_required(session)
 def wid_monthly_employee_spending():
