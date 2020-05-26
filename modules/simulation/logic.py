@@ -300,14 +300,16 @@ def generate_employee_spending_graph(dept_code):
     JOIN transaction t on src_token = ec.ec_card_token
     WHERE e.employee_dept_FK = %s
     AND t.create_time >= %s AND t.create_time <= %s
-    GROUP BY e_sum"""
+    GROUP BY e_sum
+    ORDER BY e_sum"""
 
     prev_query = """SELECT sum(t.amount), day(t.create_time) as e_sum FROM employee e
     JOIN employee_card ec on e.token = ec.ec_employee_token
     JOIN transaction t on src_token = ec.ec_card_token
     WHERE e.employee_dept_FK = %s
     AND t.create_time >= %s AND t.create_time <= %s
-    GROUP BY e_sum"""
+    GROUP BY e_sum
+    ORDER BY e_sum"""
 
     cursor.execute(q, (dept_token, month_ago, start_date))
     cf = cursor.fetchall()
