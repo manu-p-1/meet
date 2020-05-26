@@ -42,10 +42,7 @@ def department_alloc():
         dest = f[1]
         biz = client.client_sdk.businesses.find(token=dest)
         biz_name = biz.business_name_dba
-        for name in client.DEPT_MAPPINGS:
-            if name[0] == biz_name:
-                biz_name_readable = name[1]
-                dept_amt[biz_name_readable] = amt
+        dept_amt[client.READABLE_DEPARTMENTS[biz_name]] = amt
 
     return dept_amt
 
