@@ -33,7 +33,7 @@ def department_alloc():
         SELECT amount, dest_token FROM transaction WHERE src_token = %s
     """
     cursor.execute(q, client.business.token)
-    conn.close()
+    
     funds = cursor.fetchall()
 
     dept_amt = {}
@@ -44,6 +44,7 @@ def department_alloc():
         biz_name = biz.business_name_dba
         dept_amt[client.READABLE_DEPARTMENTS[biz_name]] = amt
 
+    conn.close()
     return dept_amt
 
 
@@ -206,13 +207,14 @@ def current_outgoing_transactions(dept_code):
             amounts.append(cf[0][0])
 
     cursor.execute(q, (token, twenty_four_ago, start_date))
+    
 
     cf = cursor.fetchall()
     if len(cf) != 0:
         amounts.append(cf[0][0])
 
     tot = float(sum(amounts))
-
+    conn.close()
     return {
         "number_transactions": len(amounts),
         "total": tot
@@ -228,7 +230,9 @@ def active_plans():
 
     q = """SELECT COUNT(id) FROM plan WHERE start_date >= %s AND end_date <= %s"""
     cursor.execute(q, (now_time, now_time))
-    return float(cursor.fetchall()[0][0])
+    data = cursor.fetchall()[0][0]
+    conn.close()
+    return float(data)
 
 
 def find_department_token(dept_code):
@@ -278,7 +282,7 @@ def department_employee__monthly_spending(dept_code):
             "gpa_bal": client.retrieve_balance(record[3]).gpa.available_balance,
             "monthly_spending": float(record[4])
         }
-
+    conn.close()
     return employee_to_spending
 
 
@@ -324,6 +328,7 @@ def generate_employee_spending_graph(dept_code):
     for record in cf:
         prev_sum[record[1]] = float(record[0])
 
+    conn.close()
     return {'current_month': employee_sum, 'previous_month': prev_sum}
 
 
@@ -362,7 +367,7 @@ def plan_avg_six_months(dept_code):
         plan_avg[INT_MONTHS[record[1]]] = {
             "avg": float(record[0])
         }
-
+    conn.close()
     return plan_avg
 
 

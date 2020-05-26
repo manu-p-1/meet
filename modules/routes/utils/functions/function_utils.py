@@ -19,8 +19,10 @@ def is_duplicate_plan(mysql, field_data) -> bool:
     q = '''SELECT plan_name FROM plan WHERE plan_name = %s'''
     cursor.execute(q, field_data)
     if len(cursor.fetchall()) == 0:
+        conn.close()
         return False
     else:
+        conn.close()
         return True
 
 
@@ -32,8 +34,10 @@ def is_active_plan(mysql, field_data) -> bool:
     q = '''SELECT plan_name FROM plan WHERE plan_name = %s AND start_date < %s'''
     cursor.execute(q, (field_data, start_date))
     if len(cursor.fetchall()) == 0:
+        conn.close()
         return False
     else:
+        conn.close()
         return True
 
 

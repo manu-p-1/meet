@@ -6,6 +6,7 @@ from sys import stderr
 
 from datetime import datetime
 from modules.middleware.logic import createBackgroundScheduler
+from modules.simulation.logic import simulate_startup
 
 def load_values():
     conn = mysql.connect()
@@ -56,8 +57,9 @@ def load_values():
                 Transaction.current_time(t.created_time),
                 t.amount,
             )
-
-    session['db_init'] = True
     conn.commit()
     conn.close()
+    simulate_startup()
+    session['db_init'] = True
+
     createBackgroundScheduler()
