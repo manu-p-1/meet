@@ -1,0 +1,44 @@
+<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <img class="d-inline-block mr-2" src="/static/images/logos/Generic%20Company%20Logo.png"
+                     width="35" alt="{{ session['company_name'] }} Logo">
+
+                <h5 class="modal-title d-inline-block" id="confirmModalLabel">Are you sure?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-modal-cancel" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary btn-modal-proceed" data-dismiss="modal">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <img class="d-inline-block mr-2" src="/static/images/logos/Generic%20Company%20Logo.png"
+                     width="35" alt="{{ session['company_name'] }} Logo">
+
+                <h5 class="modal-title d-inline-block" id="errorModalLabel">An Error Occurred</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-primary btn-modal-proceed" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
