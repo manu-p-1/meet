@@ -4,7 +4,7 @@ import json
 
 from modules.decorators.utils import login_required
 from modules.routes.utils.classes.class_utils import ManipulationType
-from modules.routes.utils.functions.function_utils import is_active_plan
+from modules.routes.utils.functions.function_utils import is_active_plan, short_error, short_success
 from server import mysql
 
 util_bp = Blueprint('util_bp', __name__,
@@ -104,7 +104,7 @@ def manage_plan():
         if plan_fmt['end_date'] is not None:
             plan_fmt['end_date'] = plan_fmt['end_date'].strftime("%Y-%m-%d %H:%M")
 
-        plan_fmt['fund_individuals'] = bool(plan_fmt['fund_individuals'])
+        plan_fmt['fund_individuals'] = True if plan_fmt['fund_individuals'] == '\x01' else False
         plan_fmt['is_active'] = True if is_active_plan(mysql, plan_fmt['plan_name']) else False
 
         employees_list = []
@@ -127,7 +127,16 @@ def manage_plan():
 
         return jsonify(
             response_status="success",
-            active=plan_fmt['is_active'],
+            active_status={
+                "status": plan_fmt['is_active'],
+                "info": None if not plan_fmt['is_active'] else render_template("plans/plan_info_partial.html",
+                                                                               info_message="This plan is already "
+                                                                                            "active "
+                                                                                            "and cannot be modified. "
+                                                                                            "It "
+                                                                                            "can only "
+                                                                                            "be deleted.")
+            },
             response={
                 "plan_name": plan_fmt['plan_name'],
                 "funding_amount": plan_fmt['funding_amount'],
@@ -146,13 +155,7 @@ def manage_plan():
                 "usage_limit": plan_fmt['usage_limit']
             }
         )
-
-    return jsonify(
-        response_status="error",
-        response=render_template('alert_partial.html',
-                                 status=False,
-                                 err_list=['A plan with this name could not be found.'])
-    )
+    return short_error(err_list=['A plan with this name could not be found.'])
 
 
 @util_bp.route('plans/find/delete_plan/', methods=['POST'])
@@ -169,16 +172,9 @@ def delete_plan():
         cursor.execute(q2, session['MANAGE_FORM']['id'])
         conn.commit()
         conn.close()
-        return jsonify(
-            response_status="success",
-            response=render_template('alert_partial.html', status=True, manip_type=ManipulationType.DELETED.value)
-        )
+        return short_success(manip_type=ManipulationType.DELETED)
+
     except Exception as e:
         # An exception here shouldn't really occur, so log it
         conn.close()
-        return jsonify(
-            response_status="error",
-            response=render_template('alert_partial.html',
-                                     status=False,
-                                     err_list=['Something went wrong. Please try again.'])
-        )
+        return short_error(err_list=['Something went wrong. Please try again.'])
