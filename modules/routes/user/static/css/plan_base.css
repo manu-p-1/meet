@@ -95,3 +95,11 @@
         text-decoration: none;
     }
 }
+
+.ui-menu.ui-widget.ui-autocomplete {
+    font-family: inherit !important;
+    font-weight: lighter !important;
+    font-size: medium !important;
+    border-bottom-left-radius: 5px !important;
+    border-bottom-right-radius: 5px !important;
+}
