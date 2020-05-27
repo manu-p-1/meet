@@ -46,7 +46,7 @@ def short_error(form=None, err_list=None):
         return jsonify(
             response_status="error",
             response=render_template(
-                'alert_partial.html',
+                'plans/plan_alert_partial.html',
                 status=False,
                 form=form
             )
@@ -55,7 +55,7 @@ def short_error(form=None, err_list=None):
         return jsonify(
             response_status="error",
             response=render_template(
-                'alert_partial.html',
+                'plans/plan_alert_partial.html',
                 status=False,
                 err_list=err_list
             )
@@ -67,8 +67,8 @@ def short_success(manip_type: ManipulationType):
     return jsonify(
         response_status="success",
         response=render_template(
-            'alert_partial.html',
+            'plans/plan_alert_partial.html',
             status=True,
-            manip_type=manip_type
+            manip_type=manip_type.value
         )
     )
