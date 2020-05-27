@@ -23,7 +23,7 @@ search.autocomplete({
 
         let x = $(destFund).find(":selected").val();
         if (!x) {
-            alert("Please choose a fund destination before searching an employee");
+            showErrorModal("Please choose a fund destination before searching an employee");
             search.val('');
             destFund.focus();
             return;
@@ -137,6 +137,7 @@ $(controlToggle).on("click", function () {
     toggleDiv(controlToggle, fundControls);
 });
 
+$(".ui-menu-ui-widget.ui-autocomplete").addClass("shadow-lg");
 
 function alertTop(divAfter, data) {
     let alertdiv = $(".alert");
@@ -176,7 +177,7 @@ function removeNewEmployee(e) {
         x.html(parseInt(x.html()) - 1);
     }
     $(closestGroup).remove();
-    delete registeredEmployees[textArea.attr("mrc_id")];
+    delete registeredEmployees[textArea.attr("meet_id")];
     newEmployeeCount--;
 }
 
@@ -203,7 +204,7 @@ function addNewEmployee(name, id) {
             `<div class="form-group col-md-3">
                 <label class="text-muted additional-employee-input-label">Employee <span class="employeeCount">${newEmployeeCount + 1}</span></label>
                 <div class="input-container">
-                    <textarea class="employeeIDInput form-control position-relative" mrc_id="${id}" name="employeesOptional-${newEmployeeCount}" type="text" readonly rows="2">NAME: ${name}&#13;&#10;ID: ${id}
+                    <textarea class="employeeIDInput form-control position-relative" meet_id="${id}" name="employeesOptional-${newEmployeeCount}" type="text" readonly rows="2">NAME: ${name}&#13;&#10;ID: ${id}
                     </textarea>
                     <span class="removeNewEmployeeInput material-icons">remove_circle</span>
                 </div>
@@ -213,7 +214,7 @@ function addNewEmployee(name, id) {
         registeredEmployees[id] = name;
         newEmployeeCount++;
     } else {
-        alert("Only a maximum of 12 recipients can receive funds at one time");
+        showErrorModal("Only a maximum of 12 recipients can receive funds at one time");
     }
 }
 
