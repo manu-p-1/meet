@@ -30,7 +30,7 @@ trap_ctrlc ()
 }
 
 kill_flask(){
-  printf "===Killing....$f_pid===\n\n"
+  printf "===Killing PID $f_pid....===\n\n"
   kill "$f_pid"
 }
 
@@ -95,18 +95,6 @@ if [[ -z "${DB_HOST}" ]]; then
   echo "===exported DB_HOST==="
 fi
 
-if [[ -z "${MRC_APP_TOKEN}" ]]; then
-  read -r -p "Enter Your Marqeta app token: "  app_token
-  export MRC_APP_TOKEN=$app_token
-  echo "===exported MRC_APP_TOKEN==="
-fi
-
-if [[ -z "${MRC_ACCESS_TOKEN}" ]]; then
-  read -r -p "Enter Your Marqeta access token: "  access_token
-  export MRC_ACCESS_TOKEN=$access_token
-  echo "===exported MRC_ACCESS_TOKEN==="
-fi
-
 if [[ -z "${MY_ACCESS}" ]]; then
   export MY_ACCESS=abf01008-65c8-4e4b-b950-c30634f37f2f
   echo "===exported MY_ACCESS==="
@@ -114,12 +102,12 @@ fi
 
 if [[ -z "${MY_APP}" ]]; then
   export MY_APP=2ef6b1d8-5a92-4884-9cf6-ae04d02b8fa5
-  printf "===exported MY_APP===\n\n"
+  printf "===exported MY_APP==="
 fi
 
 if [[ -z "${SAM_CARD_PRODUCT_TOKEN}" ]]; then
   export SAM_CARD_PRODUCT_TOKEN=f39eb05d-76c0-48dd-ac50-d1e4d20b7eab
-  printf "===exported SAM_CARD_PRODUCT_TOKEN===\n\n"
+  printf "===exported SAM_CARD_PRODUCT_TOKEN===\n"
 fi
 
 # DEBUG TRUE - FLASK RESTARTS FOR EVERY CHANGE :)
@@ -128,11 +116,11 @@ export FLASK_APP=server:create_server
 
 printf "===exported FLASK_DEBUG and FLASK_APP===\n\n"
 
-flask run -h 127.0.0.1 &
+flask run --host=localhost --port=12000 &
 f_pid=$!
 
 printf "===Running Flask===\n\n"
 echo "Starting Browser...."
 
-python -mwebbrowser http://127.0.0.1:5000
+python -mwebbrowser http://localhost:12000/
 wait
