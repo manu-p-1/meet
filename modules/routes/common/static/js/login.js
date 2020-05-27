@@ -21,12 +21,3 @@ $("#loginForm").on("submit", function () {
 $("#loginBtn").on("click", function () {
     $("loginForm").submit();
 });
-
-$(function () {
-    setInterval(function () {
-        let r = $("#email");
-        if (r.val().length !== 0) {
-            r.focus();
-        }
-    }, 2000);
-});
