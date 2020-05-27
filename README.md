@@ -27,12 +27,12 @@
   
   <br>
   
-  <a href="https://github.com/manu-p-1/mrc/commits/master" target="_blank">
-    <img src="https://img.shields.io/github/last-commit/manu-p-1/mrc/master.svg?style=for-the-badge">
+  <a href="https://github.com/manu-p-1/meet/commits/master" target="_blank">
+    <img src="https://img.shields.io/github/last-commit/manu-p-1/meet/master.svg?style=for-the-badge">
   </a>
   
-  <a href="https://github.com/manu-p-1/mrc/graphs/contributors" target="_blank">
-    <img src="https://img.shields.io/github/contributors/manu-p-1/mrc.svg?style=for-the-badge">
+  <a href="https://github.com/manu-p-1/meet/graphs/contributors" target="_blank">
+    <img src="https://img.shields.io/github/contributors/manu-p-1/meet.svg?style=for-the-badge">
   </a>
 <p>
 <br>
