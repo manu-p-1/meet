@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="description" content="Marqeta Hackathon Project -- MEET">
         <meta name="author" content="Manu Puduvalli | Samuel Yuen | William Vega | Yi-jian Ma Ma">
-        <title>{% block base_title %}{% endblock %} - {{ session['company_name'] }}</title>
+        <title>{% block base_title %}{% endblock %} · {{ session['company_name'] }}</title>
 
         {% include 'static_links.html' %}
 
@@ -75,7 +75,7 @@
                     <div class="col-md-6">
                         <ul class="list-unstyled text-center rel-links">
                             <li class="mb-5">
-                                <strong><a href="https://github.com/manu-p-1/mrc" target="_blank">Meet Source
+                                <strong><a href="https://github.com/manu-p-1/meet" target="_blank">Meet Source
                                     Repository<i class="fab fa-github fa-lg ml-2"></i></a></strong>
                             </li>
 
@@ -109,7 +109,7 @@
         </div>
     </div>
     <div class="footer-copyright text-center py-3 mt-4">© 2020 Copyright:
-        <a href="https://www.github.com/manu-p-1/mrc">MEET</a>
+        <a href="https://www.github.com/manu-p-1/meet">MEET</a>
     </div>
 </footer>
 <script>
@@ -117,7 +117,7 @@
     $(function () {
         let c = $("footer");
         c.on("click", function () {
-            ++ctr % 2 == 0 && cp + 3 === ctr ? (c.css("background", ""), cp = ctr) : ctr % 3 == 0 && 0 !== ctr && (c.css("background", "linear-gradient(40deg, #222e6f, #215c76)"), cp = ctr), 3 === ctr && $('<p class="text-center complement">You found the river gradient. Nice work!</p>').insertAfter(".easter-egg")
+            ++ctr % 2 == 0 && cp + 3 === ctr ? (c.css("background", ""), cp = ctr) : ctr % 3 == 0 && 0 !== ctr && (c.css("background", "linear-gradient(90deg, rgba(94,23,235,1) 47%, rgba(0,123,255,1) 100%)"), cp = ctr), 3 === ctr && $('<p class="text-center complement">You found the meet gradient. Nice work!</p>').insertAfter(".easter-egg")
         })
     });
 </script>
