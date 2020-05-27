@@ -46,16 +46,18 @@
                         <div class="form-group md-form md-outline">
                             {{ form.csrf_token }}
                             {{ form.email.label }}
-                            {{ form.email(class_="form-control") }}
+                            {{ form.email }}
                         </div>
                         <div class="form-group md-form md-outline">
                             {{ form.password.label }}
-                            {{ form.password(class_="form-control") }}
+                            {{ form.password }}
+                        </div>
+                        <div class="form-group md-form">
+                            {{ form.loginBtn }}
                         </div>
 
-                        <button type="submit" class="btn btn-grey btn-lg btn-block" id="loginBtn">Login</button>
                         <div class="custom-control custom-checkbox mt-3">
-                            <input type="checkbox" class="custom-control-input" id="rememberMe" name="rememberMe">
+                            {{ form.rememberMe }}
                             <label class="custom-control-label complement-light" for="rememberMe">Keep me logged
                                 in</label>
                         </div>
@@ -68,5 +70,10 @@
     {% assets "common_js" %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
+    <script>
+        $(document).ready(function () {
+            $("#loginBtn").unwrap();
+        });
+    </script>
 
 {% endblock %}
