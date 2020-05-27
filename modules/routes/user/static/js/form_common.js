@@ -137,7 +137,7 @@ $(controlToggle).on("click", function () {
     toggleDiv(controlToggle, fundControls);
 });
 
-$(".ui-menu-ui-widget.ui-autocomplete").addClass("shadow-lg");
+$(".ui-menu.ui-widget.ui-autocomplete").addClass("shadow-lg");
 
 function alertTop(divAfter, data) {
     let alertdiv = $(".alert");
