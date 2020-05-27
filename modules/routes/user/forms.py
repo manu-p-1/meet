@@ -58,8 +58,8 @@ def get_plan_base(sn: dict):
         fundingAmount = DecimalField('Per-Employee Funding Amount',
                                      validators=[
                                          InputRequired(message="Enter a funding amount."),
-                                         NumberRange(min=100.00,
-                                                     message="The minimum funding amount must be at least $100.00.")
+                                         NumberRange(min=15.00,
+                                                     message="The minimum funding amount must be at least $15.00.")
                                      ],
                                      render_kw={"placeholder": "Funding Amount",
                                                 "class": "form-control"},
@@ -163,9 +163,9 @@ def get_plan_base(sn: dict):
                                    validators=[
                                        RequiredIf('controlToggle',
                                                   message="The velocity control amount limit is required."),
-                                       NumberRange(min=100.00,
+                                       NumberRange(min=15.00,
                                                    message="The minimum velocity control amount limit must be at least "
-                                                           "$100.00.")
+                                                           "$15.00.")
                                    ],
                                    render_kw={"placeholder": "Amount Limit",
                                               "class": "form-control"},
