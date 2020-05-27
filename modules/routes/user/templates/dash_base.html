@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="description" content="Marqeta Hackathon Project - MEET - Dashboard">
         <meta name="author" content="Manu Puduvalli | Samuel Yuen | William Vega | Yi-jian Ma Ma">
-        <title>{% block base_title %}{% endblock %} - {{ session['company_name'] }} Dashboard</title>
+        <title>{% block base_title %}{% endblock %} · {{ session['company_name'] }} Dashboard</title>
 
         {% include 'static_links.html' %}
 
@@ -157,7 +157,7 @@
             <footer class="main-footer d-flex p-2 px-3 bg-white border-top">
                 <ul class="nav">
                     <li class="nav-item">
-                        <a class="nav-link" target="_blank" href="https://www.github.com/manu-p-1/mrc">About</a>
+                        <a class="nav-link" target="_blank" href="https://www.github.com/manu-p-1/meet">About</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" target="_blank" href="https://www.marqeta.com">Marqeta Home</a>
@@ -173,6 +173,7 @@
             </footer>
         </main>
     </div>
+    {% include "modals_partial.html" %}
 </div>
 
 {% assets "dash_js" %}
