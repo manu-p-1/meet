@@ -71,7 +71,7 @@ def create_plan():
             executeOrders()
 
             conn.close()
-            return short_success(ManipulationType.CREATED.value)
+            return short_success(ManipulationType.CREATED)
         else:
             return short_error(form)
 
@@ -120,7 +120,7 @@ def manage_plan():
             conn.commit()
             conn.close()
 
-            return short_success(ManipulationType.UPDATED.value)
+            return short_success(ManipulationType.UPDATED)
         else:
             return short_error(form=form)
 
