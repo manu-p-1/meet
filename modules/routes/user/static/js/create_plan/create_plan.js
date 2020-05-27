@@ -1,12 +1,13 @@
 /* THIS PART IS FOR SUBMITTING THE FORM */
-form.on("submit", function (e) {
-    let answer = confirm("Are you sure you would like to create this plan? Some parts may be unmodifiable.");
-    if (!answer) {
-        return false;
-    }
-    e.preventDefault(); // avoid to execute the actual submit of the form.
+form.on("submit", function (evt) {
+    evt.preventDefault();
+    showConfirmModal("Are you sure you would like to create this plan? Some parts may be unmodifiable.", function () {
+        ajaxSubmitCreateForm();
+    });
+});
+
+function ajaxSubmitCreateForm() {
     $("#timeZone").val(Intl.DateTimeFormat().resolvedOptions().timeZone);
-    const form = $(this);
     const url = form.attr('action');
     replaceBtn("#createPlanButton");
 
@@ -20,10 +21,10 @@ form.on("submit", function (e) {
             if (data['response_status'] === "success") {
                 resetForm();
             }
-            enableBtn("#createPlanButton")
+            enableBtn("#createPlanButton");
         },
         error: function (data) {
-            alert(ERROR);
+            showErrorModal(ERROR);
         }
     });
-});
+}
