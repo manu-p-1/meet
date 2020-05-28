@@ -1,12 +1,16 @@
-function replaceBtn(btn) {
-    let ref = $(btn);
+var buttonToText = {};
+
+function replaceBtn(selector) {
+    let ref = $(selector);
+    buttonToText[selector] = ref.text();
     ref.html(`<i class="fas fa-spinner fa-pulse"></i>`);
     ref.prop("disabled", true);
 }
 
-function enableBtn(btn) {
-    let ref = $(btn);
+function enableBtn(selector) {
+    let ref = $(selector);
     ref.find('i').remove();
+    ref.text(buttonToText[selector]);
     ref.prop("disabled", false);
 }
 
