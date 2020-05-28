@@ -177,7 +177,7 @@ function removeNewEmployee(e) {
         x.html(parseInt(x.html()) - 1);
     }
     $(closestGroup).remove();
-    delete registeredEmployees[textArea.attr("meet_id")];
+    delete registeredEmployees[textArea.attr("data-meet-id")];
     newEmployeeCount--;
 }
 
@@ -204,7 +204,7 @@ function addNewEmployee(name, id) {
             `<div class="form-group col-md-3">
                 <label class="text-muted additional-employee-input-label">Employee <span class="employeeCount">${newEmployeeCount + 1}</span></label>
                 <div class="input-container">
-                    <textarea class="employeeIDInput form-control position-relative" meet_id="${id}" name="employeesOptional-${newEmployeeCount}" type="text" readonly rows="2">NAME: ${name}&#13;&#10;ID: ${id}
+                    <textarea class="employeeIDInput form-control position-relative" data-meet-id="${id}" name="employeesOptional-${newEmployeeCount}" type="text" readonly rows="2">NAME: ${name}&#13;&#10;ID: ${id}
                     </textarea>
                     <span class="removeNewEmployeeInput material-icons">remove_circle</span>
                 </div>
@@ -240,13 +240,12 @@ function resetForm() {
 }
 
 function createDatePicker(referenceSelector) {
-    let pickerFormat = 'YYYY-MM-DD HH:mm';
+    let pickerFormat = 'MM/DD/YYYY h:mm A';
     referenceSelector.daterangepicker({
         autoUpdateInput: false,
         singleDatePicker: true,
         showDropdowns: true,
         timePicker: true,
-        timePicker24Hour: true,
         drops: "up",
         minDate: moment().startOf('minute'),
         maxDate: moment().startOf('year').add(5, 'year'),
@@ -264,6 +263,43 @@ function createDatePicker(referenceSelector) {
     referenceSelector.on('cancel.daterangepicker', function (ev, picker) {
         $(this).val('');
     });
+}
+
+//This is for Priorities on the sidebar
+const PriorityObj = {
+    "Low": {
+        name: "Low",
+        class_: "text-success"
+    },
+    "Medium": {
+        name: "Medium",
+        class_: "text-warning"
+    },
+    "High": {
+        name: "High",
+        class_: "text-danger"
+    },
+    "Urgent": {
+        name: "Urgent",
+        class_: "text-dark"
+    }
+};
+
+$(".priority-select-dropdown .dropdown-item").on("click", function (e) {
+    let targ = $(e.target);
+    let v = targ.val();
+    changePriority(PriorityObj[v]);
+});
+
+function changePriority(priorityobj) {
+    console.log(priorityobj);
+    $("input[name=priority]").val(priorityobj.name);
+
+    $("#prioritySetting")
+        .text(priorityobj.name)
+        .val(priorityobj.name)
+        .removeClass()
+        .addClass(priorityobj.class_);
 }
 
 
