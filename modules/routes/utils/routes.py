@@ -104,7 +104,7 @@ def manage_plan():
         if plan_fmt['end_date'] is not None:
             plan_fmt['end_date'] = plan_fmt['end_date'].strftime("%Y-%m-%d %H:%M")
 
-        plan_fmt['fund_individuals'] = True if plan_fmt['fund_individuals'] == '\x01' else False
+        plan_fmt['fund_individuals'] = True if int.from_bytes(plan_fmt['fund_individuals'], 'big') else False
         plan_fmt['is_active'] = True if is_active_plan(mysql, plan_fmt['plan_name']) else False
 
         employees_list = []
@@ -152,7 +152,8 @@ def manage_plan():
                 "control_name": plan_fmt['control_name'],
                 "control_window": plan_fmt['control_window'],
                 "amount_limit": plan_fmt['amount_limit'],
-                "usage_limit": plan_fmt['usage_limit']
+                "usage_limit": plan_fmt['usage_limit'],
+                "priority": plan_fmt['priority']
             }
         )
     return short_error(err_list=['A plan with this name could not be found.'])
