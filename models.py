@@ -45,11 +45,11 @@ class Plan(Model):
     def __init__(self, cursor, conn, immediate_commit=True):
 
         insert = '''INSERT INTO plan (plan_name,funding_amount,plan_justification,memo,start_date,end_date,
-                    source_fund_FK, dest_fund_FK,fund_individuals,control_name, control_window,amount_limit,usage_limit,complete) VALUES 
+                    source_fund_FK, dest_fund_FK,fund_individuals,control_name, control_window,amount_limit,usage_limit,priority,complete) VALUES 
                     (%s,%s,%s,%s,%s,%s,
                     (SELECT id FROM department_lookup WHERE department = %s),
                     (SELECT id FROM department_lookup WHERE department = %s),
-                    %s,%s,%s,%s,%s,%s)'''
+                    %s,%s,%s,%s,%s,%s, %s)'''
         select = """SELECT * FROM plan"""
         select_where = "SELECT * FROM plan WHERE %s = %s"
 
@@ -68,7 +68,7 @@ class Plan(Model):
                                                     form.fundIndivEmployeesToggle.data,
                                                     form.controlName.data, form.controlWindow.data,
                                                     form.amountLimit.data,
-                                                    form.usageLimit.data, False))
+                                                    form.usageLimit.data, form.priority.data, False))
 
         if len(form.employeesOptional.data) != 0 and form.employeesOptional.data[0] != '':
             for employeeField in form.employeesOptional.data:
@@ -84,7 +84,8 @@ class Plan(Model):
                 field.data = None
 
         update_query = '''UPDATE plan SET plan_name = %s,plan_justification = %s,memo = %s,end_date = %s,
-                    fund_individuals = %s,control_name = %s, control_window = %s,amount_limit = %s,usage_limit = %s
+                    fund_individuals = %s,control_name = %s, control_window = %s,amount_limit = %s,usage_limit = %s,
+                    priority = %s
                     WHERE id = %s'''
         self._cursor.execute(update_query, (form.planName.data,
                                             form.planJustification.data, form.memo.data,
@@ -92,7 +93,7 @@ class Plan(Model):
                                             form.fundIndivEmployeesToggle.data,
                                             form.controlName.data, form.controlWindow.data,
                                             form.amountLimit.data,
-                                            form.usageLimit.data, plan_id))
+                                            form.usageLimit.data, form.priority.data, plan_id))
         if self.is_immediate_commit:
             self._conn.commit()
 
