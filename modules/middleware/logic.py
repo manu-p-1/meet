@@ -10,6 +10,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import time
 import atexit
 
+
 # open Client connection
 def openClient():
     # Marqeta Client
@@ -20,7 +21,7 @@ def openClient():
         'timeout': 60
     }
     client = Client(client_payload['base_url'], client_payload['application_token'],
-                         client_payload['access_token'], client_payload['timeout'])
+                    client_payload['access_token'], client_payload['timeout'])
     return client
 
 
@@ -32,12 +33,13 @@ def createBackgroundScheduler():
     # Shut down the scheduler when exiting the app
     atexit.register(lambda: scheduler.shutdown())
 
+
 # executeOrders
 # the plan_ids should be a list of plan ids, as stored in the db
 # This will come from some func that queries the db for all
 # past due and store them as a list
 def executeOrders():
-    #print("Executing Orders")
+    # print("Executing Orders")
     conn = mysql.connect()
     cursor = conn.cursor()
     query = 'SELECT id, fund_individuals FROM plan WHERE start_date < NOW() AND complete = 0'
@@ -88,8 +90,8 @@ def dept_to_dept(plan_id):
     control_window = records[0][11]
     amount_limit = records[0][12]
     usage_limit = records[0][13]
-    complete = records[0][14]
-    
+    complete = records[0][15]
+
     query = 'SELECT token FROM department_lookup WHERE id = %s'
     cursor.execute(query, source_fund_FK)
     source_token = cursor.fetchall()[0][0]
@@ -99,15 +101,16 @@ def dept_to_dept(plan_id):
     dest_token = cursor.fetchall()[0][0]
 
     transfer = client.transfer(funding_amount, source_token, dest_token, dest_token_is_user=False)
-    
-    t = Transaction(cursor,conn=conn)
-    t.insert(source_token,dest_token,Transaction.current_time(transfer.created_time),funding_amount)
+
+    t = Transaction(cursor, conn=conn)
+    t.insert(source_token, dest_token, Transaction.current_time(transfer.created_time), funding_amount)
 
     query = 'UPDATE plan SET complete = 1 WHERE id = %s'
     cursor.execute(query, plan_id)
 
     conn.commit()
     conn.close()
+
 
 def dept_to_emp(plan_id):
     conn = mysql.connect()
@@ -130,7 +133,7 @@ def dept_to_emp(plan_id):
     control_window = records[0][11]
     amount_limit = records[0][12]
     usage_limit = records[0][13]
-    complete = records[0][14]
+    complete = records[0][15]
 
     query = 'SELECT token FROM department_lookup WHERE id = %s'
     cursor.execute(query, source_fund_FK)
@@ -140,14 +143,14 @@ def dept_to_emp(plan_id):
     cursor.execute(query, plan_id)
     records = cursor.fetchall()
 
-    t = Transaction(cursor,conn)
+    t = Transaction(cursor, conn)
 
     for row in records:
         query = 'SELECT token FROM employee WHERE id = %s'
         cursor.execute(query, row[0])
         dest_token = cursor.fetchall()[0][0]
         transfer = client.transfer(funding_amount, source_token, dest_token, dest_token_is_user=True)
-        t.insert(source_token,dest_token,Transaction.current_time(transfer.created_time),funding_amount)
+        t.insert(source_token, dest_token, Transaction.current_time(transfer.created_time), funding_amount)
 
     conn.commit()
     conn.close()
@@ -176,22 +179,21 @@ def complete_employee_plan(plan_id):
 
     # get the days between
     if end_date:
-        delta = (end_date) - (start_date)
+        delta = end_date - start_date
         days = delta.days
 
     query = 'SELECT token FROM employee WHERE id = %s'
     employee_tokens = []
     for eid in employee_ids:
-        cursor.execute(query,eid[0])
+        cursor.execute(query, eid[0])
         employee_tokens.append(cursor.fetchone()[0])
 
-    
     for et in employee_tokens:
         payload = {
             'user_token': et,
             'card_product_token': os.environ['SAM_CARD_PRODUCT_TOKEN'],
         }
-        
+
         if end_date:
             payload['expiration_offset'] = {
                 "unit": "DAYS",
