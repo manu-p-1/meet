@@ -3,7 +3,7 @@ from wtforms import PasswordField, BooleanField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import InputRequired, Length
 
-from modules.routes.common.custom_fields import InlineSubmitField
+from modules.routes.utils.custom_fields import InlineSubmitField
 
 
 class LoginForm(FlaskForm):
@@ -17,6 +17,6 @@ class LoginForm(FlaskForm):
         Length(min=1, max=255, message="Something went wrong, please try again.")
     ], render_kw={"class": "form-control"})
 
-    loginBtn = InlineSubmitField("Login", default="Login", render_kw={"class": "btn btn-block btn-sm grey lighten-2"})
+    loginBtn = InlineSubmitField("Login", btn_text="Login", render_kw={"class": "btn btn-block btn-sm grey lighten-2"})
 
     rememberMe = BooleanField("Remember Me", render_kw={"class":"custom-control-input"})
