@@ -37,16 +37,19 @@ searchForm.on("submit", function (evt) {
                     $("#usageLimit").val(resp['start_date']);
                 }
 
+                changePriority(PriorityObj[resp['priority']]);
+
                 function loadEmployees(employeeList) {
                     for (let val of employeeList) {
                         addNewEmployee(val['name'], val['id'])
                     }
                 }
 
-                if (data['active_status']['status']) { //Not Active Plan
+                if (data['active_status']['status']) { // Active Plan
                     readonlyProp(true);
                     alertTop(".main-content-container", data['active_status']['info']);
                     deletePlanButton.prop('disabled', false);
+                    $("#editPriority").attr("style", "pointer-events:none;");
                 }
 
             } else {
