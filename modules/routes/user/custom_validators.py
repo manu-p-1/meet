@@ -1,6 +1,6 @@
 import sys
 import pytz
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta
 from wtforms import FieldList, StringField
 from wtforms.validators import Optional, DataRequired, ValidationError
 from modules.routes.user.custom_fields import EmployeeInfoTextAreaField
@@ -88,13 +88,12 @@ class EmployeeUnique(object):
 
 
 class DateProper(object):
-    fmt = "%Y-%m-%d %H:%M:%S"
+    scrubbed_fmt = "%Y-%m-%d %H:%M:%S"
+    incoming_fmt = "%m/%d/%Y %I:%M %p"
 
     def __init__(self, message=None):
         if not message:
-            message = f'Date range is malformed. Follow the format YYYY-MM-DD HH:MM.'
-        else:
-            message = message + " Follow the format YYYY-MM-DD HH:MM. Hour's are in 24-hour format."
+            message = f'Date range is malformed. Follow the format MM/DD/YYYY hh:mm AM[or PM].'
         self.message = message
 
     def __call__(self, form, field):
@@ -105,11 +104,11 @@ class DateProper(object):
         if field.data is None:
             raise Exception('no field named "%s" in form' % field)
 
-        field.data += ":00"
         print("FIELD SHORT NAME", field.short_name, file=sys.stderr)
-        print("FIELD BEFORE CONVERT", field.data, file=sys.stderr)
 
-        dtobj = self.check_field(field.data)
+        dtobj = self.check_and_convert(field.data)
+
+        print("FIELD BEFORE CONVERT", field.data, file=sys.stderr)
 
         """
         Choose the function depending on what kind of date it is 
@@ -121,16 +120,15 @@ class DateProper(object):
 
         print("FIELD AFTER CONVERT", field.data, file=sys.stderr)
 
-    def check_field(self, against):
+    def check_and_convert(self, against):
         """
         Check if the date is valid, otherwise return a validation error
         :param against: The date as a string to be checked
         :return: a datetime object otherwise raise a ValidationError
         """
         try:
-            naive = datetime.strptime(against, self.fmt)
-            return naive
-        except ValueError as ve:
+            return datetime.strptime(against, self.incoming_fmt)
+        except ValueError:
             raise ValidationError(message=self.message)
 
     def normalize_start(self, dtobj):
@@ -160,8 +158,8 @@ class DateProper(object):
         if utc_dt <= one_hour_back:
             raise ValidationError("The request timed out.")
         elif now >= utc_dt >= one_hour_back:
-            return now.strftime(self.fmt)
-        return utc_dt.strftime(self.fmt)
+            return now.strftime(self.scrubbed_fmt)
+        return utc_dt.strftime(self.scrubbed_fmt)
 
     def normalize_end(self, dtobj):
         """
@@ -178,7 +176,7 @@ class DateProper(object):
         if utc_dt > five_years_fw:
             raise ValidationError("A plan can only extend for a maximum of 5 years.")
 
-        return utc_dt.strftime(self.fmt)
+        return utc_dt.strftime(self.scrubbed_fmt)
 
     def normalize(self, dtobj):
         """
