@@ -69,28 +69,28 @@
             <div class="nav-wrapper">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link {%- if request.path == url_for('user_bp.overview') %} active {% endif %}"
+                        <a class="nav-link {%- if request.path == url_for('user_bp.overview') %} active {%- endif %}"
                            href="{{ url_for('user_bp.overview') }}">
                             <i class="material-icons">edit</i>
                             <span>Company Overview</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {%- if request.path == url_for('user_bp.create_plan') %} active {% endif %}"
+                        <a class="nav-link {%- if request.path == url_for('user_bp.create_plan') %} active {%- endif %}"
                            href="{{ url_for('user_bp.create_plan') }}">
                             <i class="material-icons">vertical_split</i>
                             <span>Create Plan</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {%- if request.path == url_for('user_bp.manage_plan') %} active {% endif %}"
+                        <a class="nav-link {%- if request.path == url_for('user_bp.manage_plan') %} active {%- endif %}"
                            href="{{ url_for('user_bp.manage_plan') }}">
                             <i class="material-icons">note_add</i>
                             <span>Manage Plans</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link{%- if request.path == url_for('user_bp.profile') %} active {% endif %}"
+                        <a class="nav-link{%- if request.path == url_for('user_bp.profile') %} active {%- endif %}"
                            href="{{ url_for('user_bp.profile') }}">
                             <i class="material-icons">person</i>
                             <span>User Profile</span>
