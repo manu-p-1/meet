@@ -1,11 +1,13 @@
 from flask_wtf import FlaskForm
+from tzlocal.win32 import valuestodict
 from wtforms import StringField, IntegerField, TextAreaField, SelectField, BooleanField, SubmitField, DecimalField, \
     FieldList, HiddenField
-from wtforms.validators import InputRequired, NumberRange, Length
+from wtforms.validators import InputRequired, NumberRange, Length, AnyOf
 from wtforms.widgets.html5 import NumberInput
 
 from modules.routes.user.custom_fields import EmployeeInfoTextAreaField
 from modules.routes.user.custom_validators import RequiredIf, DateProper, EmployeeUnique
+from modules.routes.utils.custom_fields import InlineSubmitField
 
 from server import client
 
@@ -24,7 +26,7 @@ def create_plan_form(sn):
     """
 
     class CreatePlanForm(get_plan_base(sn)):
-        createPlanButton = SubmitField("Create Plan", render_kw={"class": "btn btn-primary btn-block"})
+        createPlanButton = InlineSubmitField("Create Plan", btn_text="Create Plan", render_kw={"class": "btn btn-primary btn-block"})
 
     return CreatePlanForm()
 
@@ -37,7 +39,7 @@ def get_plan_form(sn: dict):
     """
 
     class ManagePlanForm(get_plan_base(sn)):
-        updatePlanButton = SubmitField("Update Plan", render_kw={"class": "btn btn-primary btn-block"})
+        updatePlanButton = InlineSubmitField("Update Plan", btn_text="Update Plan", render_kw={"class": "btn btn-primary btn-block"})
 
     return ManagePlanForm()
 
@@ -184,5 +186,10 @@ def get_plan_base(sn: dict):
                                   widget=NumberInput())
 
         timeZone = HiddenField(validators=[InputRequired(message="The timezone is a required field")])
+
+        priority = HiddenField(validators=[
+            InputRequired(message="Priority is a required field"),
+            AnyOf(values=["Low", "Medium", "High", "Urgent"], message="Priority must be Low, Medium, High, or Urgent")
+        ], default="Low")
 
     return Plan  # Return a reference to the class and not an object!
