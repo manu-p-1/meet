@@ -1,11 +1,10 @@
-import sys
 from typing import List, Dict, Union
 
 from models import Plan
 from modules.routes.user.custom_fields import EmployeeInfoTextAreaField
 from modules.routes.utils.classes.class_utils import ManipulationType, OperationType
 from modules.routes.utils.functions.function_utils import is_duplicate_plan, short_error, short_success
-from server import mysql, client
+from server import mysql
 from datetime import date
 from sys import stderr
 from flask import Blueprint, render_template, request, jsonify, redirect, flash, session, url_for
