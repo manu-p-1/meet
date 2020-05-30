@@ -1,6 +1,5 @@
 import json
 from datetime import datetime, timedelta, timezone
-from sys import stderr
 import random
 from models import Transaction, EmployeeCard
 from sdk.ext import Authorization
@@ -120,7 +119,10 @@ def simulate_startup():
 def simulate_employee_plan(plan_id):
     conn = mysql.connect()
     cursor = conn.cursor()
-    query = '''SELECT e.token, ep_card_token FROM employee_plan ep JOIN employee e ON ep.ep_employee_FK = e.id WHERE ep_plan_FK = %s'''
+    query = '''
+    SELECT e.token, ep_card_token FROM employee_plan ep 
+    JOIN employee e ON ep.ep_employee_FK = e.id 
+    WHERE ep_plan_FK = %s'''
     t = Transaction(cursor, conn=conn)
 
     # THIS WILL RETURN ALL EMPLOYEES AND THEIR ASSOCIATED CARDS WITH AN ACCORDING PLAN
