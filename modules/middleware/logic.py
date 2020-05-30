@@ -1,13 +1,9 @@
 from marqeta import Client
 from server import mysql, client
-from datetime import datetime
 from models import EmployeeCard, Transaction
-import json
 import os
-import random
-from modules.simulation.logic import simulate_employee_plan, MIDS
+from modules.simulation.logic import simulate_employee_plan
 from apscheduler.schedulers.background import BackgroundScheduler
-import time
 import atexit
 
 
