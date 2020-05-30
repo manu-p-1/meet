@@ -95,8 +95,8 @@ memo.on("input", function () {
 
 
 //For the Date Picker
-createDatePicker($("#startDate"));
-createDatePicker($("#endDate"));
+createDatePicker($("#startDate"), moment().startOf('minute'));
+createDatePicker($("#endDate"), moment().startOf('minute').add(1, 'hour'));
 
 
 //For the Individual Employee toggle
@@ -116,7 +116,7 @@ indivUserToggle.on("click", function () {
 var newEmployeeCount = $(".employeeIDInput").length;
 
 //For Removing employees
-$(document).on("click", ".removeNewEmployeeInput", function (e) {
+$(document).on("click", ".remove-new-employee-input", function (e) {
     removeNewEmployee(e);
     if (newEmployeeCount === 0) {
         indivUserToggle.trigger("click");
@@ -206,7 +206,7 @@ function addNewEmployee(name, id) {
                 <div class="input-container">
                     <textarea class="employeeIDInput form-control position-relative" data-meet-id="${id}" name="employeesOptional-${newEmployeeCount}" type="text" readonly rows="2">NAME: ${name}&#13;&#10;ID: ${id}
                     </textarea>
-                    <span class="removeNewEmployeeInput material-icons">remove_circle</span>
+                    <span class="remove-new-employee-input material-icons">remove_circle</span>
                 </div>
             </div>`;
 
@@ -239,15 +239,15 @@ function resetForm() {
     $(".active-danger").addClass("d-none");
 }
 
-function createDatePicker(referenceSelector) {
-    let pickerFormat = 'MM/DD/YYYY h:mm A';
+function createDatePicker(referenceSelector, minimumDate) {
+    let pickerFormat = 'MM/DD/YYYY hh:mm A';
     referenceSelector.daterangepicker({
         autoUpdateInput: false,
         singleDatePicker: true,
         showDropdowns: true,
         timePicker: true,
         drops: "up",
-        minDate: moment().startOf('minute'),
+        minDate: minimumDate,
         maxDate: moment().startOf('year').add(5, 'year'),
         locale: {
             format: pickerFormat
@@ -267,19 +267,19 @@ function createDatePicker(referenceSelector) {
 
 //This is for Priorities on the sidebar
 const PriorityObj = {
-    "Low": {
+    Low: {
         name: "Low",
         class_: "text-success"
     },
-    "Medium": {
+    Medium: {
         name: "Medium",
         class_: "text-warning"
     },
-    "High": {
+    High: {
         name: "High",
         class_: "text-danger"
     },
-    "Urgent": {
+    Urgent: {
         name: "Urgent",
         class_: "text-dark"
     }
