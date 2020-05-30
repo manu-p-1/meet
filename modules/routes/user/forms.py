@@ -1,12 +1,12 @@
 from flask_wtf import FlaskForm
-from tzlocal.win32 import valuestodict
-from wtforms import StringField, IntegerField, TextAreaField, SelectField, BooleanField, SubmitField, DecimalField, \
+from wtforms import StringField, IntegerField, TextAreaField, SelectField, BooleanField, DecimalField, \
     FieldList, HiddenField
 from wtforms.validators import InputRequired, NumberRange, Length, AnyOf
 from wtforms.widgets.html5 import NumberInput
 
 from modules.routes.user.custom_fields import EmployeeInfoTextAreaField
-from modules.routes.user.custom_validators import RequiredIf, DateProper, EmployeeUnique
+from modules.routes.user.custom_validators import RequiredIf, EmployeeUnique, EndDateProper, \
+    StartDateProper
 from modules.routes.utils.custom_fields import InlineSubmitField
 
 from server import client
@@ -26,7 +26,8 @@ def create_plan_form(sn):
     """
 
     class CreatePlanForm(get_plan_base(sn)):
-        createPlanButton = InlineSubmitField("Create Plan", btn_text="Create Plan", render_kw={"class": "btn btn-primary btn-block"})
+        createPlanButton = InlineSubmitField("Create Plan", btn_text="Create Plan",
+                                             render_kw={"class": "btn btn-primary btn-block"})
 
     return CreatePlanForm()
 
@@ -39,7 +40,8 @@ def get_plan_form(sn: dict):
     """
 
     class ManagePlanForm(get_plan_base(sn)):
-        updatePlanButton = InlineSubmitField("Update Plan", btn_text="Update Plan", render_kw={"class": "btn btn-primary btn-block"})
+        updatePlanButton = InlineSubmitField("Update Plan", btn_text="Update Plan",
+                                             render_kw={"class": "btn btn-primary btn-block"})
 
     return ManagePlanForm()
 
@@ -89,7 +91,7 @@ def get_plan_base(sn: dict):
         startDate = StringField('Start Date/Times',
                                 validators=[
                                     InputRequired(message="A start date is required."),
-                                    DateProper(message="The start date is malformed.")
+                                    StartDateProper()
                                 ],
                                 render_kw={"placeholder": "Start Date/Times",
                                            "class": "form-control"})
@@ -128,7 +130,7 @@ def get_plan_base(sn: dict):
         endDate = StringField('End Date/Times',
                               validators=[
                                   RequiredIf("endDateToggle", message="The end date is required."),
-                                  DateProper(message="The end date is malformed.")
+                                  EndDateProper(),
                               ],
                               render_kw={"placeholder": "Date Date/Times",
                                          "class": "form-control"})
