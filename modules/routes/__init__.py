@@ -4,9 +4,9 @@ from models import Employee, Manager, Transaction
 from server import client, mysql
 from sys import stderr
 
-from datetime import datetime
 from modules.middleware.logic import createBackgroundScheduler
 from modules.simulation.logic import simulate_startup
+
 
 def load_values():
     conn = mysql.connect()
