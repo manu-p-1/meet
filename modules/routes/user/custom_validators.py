@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from wtforms import FieldList, StringField
 from wtforms.validators import Optional, DataRequired, ValidationError
 from modules.routes.user.custom_fields import EmployeeInfoTextAreaField
+from modules.routes.utils.classes.class_utils import SupportedTimeFormats
 
 
 class RequiredIf(DataRequired):
@@ -87,38 +88,48 @@ class EmployeeUnique(object):
         return False
 
 
-class DateProper(object):
-    scrubbed_fmt = "%Y-%m-%d %H:%M:%S"
-    incoming_fmt = "%m/%d/%Y %I:%M %p"
-
+class StartDateProper:
     def __init__(self, message=None):
         if not message:
-            message = f'Date range is malformed. Follow the format MM/DD/YYYY hh:mm AM[or PM].'
+            message = f'Start date is malformed. Follow the format MM/DD/YYYY hh:mm AM[or PM].'
         self.message = message
 
     def __call__(self, form, field):
-        self.timeZone = form.timeZone.data
+        dp = DateProper(field, form.timeZone.data, self.message)
+        dtobj = dp.check_and_convert(field.data)
+        field.data = dp.normalize_start(dtobj)
+
+
+class EndDateProper:
+    def __init__(self, message=None):
+        if not message:
+            message = f'End date is malformed. Follow the format MM/DD/YYYY hh:mm AM[or PM].'
+        self.message = message
+
+    def __call__(self, form, field):
+        dp = DateProper(field, form.timeZone.data, self.message)
+        dtobj = dp.check_and_convert(field.data)
+
+        # 1 Hour from Start date - Do this in UTC because start date is processed first
+        start_plus_one = datetime.strptime(form.startDate.data, SupportedTimeFormats.FMT_UTC) + timedelta(hours=1)
+
+        if dtobj < start_plus_one:
+            raise ValidationError(f'End date must be at least 1 hour ahead of the start date')
+
+        field.data = dp.normalize_end(dtobj)
+
+
+class DateProper(object):
+
+    def __init__(self, field, timezone, message):
+        self.timezone = timezone
+        self.message = message
+
         if type(field) is not StringField:
             raise ValidationError(self.message)
 
         if field.data is None:
             raise Exception('no field named "%s" in form' % field)
-
-        print("FIELD SHORT NAME", field.short_name, file=sys.stderr)
-
-        dtobj = self.check_and_convert(field.data)
-
-        print("FIELD BEFORE CONVERT", field.data, file=sys.stderr)
-
-        """
-        Choose the function depending on what kind of date it is 
-        """
-        if field.short_name == 'startDate':
-            field.data = self.normalize_start(dtobj)
-        else:
-            field.data = self.normalize_end(dtobj)
-
-        print("FIELD AFTER CONVERT", field.data, file=sys.stderr)
 
     def check_and_convert(self, against):
         """
@@ -127,26 +138,20 @@ class DateProper(object):
         :return: a datetime object otherwise raise a ValidationError
         """
         try:
-            return datetime.strptime(against, self.incoming_fmt)
+            return datetime.strptime(against, SupportedTimeFormats.FMT_UI)
         except ValueError:
             raise ValidationError(message=self.message)
 
     def normalize_start(self, dtobj):
         """
-
         Given a start date time as a datetime object, we make sure that the time the user
         submitted is between the current utc time and the current utc time - 1 hour
-
         If the plan start time on the form is older than 1 hour before the current UTC time:
             -> Send a Request Timeout
-
         If the plan start time is between the current utc time and 1 hour before the current UTC time:
             -> Adjust the plan start time to the current UTC time
-
         If the plan start time is ahead of the current utc time (future plan):
             -> Do nothing - convert it to a string with strftime
-
-
         :param dtobj: The datetime object representing the normalized start time
         :return: A string value of the UTC converted time, or a ValidationError otherwise
         """
@@ -157,26 +162,24 @@ class DateProper(object):
 
         if utc_dt <= one_hour_back:
             raise ValidationError("The request timed out.")
-        elif now >= utc_dt >= one_hour_back:
-            return now.strftime(self.scrubbed_fmt)
-        return utc_dt.strftime(self.scrubbed_fmt)
+
+        return utc_dt.strftime(SupportedTimeFormats.FMT_UTC)
 
     def normalize_end(self, dtobj):
         """
         Given an end time as a datetime object, we make sure that the end date is not greater
         than 5 years from now. We put a cap that a plan cannot last more than 5 years.
-
         :param dtobj: The datetime object representing the normalized end time
         :return: A string value of the UTC converted time, or a ValidationError otherwise
         """
         utc_dt = self.normalize(dtobj)
         now = datetime.utcnow().replace(tzinfo=pytz.utc)
-        five_years_fw = now + timedelta(days=1825)
+        five_years_fw = now + timedelta(days=1825)  # Five years
 
         if utc_dt > five_years_fw:
             raise ValidationError("A plan can only extend for a maximum of 5 years.")
 
-        return utc_dt.strftime(self.scrubbed_fmt)
+        return utc_dt.strftime(SupportedTimeFormats.FMT_UTC)
 
     def normalize(self, dtobj):
         """
@@ -185,7 +188,7 @@ class DateProper(object):
         :param dtobj:
         :return:
         """
-        local = pytz.timezone(self.timeZone)
+        local = pytz.timezone(self.timezone)
         local_dt = local.localize(dtobj, is_dst=None)
         utc_dt = local_dt.astimezone(pytz.utc)
 
