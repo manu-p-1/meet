@@ -4,7 +4,10 @@ const deletePlanButton = $("#deletePlanButton");
 searchForm.on("submit", function (evt) {
     evt.preventDefault();
     $.ajax({
-        url: `/util/plans/find/manage_plan/?value=${$("#planSearch").val()}`,
+        url: "/util/plans/find/manage_plan/?"
+            + "value=" + encodeURIComponent($("#planSearch").val()) + "&"
+            + "tz=" + encodeURIComponent(getTz()),
+
         type: 'GET',
         success: function (data) {
             if (data["response_status"] === "success") {
@@ -70,7 +73,7 @@ form.on("submit", function (evt) {
 });
 
 function ajaxSubmitUpdateForm() {
-    $("#timeZone").val(Intl.DateTimeFormat().resolvedOptions().timeZone);
+    $("#timeZone").val(getTz());
     const url = form.attr('action');
     replaceBtn("#updatePlanButton");
 
@@ -89,6 +92,10 @@ function ajaxSubmitUpdateForm() {
             showErrorModal(ERROR);
         }
     });
+}
+
+function getTz(){
+    return Intl.DateTimeFormat().resolvedOptions().timeZone
 }
 
 deletePlanButton.on("click", function (evt) {
@@ -122,6 +129,7 @@ readonlyProp(true);
 
 function readonlyProp(valueBool) {
     form.find(":input:not([type=hidden])").prop('disabled', valueBool);
+    form.find(".remove-new-employee-input").attr("style", "pointer-events:none");
 }
 
 
