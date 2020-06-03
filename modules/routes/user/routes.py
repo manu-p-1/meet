@@ -57,22 +57,33 @@ def create_plan():
         return render_template('plans/create_plan/create_plan_partial.html', form=form, current_date=time_now())
     else:
         if form.validate_on_submit():
-
             conn = mysql.connect()
             cursor = conn.cursor()
 
-            if is_duplicate_plan(mysql, form.planName.data):
-                return short_error(err_list=['This plan is already exists'])
-
-            p = Plan(cursor, conn=conn)
-            p.insert(form)
-
-            executeOrders()
-
+            create_plan_execution(conn, cursor, form)
             conn.close()
+
             return short_success(ManipulationType.CREATED)
         else:
             return short_error(form)
+
+
+def create_plan_execution(conn, cursor, form):
+    if is_duplicate_plan(mysql, form.planName.data):
+        return short_error(err_list=['This plan is already exists'])
+
+    """
+    if form.allEmployees.data:
+        Get all employees for department
+        for each employee
+            create dictionary of id, name and append to list
+        form.employeesOptional.data = newEmployeeList
+    """
+
+    p = Plan(cursor, conn=conn)
+    p.insert(form)
+
+    executeOrders()
 
 
 @user_bp.route('/manage_plan/', methods=['GET', 'POST'])
@@ -92,29 +103,10 @@ def manage_plan():
         form = get_plan_form(session)
 
         if form.validate_on_submit():
-            print(request.form, file=stderr)
-
             conn = mysql.connect()
             cursor = conn.cursor()
 
-            if plan_fmt['plan_name'] != form.planName.data:
-                if is_duplicate_plan(mysql, form.planName.data):
-                    return short_error(err_list=['This plan is already exists'])
-
-            if plan_fmt['is_active']:
-                return short_error(err_list=['This plan is currently active'])
-
-            p = Plan(cursor, conn=conn)
-            p.update(form, plan_fmt['id'])
-
-            q_del = """DELETE FROM employee_plan WHERE ep_employee_FK = %s AND ep_plan_FK = %s"""
-            q_ins = """INSERT INTO employee_plan(ep_employee_FK, ep_plan_FK) VALUES (%s, %s)"""
-            uq = get_unique_employees(plan_fmt['employees_list'], form.employeesOptional.data)
-
-            if uq['operation'] == OperationType.DELETE_EMPLOYEE:
-                [cursor.execute(q_del, (record['id'], plan_fmt['id'])) for record in uq['diff_list']]
-            else:
-                [cursor.execute(q_ins, (record['id'], plan_fmt['id'])) for record in uq['diff_list']]
+            manipulate_plan(conn, cursor, form, plan_fmt)
 
             conn.commit()
             conn.close()
@@ -122,6 +114,28 @@ def manage_plan():
             return short_success(ManipulationType.UPDATED)
         else:
             return short_error(form=form)
+
+
+def manipulate_plan(conn, cursor, form, plan_fmt):
+
+    if plan_fmt['plan_name'] != form.planName.data:
+        if is_duplicate_plan(mysql, form.planName.data):
+            return short_error(err_list=['This plan is already exists'])
+
+    if plan_fmt['is_active']:
+        return short_error(err_list=['This plan is currently active'])
+
+    p = Plan(cursor, conn=conn)
+    p.update(form, plan_fmt['id'])
+
+    q_del = """DELETE FROM employee_plan WHERE ep_employee_FK = %s AND ep_plan_FK = %s"""
+    q_ins = """INSERT INTO employee_plan(ep_employee_FK, ep_plan_FK) VALUES (%s, %s)"""
+    uq = get_unique_employees(plan_fmt['employees_list'], form.employeesOptional.data)
+
+    if uq['operation'] == OperationType.DELETE_EMPLOYEE:
+        [cursor.execute(q_del, (record['id'], plan_fmt['id'])) for record in uq['diff_list']]
+    else:
+        [cursor.execute(q_ins, (record['id'], plan_fmt['id'])) for record in uq['diff_list']]
 
 
 def time_now() -> str:
