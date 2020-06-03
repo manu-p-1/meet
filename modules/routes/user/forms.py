@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, TextAreaField, SelectField, BooleanField, DecimalField, \
-    FieldList, HiddenField
+    FieldList, HiddenField, RadioField
 from wtforms.validators import InputRequired, NumberRange, Length, AnyOf
 from wtforms.widgets.html5 import NumberInput
 
@@ -114,6 +114,10 @@ def get_plan_base(sn: dict):
         fundIndivEmployeesToggle = BooleanField('Employee specific disbursement',
                                                 render_kw={"class": "custom-control-input"})
 
+        searchEmployee = RadioField('Search for an employee', render_kw={"class": "form-control custom-control-input"})
+
+        allEmployees = RadioField('Disburse to all Employees', render_kw={"class": "form-control custom-control-input"})
+
         employeesOptional = FieldList(EmployeeInfoTextAreaField('employeesOptional',
                                                                 validators=[
                                                                     RequiredIf('fundIndivEmployeesToggle',
@@ -180,8 +184,8 @@ def get_plan_base(sn: dict):
                                       RequiredIf('controlToggle',
                                                  message="The velocity control usage limit is required."),
                                       NumberRange(min=0, max=100,
-                                                  message="The velocity control usage limit should be between 0 and 100, "
-                                                          "inclusive.")
+                                                  message="The velocity control usage limit should be between "
+                                                          "0 and 100, inclusive.")
                                   ],
                                   render_kw={"placeholder": "Usage Limit",
                                              "class": "form-control"},
