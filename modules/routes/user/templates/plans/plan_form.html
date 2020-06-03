@@ -52,6 +52,10 @@
     {{ form.fundIndivEmployeesToggle.label(class_="custom-control-label") }}
 </div>
 <div id="employeesOnly" class="d-none">
+
+    {{ form.searchEmployee }}
+    {{ form.searchEmployee.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label custom-control-label") }}
+
     <div id="employeeIDBoundary" class="card-specific">
         <div class="form-row mb-3 position-relative input-and-loader">
             <label for="searchEmployee" class="text-muted font-italic ml-1 mb-0 pre-input-label">Search and Employee
@@ -62,6 +66,10 @@
         <div class="form-row mb-3" id="employeeIDBoundaryRow">
         </div>
     </div>
+
+    {{ form.allEmployees.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label custom-control-label") }}
+    {{ form.allEmployees }}
+
     <div class="custom-control custom-toggle custom-toggle-sm mb-3">
         {{ form.endDateToggle }}
         {{ form.endDateToggle.label(class_="custom-control-label") }}
