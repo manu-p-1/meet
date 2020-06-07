@@ -4,13 +4,20 @@ let form = $(".plan-form");
 let loading = $(".employees-loading-icon");
 loading.hide();
 
-let destFund = $("#destFund");
+let destFund = $("#dest_fund");
 let search = $("#searchEmployee");
 destFund.children(":first-child").prop("disabled", true);
 
-const ERROR = "Your request could not be processed at this time. Please wait and try again later.";
-
+const REQ_ERR = "Your request could not be processed at this time. Please wait and try again later.";
+const CHOOSE_ERR = "Please choose a fund destination before searching an employee";
 const cache = {};
+
+
+const employeeBoundary = $("#employeeIDBoundaryRow");
+const disburseAll = $("#disbursement_type-0");
+const disburseSearch = $("#disbursement_type-1");
+
+
 search.autocomplete({
     minLength: 1,
     source: function (request, response) {
@@ -23,7 +30,7 @@ search.autocomplete({
 
         let x = $(destFund).find(":selected").val();
         if (!x) {
-            showErrorModal("Please choose a fund destination before searching an employee");
+            showErrorModal(CHOOSE_ERR);
             search.val('');
             destFund.focus();
             return;
@@ -32,7 +39,7 @@ search.autocomplete({
         const ll = [];
         loading.show();
 
-        $.getJSON(`/util/plans/find/department_employees/?department=${x}`, request, function (data, status, xhr) {
+        $.getJSON(`/util/plans/find/department_employees/?department=${x}`, request, function (data) {
             if (data.length) {
                 $.each(data, function (index, value) {
                     let name = value['name'];
@@ -77,9 +84,13 @@ search.autocomplete({
 
 //Listen to the destination fund change
 destFund.on("change", function () {
-    for (let member in cache) delete cache[member];
+    delAutoCompleteCache();
     removeAllEmployees();
 });
+
+function delAutoCompleteCache() {
+    for (let member in cache) delete cache[member];
+}
 
 //For the Description Counter
 let memo = $("#memo");
@@ -94,50 +105,72 @@ memo.on("input", function () {
 });
 
 
-//For the Date Picker
-createDatePicker($("#startDate"), moment().startOf('minute'));
-createDatePicker($("#endDate"), moment().startOf('minute').add(1, 'hour'));
-
-
-//For the Individual Employee toggle
-let indivUserToggle = $("#fundIndivEmployeesToggle");
+//For the Individual Employee toggle and set initial states
+let indivUserToggle = $("#has_fund_individuals");
 let employeesOnly = $("#employeesOnly");
+disableOrEnable(employeesOnly.find(":input"), false);
+
 
 indivUserToggle.on("click", function () {
     if (employeesOnly.hasClass("d-none")) {
+        disableOrEnable(employeesOnly.find(":input"), false);
         indivUserToggle.attr("checked", "checked");
         employeesOnly.removeClass("d-none");
     } else {
         indivUserToggle.removeAttr("checked", "checked");
         employeesOnly.addClass("d-none");
+        disableOrEnable(employeesOnly.find(":input"), false);
     }
 });
 
-var newEmployeeCount = $(".employeeIDInput").length;
+
+//For the Date Picker
+createDatePicker($("#start_date"), moment().startOf('minute'));
+createDatePicker($("#end_date"), moment().startOf('minute').add(1, 'hour'));
+
+
+let newEmployeeCount = $(".employeeIDInput").length;
 
 //For Removing employees
 $(document).on("click", ".remove-new-employee-input", function (e) {
     removeNewEmployee(e);
     if (newEmployeeCount === 0) {
-        indivUserToggle.trigger("click");
+        disburseAll.trigger("click");
     }
 });
 
 //For the end date toggle
-const endDateToggle = $("#endDateToggle");
+const endDateToggle = $("#has_end_date");
 const endDateGroup = $("#endDateGroup");
 $(endDateToggle).on("click", function () {
     toggleDiv(endDateToggle, endDateGroup);
 });
 
 //For the velocity controls toggle
-const controlToggle = $("#controlToggle");
+const controlToggle = $("#has_velocity_controls");
 const fundControls = $("#fundControls");
 $(controlToggle).on("click", function () {
     toggleDiv(controlToggle, fundControls);
 });
 
 $(".ui-menu.ui-widget.ui-autocomplete").addClass("shadow-lg");
+boundaryDisable(true);
+
+disburseAll.on("click", function () {
+    boundaryDisable(true);
+});
+
+disburseSearch.on("click", function () {
+    boundaryDisable(false);
+});
+
+function disableOrEnable(selector, truth){
+    selector.prop("disabled", truth)
+}
+
+function boundaryDisable(truth) {
+    $("#employeeIDBoundary *").prop("disabled", truth);
+}
 
 function alertTop(divAfter, data) {
     let alertdiv = $(".alert");
@@ -179,10 +212,12 @@ function removeNewEmployee(e) {
     $(closestGroup).remove();
     delete registeredEmployees[textArea.attr("data-meet-id")];
     newEmployeeCount--;
+
+   employeeBoundary.trigger("removeEmployee");
 }
 
 function removeAllEmployees() {
-    $("#employeeIDBoundaryRow").empty();
+   employeeBoundary.empty();
 }
 
 function toggleDiv(toggler, divElement) {
@@ -199,20 +234,21 @@ function toggleDiv(toggler, divElement) {
 
 function addNewEmployee(name, id) {
     if (newEmployeeCount <= 12) {
-        let bound = $("#employeeIDBoundaryRow");
         let template =
             `<div class="form-group col-md-3">
                 <label class="text-muted additional-employee-input-label">Employee <span class="employeeCount">${newEmployeeCount + 1}</span></label>
                 <div class="input-container">
-                    <textarea class="employeeIDInput form-control position-relative" data-meet-id="${id}" name="employeesOptional-${newEmployeeCount}" type="text" readonly rows="2">NAME: ${name}&#13;&#10;ID: ${id}
+                    <textarea class="employeeIDInput form-control position-relative" data-meet-id="${id}" name="employees_list-${newEmployeeCount}" type="text" readonly rows="2">NAME: ${name}&#13;&#10;ID: ${id}
                     </textarea>
                     <span class="remove-new-employee-input material-icons">remove_circle</span>
                 </div>
             </div>`;
 
-        bound.append(template);
+        employeeBoundary.append(template);
         registeredEmployees[id] = name;
         newEmployeeCount++;
+
+        employeeBoundary.trigger('newEmployee');
     } else {
         showErrorModal("Only a maximum of 12 recipients can receive funds at one time");
     }
@@ -237,6 +273,9 @@ function resetForm() {
         delete registeredEmployees[key];
     }
     $(".active-danger").addClass("d-none");
+    $("#sidebarCurrentDate").val(moment().format('MMM Do, YYYY'));
+    changePriority(PriorityObj.Low);
+    form.trigger("formReset");
 }
 
 function createDatePicker(referenceSelector, minimumDate) {
@@ -252,7 +291,7 @@ function createDatePicker(referenceSelector, minimumDate) {
         locale: {
             format: pickerFormat
         }
-    }, function (start, end, label) {
+    }, function (start) {
         referenceSelector.val(start);
     });
 
@@ -260,7 +299,7 @@ function createDatePicker(referenceSelector, minimumDate) {
         $(this).val(picker.startDate.format(pickerFormat));
     });
 
-    referenceSelector.on('cancel.daterangepicker', function (ev, picker) {
+    referenceSelector.on('cancel.daterangepicker', function () {
         $(this).val('');
     });
 }
@@ -285,10 +324,8 @@ const PriorityObj = {
     }
 };
 
-$(".priority-select-dropdown .dropdown-item").on("click", function (e) {
-    let targ = $(e.target);
-    let v = targ.val();
-    changePriority(PriorityObj[v]);
+$(".priority-select-dropdown .dropdown-item").on("click", function () {
+    changePriority(PriorityObj[$(this).val()]);
 });
 
 function changePriority(priorityobj) {
@@ -303,3 +340,140 @@ function changePriority(priorityobj) {
 }
 
 
+const UpdateTotalModule = (function () {
+    const tot = {};
+    const sft = $("#sidebarFundingTotal");
+    const departmentSizeCache = {};
+    let fundingAmount = 0.00;
+    let fundingInput = null;
+
+    tot.reset = function resetzero() {
+        fundingAmount = fundingInput = 0;
+        sft.html(currency_formatter.format(0));
+    };
+
+    function adjustSidebarTotal() {
+        let cleaned = fundingAmount;
+        try {
+            if (isNaN(cleaned)) {
+                formatZero();
+            } else {
+                cleaned = currency_formatter.format(cleaned);
+            }
+        } catch (err) {
+            formatZero();
+        }
+
+        function formatZero() {
+            cleaned = currency_formatter.format(0.00);
+        }
+
+        sft.html(cleaned);
+    }
+
+    async function adjustFundsWithDepartment() {
+
+        fundingAmount = fundingInput * await inner_size();
+        adjustSidebarTotal();
+
+        function inner_size() {
+            let optVal = $(destFund.find(":selected")[0]).val();
+
+            if (optVal.trim()) {
+                if (!departmentSizeCache.hasOwnProperty(optVal)) {
+                    return new Promise((res) => {
+                        $.getJSON("/util/plans/find/department_size/?department=" + optVal, function (data) {
+                            console.log(data);
+                            departmentSizeCache[optVal] = data['size'];
+                            res(data['size']);
+                        }).fail(function () {
+                            alert(ERROR);
+                            res(0);
+                        });
+                    });
+                }
+                return departmentSizeCache[optVal];
+            } else {
+                showConfirmModal("Your funding total will remain zero until you choose a funding destination");
+                return 0;
+            }
+        }
+    }
+
+    function adjustFundsWithEmployees() {
+        fundingAmount = fundingInput * $(".employeeIDInput").length;
+        adjustSidebarTotal();
+    }
+
+    function adjustFundsWithInput() {
+        fundingAmount = fundingInput;
+        adjustSidebarTotal();
+    }
+
+    function adjustFundsIfEmployeeSpecific() {
+        if (indivUserToggle.is(':checked')) {
+            let checked = $("input[name='disbursement_type']:checked").val();
+            if (checked === "DISB_ALL") {
+                adjustFundsWithDepartment();
+            } else {
+                adjustFundsWithEmployees();
+            }
+        } else {
+            adjustFundsWithInput();
+        }
+    }
+
+    $("#funding_amount").on("change input", function () {
+        fundingInput = $(this).val();
+        adjustFundsIfEmployeeSpecific();
+    });
+
+    destFund.on("change", function () {
+        adjustFundsIfEmployeeSpecific();
+    });
+
+    indivUserToggle.on("click", function () {
+        if ($(this).is(":checked")) {
+            adjustFundsWithDepartment();
+        } else {
+            fundingAmount = fundingInput;
+            adjustSidebarTotal();
+        }
+    });
+
+    //ON SEARCH CLICK
+
+    disburseAll.on("click", function () {
+        adjustFundsWithDepartment();
+    });
+
+    disburseSearch.on("click", function () {
+        adjustFundsWithEmployees();
+    });
+
+   employeeBoundary.on("newEmployee", function () {
+        adjustFundsWithEmployees();
+    });
+
+   employeeBoundary.on("removeEmployee", function(){
+        adjustFundsWithEmployees();
+    });
+
+    form.on("formReset", function () {
+        tot.reset();
+    });
+
+    return tot;
+}());
+
+$(document).scroll(function () {
+    if ($(window).width() >= 992) {
+        var y = $(document).scrollTop(), header = $("#sidebarItems");
+        if (y >= (y + $('#mainContent').offset().top) || Math.floor(y) <= 230) {
+            header.css({ "position": "static", "width": "auto" });
+        }
+        else {
+            header.css({ "position": "sticky", "width": "auto", "top": "70px" });
+        }
+    }
+});
