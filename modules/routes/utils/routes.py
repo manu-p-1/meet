@@ -3,15 +3,17 @@ from datetime import datetime
 
 from dateutil import tz
 from flask import Blueprint, render_template, request, jsonify, session
-import json
 
 from modules.decorators.utils import login_required
+from modules.routes.user.forms import Forminator
 from modules.routes.utils.classes.class_utils import ManipulationType, SupportedTimeFormats
 from modules.routes.utils.functions.function_utils import is_active_plan, short_error, short_success
 from server import mysql
 
 util_bp = Blueprint('util_bp', __name__,
                     template_folder='templates', static_folder='static')
+
+UNKNOWN_ERROR = "Something went wrong. Please try again."
 
 
 @util_bp.route('plans/find/department_employees/', methods=['GET'])
@@ -71,7 +73,7 @@ def overview(ctx=None):
         ]
 
     conn.close()
-    return json.dumps(e_payload)
+    return jsonify(e_payload)
 
 
 @util_bp.route('plans/find/manage_plan/', methods=['GET'])
@@ -85,7 +87,9 @@ def manage_plan():
     timezone = request.args.get('tz')
 
     if search_query is None or timezone is None:
-        return short_error(err_list=['An error retrieving the plan occured'])
+        return short_error(err_list=[UNKNOWN_ERROR])
+
+    search_query = Forminator.scrub_plan_name(search_query)
 
     cursor.execute('SELECT * FROM PLAN where plan_name = %s', search_query)
     plan_data = cursor.fetchall()
@@ -114,6 +118,7 @@ def manage_plan():
         plan_fmt['end_date'] = convert_time_zone(plan_fmt['end_date'], timezone)
 
     plan_fmt['fund_individuals'] = True if int.from_bytes(plan_fmt['fund_individuals'], 'big') else False
+    plan_fmt['fund_all_employees'] = True if int.from_bytes(plan_fmt['fund_all_employees'], 'big') else False
     plan_fmt['is_active'] = True if is_active_plan(mysql, plan_fmt['plan_name']) else False
 
     employees_list = []
@@ -124,11 +129,14 @@ def manage_plan():
         """
         cursor.execute(get_employees_query, session['CURRENT_PLAN_EDIT'])
         cf = cursor.fetchall()
-        for employee in cf:
-            employees_list.append({
+
+        employees_list = [
+            {
                 "id": employee[0],
                 "name": employee[1]
-            })
+            } for employee in cf
+        ]
+
     plan_fmt['employees_list'] = employees_list
 
     session['MANAGE_FORM'] = plan_fmt
@@ -154,6 +162,7 @@ def manage_plan():
             "start_date": plan_fmt['start_date'],
             "dest_fund": plan_fmt['dest_fund_FK'],
             "has_employee_specific": True if plan_fmt['fund_individuals'] else False,
+            "has_all_employees": True if plan_fmt['fund_all_employees'] else False,
             "employees_list": plan_fmt['employees_list'],
             "has_end_date": True if plan_fmt['end_date'] is not None else False,
             "end_date": plan_fmt['end_date'],
@@ -191,7 +200,29 @@ def delete_plan():
         conn.close()
         return short_success(manip_type=ManipulationType.DELETED)
 
-    except Exception as e:
+    except Exception:
         # An exception here shouldn't really occur, so log it
         conn.close()
-        return short_error(err_list=['Something went wrong. Please try again.'])
+        return short_error(err_list=[UNKNOWN_ERROR])
+
+
+@util_bp.route('plans/find/department_size/', methods=['GET'])
+@login_required(session)
+def department_size():
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    dept_value = request.args.get('department')
+
+    if not dept_value.strip():
+        return short_error(err_list=[UNKNOWN_ERROR])
+
+    q = """SELECT count(employee_dept_FK) as length 
+    FROM employee e 
+    JOIN department_lookup dl on e.employee_dept_FK = dl.token
+    WHERE dl.department = %s;"""
+
+    cursor.execute(q, dept_value)
+    return jsonify(
+        size=cursor.fetchall()[0][0]  # This will always return something, even 0
+    )
