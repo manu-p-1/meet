@@ -17,15 +17,17 @@
         </div>
         <!-- End Page Header -->
         <div class="row">
-            <div class="col-lg-9 col-md-12">
+            <div class="col-lg-9 col-md-12" id="mainContent">
                 <div class="card card-small mb-3">
                     <div class="card-body">
                         {% include 'plans/create_plan/plan_form_partial.html' %}
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-12">
-                {% include "plans/plan_sidebar_partial.html" %}
+            <div class="col-lg-3 col-md-12" id="pageWrap">
+                <div id="sidebarItems">
+                    {% include "plans/plan_sidebar_partial.html" %}
+                </div>
             </div>
         </div>
     </div>

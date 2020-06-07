@@ -1,13 +1,11 @@
-import sys
 from server import mysql
-from flask import Blueprint, render_template, request, jsonify, redirect, flash, session, url_for
+from flask import Blueprint, render_template, request, redirect, flash, session, url_for
 from .forms import LoginForm
 from server import client
 
 from modules.decorators.utils import check_login
 from modules.routes import load_values
 from modules.routes.utils.functions.function_utils import gather_form_errors
-from modules.simulation.logic import simulate_startup
 
 common_bp = Blueprint('common_bp', __name__,
                       template_folder='templates', static_folder='static')
@@ -35,7 +33,10 @@ def login(ctx=None):
         if form.validate_on_submit():
             conn = mysql.connect()
             cursor = conn.cursor()
-            query = '''SELECT manager_dept_FK,first_name, last_name, email, title, pass, gender FROM manager WHERE email = %s'''
+            query = '''
+            SELECT manager_dept_FK,first_name, last_name, email, title, pass, gender 
+            FROM manager WHERE email = %s
+            '''
             cursor.execute(query, (request.form.get('email')))
 
             try:
@@ -67,7 +68,6 @@ def login(ctx=None):
 
         else:
             flash(gather_form_errors(form)[0], category='err')
-            conn.close()
             return redirect(url_for('common_bp.login'))
 
 

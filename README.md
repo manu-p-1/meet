@@ -34,7 +34,7 @@
   <a href="https://github.com/manu-p-1/meet/graphs/contributors" target="_blank">
     <img src="https://img.shields.io/github/contributors/manu-p-1/meet.svg?style=for-the-badge">
   </a>
-<p>
+</p>
 <br>
 <br>
 

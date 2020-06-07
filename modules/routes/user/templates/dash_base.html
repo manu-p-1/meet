@@ -32,6 +32,7 @@
         <script src="/static/libs/datatables/vfs_fonts.js"></script>
         <script src="/static/libs/datatables/vfs_fonts.js"></script>
         <script src="/static/libs/datatables/buttons.html5.min.js"></script>
+        <script src="{{ url_for('user_bp.static', filename='js/darkreader.min.js') }}"></script>
     {% endblock %}
 </head>
 <body class="h-100">
@@ -166,6 +167,12 @@
                         <a class="nav-link" target="_blank" href="https://www.marqeta.com/docs/core-api/introduction">Marqeta
                             Core API</a>
                     </li>
+                    <li class="nav-item">
+                        <div class="nav-link" id="darkModeSelector">
+                            <span id="darkModeSelectorText">Enable Dark Mode</span>
+                            <i class="material-icons mr-1 mb-0">nights_stay</i>
+                        </div>
+                    </li>
                 </ul>
                 <span class="copyright ml-auto my-auto mr-2">Copyright © 2020
               <a href="#" rel="nofollow">MEET</a>
@@ -180,14 +187,6 @@
     <script src="{{ ASSET_URL }}"></script>
 {% endassets %}
 
-<script>
-    var element = document.querySelector('.d-table.m-auto');
-    if ((element.offsetHeight < element.scrollHeight) || (element.offsetWidth < element.scrollWidth)) {
-        console.log("overflow");
-    } else {
-        console.log("no overflow");
-    }
-</script>
 
 </body>
 </html>

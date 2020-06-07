@@ -1,7 +1,7 @@
 import sys
 import pytz
 from datetime import datetime, timedelta
-from wtforms import FieldList, StringField
+from wtforms import FieldList, StringField, RadioField
 from wtforms.validators import Optional, DataRequired, ValidationError
 from modules.routes.user.custom_fields import EmployeeInfoTextAreaField
 from modules.routes.utils.classes.class_utils import SupportedTimeFormats
@@ -11,6 +11,10 @@ class RequiredIf(DataRequired):
 
     def __init__(self, other_field_name, message=None):
         self.other_field_name = other_field_name
+
+        if message is None:
+            message = "One ore more required Fields were missing"
+
         super(RequiredIf, self).__init__(message=message)
 
     def __call__(self, form, field):
@@ -20,6 +24,29 @@ class RequiredIf(DataRequired):
 
         if bool(other_field.data):
             super(RequiredIf, self).__call__(form, field)
+        else:
+            Optional().__call__(form, field)
+
+
+class RequiredIfRadioField(DataRequired):
+
+    def __init__(self, radio_field, radio_choice, message=None):
+        self.radio_field = radio_field
+        self.radio_choice = radio_choice
+
+        if message is None:
+            message = "One ore more required Fields were missing"
+
+        super(RequiredIfRadioField, self).__init__(message=message)
+
+    def __call__(self, form, field):
+        rfld = form._fields.get(self.radio_field)
+
+        if type(rfld) is not RadioField:
+            raise Exception(f'{rfld} cannot be used with {self.__class__.__name__}')
+
+        if rfld.data is None or rfld.data == self.radio_choice:
+            super(RequiredIfRadioField, self).__call__(form, field)
         else:
             Optional().__call__(form, field)
 
@@ -82,9 +109,9 @@ class EmployeeUnique(object):
             if type(f) is not EmployeeInfoTextAreaField:
                 raise Exception("EmployeeUnique cannot be used with a non EmployeeInfoTextAreaField type")
 
-            if f.data['id'] in seen:
+            if f.data.eid in seen:
                 return True
-            seen.add(f.data['id'])
+            seen.add(f.data.eid)
         return False
 
 
@@ -95,7 +122,7 @@ class StartDateProper:
         self.message = message
 
     def __call__(self, form, field):
-        dp = DateProper(field, form.timeZone.data, self.message)
+        dp = DateProper(field, form.time_zone.data, self.message)
         dtobj = dp.check_and_convert(field.data)
         field.data = dp.normalize_start(dtobj)
 
@@ -107,11 +134,11 @@ class EndDateProper:
         self.message = message
 
     def __call__(self, form, field):
-        dp = DateProper(field, form.timeZone.data, self.message)
+        dp = DateProper(field, form.time_zone.data, self.message)
         dtobj = dp.check_and_convert(field.data)
 
         # 1 Hour from Start date - Do this in UTC because start date is processed first
-        start_plus_one = datetime.strptime(form.startDate.data, SupportedTimeFormats.FMT_UTC) + timedelta(hours=1)
+        start_plus_one = datetime.strptime(form.start_date.data, SupportedTimeFormats.FMT_UTC) + timedelta(hours=1)
 
         if dtobj < start_plus_one:
             raise ValidationError(f'End date must be at least 1 hour ahead of the start date')

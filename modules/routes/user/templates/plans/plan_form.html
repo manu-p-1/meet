@@ -1,11 +1,11 @@
 {{ form.csrf_token }}
 <div class="form-group">
-    {{ form.planName.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
-    {{ form.planName }}
+    {{ form.plan_name.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
+    {{ form.plan_name }}
 </div>
 <div class="form-group">
 
-    {{ form.fundingAmount.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label",
+    {{ form.funding_amount.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label",
     **{"data-toggle":"tooltip",
     "data-placement": "top",
     "title": "In a department to department transfer, the entire amount goes to the department. Otherwise, the funding amount is on a per employee basis."}) }}
@@ -14,12 +14,12 @@
         <div class="input-group-prepend">
             <span class="input-group-text" id="basic-addon1">$</span>
         </div>
-        {{ form.fundingAmount }}
+        {{ form.funding_amount }}
     </div>
 </div>
 <div class="form-group">
-    {{ form.planJustification.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
-    {{ form.planJustification }}
+    {{ form.plan_justification.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
+    {{ form.plan_justification }}
 </div>
 <div class="form-group">
     {{ form.memo.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
@@ -27,9 +27,9 @@
     <small class="float-right font-weight-bold" id="count_message"><span id="count_message_amt"></span></small>
 </div>
 <div class="form-group">
-    {{ form.startDate.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
+    {{ form.start_date.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
     <div id="blog-overview-date-range" class="input-group" style="">
-        {{ form.startDate }}
+        {{ form.start_date }}
         <span class="input-group-append">
             <span class="input-group-text">
                 <i class="material-icons"></i>
@@ -39,20 +39,35 @@
 </div>
 <div class="form-row">
     <div class="form-group col-md-6">
-        {{ form.sourceFund.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
-        {{ form.sourceFund }}
+        {{ form.source_fund.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
+        {{ form.source_fund }}
     </div>
     <div class="form-group col-md-6">
-        {{ form.destFund.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
-        {{ form.destFund }}
+        {{ form.dest_fund.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
+        {{ form.dest_fund }}
     </div>
 </div>
 <div class="custom-control custom-toggle custom-toggle-sm mb-3">
-    {{ form.fundIndivEmployeesToggle }}
-    {{ form.fundIndivEmployeesToggle.label(class_="custom-control-label") }}
+    {{ form.has_fund_individuals }}
+    {{ form.has_fund_individuals.label(class_="custom-control-label") }}
 </div>
-<div id="employeesOnly" class="d-none">
-    <div id="employeeIDBoundary" class="card-specific">
+<div id="employeesOnly" class="d-none ml-3">
+
+    {% set edt_radio = form.disbursement_type | list %}
+
+    <div class="custom-control custom-radio">
+        {{ edt_radio[0](class_="custom-control-input") }}
+        {{ edt_radio[0].label(class_="text-muted font-italic ml-1 mb-0
+        pre-input-label custom-control-label disbursement-type") }}
+    </div>
+
+    <div class="custom-control custom-radio mb-2">
+        {{ edt_radio[1](class_="custom-control-input") }}
+        {{ edt_radio[1].label(class_="text-muted font-italic ml-1 mb-0
+        pre-input-label custom-control-label disbursement-type") }}
+    </div>
+
+    <div id="employeeIDBoundary" class="card-specific ml-lg-4">
         <div class="form-row mb-3 position-relative input-and-loader">
             <label for="searchEmployee" class="text-muted font-italic ml-1 mb-0 pre-input-label">Search and Employee
                 (First and Last Name)</label>
@@ -62,14 +77,15 @@
         <div class="form-row mb-3" id="employeeIDBoundaryRow">
         </div>
     </div>
+
     <div class="custom-control custom-toggle custom-toggle-sm mb-3">
-        {{ form.endDateToggle }}
-        {{ form.endDateToggle.label(class_="custom-control-label") }}
+        {{ form.has_end_date }}
+        {{ form.has_end_date.label(class_="custom-control-label") }}
     </div>
     <div id="endDateGroup" class="form-group d-none">
-        {{ form.endDate.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
+        {{ form.end_date.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
         <div id="blog-overview-date-range" class="input-group" style="">
-            {{ form.endDate(required=False) }}
+            {{ form.end_date(required=False) }}
             <span class="input-group-append">
                     <span class="input-group-text">
                         <i class="material-icons"></i>
@@ -78,34 +94,34 @@
         </div>
     </div>
     <div class="custom-control custom-toggle custom-toggle-sm mb-3">
-        {{ form.controlToggle }}
-        {{ form.controlToggle.label(class_="custom-control-label") }}
+        {{ form.has_velocity_controls }}
+        {{ form.has_velocity_controls.label(class_="custom-control-label") }}
     </div>
     <div id="fundControls" class="d-none">
         <small class="text-muted font-italic ml-1">Velocity Controls</small>
         <div class="card-specific">
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    {{ form.controlName.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
-                    {{ form.controlName(required=False) }}
+                    {{ form.vel_control_name.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
+                    {{ form.vel_control_name(required=False) }}
                 </div>
                 <div class="form-group col-md-6">
-                    {{ form.controlWindow.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
-                    {{ form.controlWindow(required=False) }}
+                    {{ form.vel_control_window.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
+                    {{ form.vel_control_window(required=False) }}
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    {{ form.amountLimit.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
-                    {{ form.amountLimit(required=False) }}
+                    {{ form.vel_amt_limit.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
+                    {{ form.vel_amt_limit(required=False) }}
                 </div>
                 <div class="form-group col-md-6">
-                    {{ form.usageLimit.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
-                    {{ form.usageLimit(required=False) }}
+                    {{ form.vel_usage_limit.label(class_="text-muted font-italic ml-1 mb-0 pre-input-label") }}
+                    {{ form.vel_usage_limit(required=False) }}
                 </div>
             </div>
         </div>
     </div>
 </div>
-{{ form.timeZone }}
+{{ form.time_zone }}
 {{ form.priority }}

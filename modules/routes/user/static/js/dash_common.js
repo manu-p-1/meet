@@ -17,4 +17,34 @@ function displayModal(modalref, message, callback) {
     $('body').removeClass('modal-open');
 }
 
- $('[data-toggle="tooltip"]').tooltip();
+$('[data-toggle="tooltip"]').tooltip();
+
+
+/*
+ * Dark Reader
+ *
+ */
+const readerOptions = {
+    brightness: 100,
+    contrast: 90,
+    sepia: 10
+};
+
+$("#darkModeSelector").on("click", handler1);
+const dmst = $("#darkModeSelectorText");
+
+function handler1() {
+    $(this).one("click", handler2);
+    DarkReader.enable(readerOptions);
+    dmst.html("Disable Dark Mode");
+}
+function handler2() {
+    $(this).one("click", handler1);
+    DarkReader.disable();
+    dmst.html("Enable Dark Mode");
+}
+
+const currency_formatter = Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD'
+});

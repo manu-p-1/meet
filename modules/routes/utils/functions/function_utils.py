@@ -1,7 +1,9 @@
 from datetime import datetime, timezone
+from typing import Union, Dict, List, Any
 
 from flask import render_template, jsonify
 
+from modules.routes.user.custom_fields import ISimpleEmployee
 from modules.routes.utils.classes.class_utils import ManipulationType
 
 
@@ -41,6 +43,23 @@ def is_active_plan(mysql, field_data) -> bool:
         return True
 
 
+def find_all_employees(cursor, dept) -> Union[Dict[str, Union[List[ISimpleEmployee], int]], Any]:
+    q = """
+        SELECT e.id FROM employee e 
+        JOIN department_lookup dl on e.employee_dept_FK = dl.token
+        WHERE dl.department = %s;
+    """
+    cursor.execute(q, dept)
+    employees = cursor.fetchall()
+    len_emps = len(employees)
+    if employees is not None and len_emps != 0:
+        return {
+            "data": [ISimpleEmployee(eid=id_) for id_ in employees],
+            "length": len_emps
+        }
+    return None
+
+
 def short_error(form=None, err_list=None):
     if form is not None and err_list is None:
         return jsonify(
@@ -72,3 +91,11 @@ def short_success(manip_type: ManipulationType):
             manip_type=manip_type.value
         )
     )
+
+
+def suffix(d):
+    return 'th' if 11 <= d <= 13 else {1: 'st', 2: 'nd', 3: 'rd'}.get(d % 10, 'th')
+
+
+def custom_strftime(fmt, t):
+    return t.strftime(fmt).replace('{S}', str(t.day) + suffix(t.day))

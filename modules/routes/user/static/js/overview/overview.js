@@ -354,8 +354,12 @@ $(document).ready(function () {
         scrollCollapse: true,
         responsive: true,
         dom: "<'myfilter'f><'mylength'l>t",
-        "initComplete": function (settings, json) {
+        "initComplete": function () {
             loadSpending();
+        },
+        "fnRowCallback": function(nRow) {
+          $('td:eq(2)', nRow).addClass("gpa-balance text-success font-weight-bold");
+          $('td:eq(3)', nRow).addClass("gpa-spending text-danger font-weight-bold");
         }
     });
 
@@ -392,8 +396,8 @@ $(document).ready(function () {
                     value['gpa_bal'],
                     value['monthly_spending']
                 ]).draw();
-            })
-
+            });
+            $(".gpa-spending").prepend("- ");
         }).fail(function () {
             let ref = $("#monthlySpendingLoadingText");
             ref.prev().remove();

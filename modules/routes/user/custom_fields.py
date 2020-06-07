@@ -1,6 +1,16 @@
-import sys
-
 from wtforms import TextAreaField
+
+
+class ISimpleEmployee:
+    def __init__(self, eid, name=None):
+        self.eid = eid
+        self.name = name
+
+    def __str__(self):
+        return f"""
+            "id": {self.eid}
+            "name": {self.name}
+        """
 
 
 class EmployeeInfoTextAreaField(TextAreaField):
@@ -13,7 +23,6 @@ class EmployeeInfoTextAreaField(TextAreaField):
 
         if self.data is not None or self.data != '':
             self.data = self.scrub(self.data)
-            print("EMPLOYEE FIELD DATA:", self.data, file=sys.stderr)
 
     @classmethod
     def scrub(cls, material):
@@ -22,7 +31,5 @@ class EmployeeInfoTextAreaField(TextAreaField):
         splitted = sub.split("-")
         if len(splitted) == 1:
             return ''
-        return {
-            "id": int(splitted[1]),
-            "name": splitted[0].strip()
-        }
+        return ISimpleEmployee(eid=int(splitted[1]), name=splitted[0].strip())
+

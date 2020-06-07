@@ -7,9 +7,9 @@ form.on("submit", function (evt) {
 });
 
 function ajaxSubmitCreateForm() {
-    $("#timeZone").val(Intl.DateTimeFormat().resolvedOptions().timeZone);
+    $("#time_zone").val(Intl.DateTimeFormat().resolvedOptions().timeZone);
     const url = form.attr('action');
-    replaceBtn("#createPlanButton");
+    replaceBtn("#create_plan_btn");
 
     $.ajax({
         type: "POST",
@@ -21,10 +21,10 @@ function ajaxSubmitCreateForm() {
             if (data['response_status'] === "success") {
                 resetForm();
             }
-            enableBtn("#createPlanButton");
+            enableBtn("#create_plan_btn");
         },
         error: function (data) {
-            showErrorModal(ERROR);
+            showErrorModal(REQ_ERR);
         }
     });
 }
