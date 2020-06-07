@@ -1,14 +1,15 @@
+import datetime
 from typing import List, Dict, Union
 
 from models import Plan
-from modules.routes.user.custom_fields import EmployeeInfoTextAreaField
-from modules.routes.utils.classes.class_utils import ManipulationType, OperationType
-from modules.routes.utils.functions.function_utils import is_duplicate_plan, short_error, short_success
+from modules.routes.user.custom_fields import EmployeeInfoTextAreaField, ISimpleEmployee
+from modules.routes.utils.classes.class_utils import ManipulationType, OperationType, SupportedTimeFormats
+from modules.routes.utils.functions.function_utils import is_duplicate_plan, short_error, short_success, \
+    find_all_employees, custom_strftime
 from server import mysql
-from datetime import date
-from sys import stderr
+from datetime import datetime
 from flask import Blueprint, render_template, request, jsonify, redirect, flash, session, url_for
-from modules.routes.user.forms import create_plan_form, get_plan_form
+from modules.routes.user.forms import create_plan_form, get_plan_form, Forminator
 from modules.decorators.utils import login_required
 from modules.middleware.logic import executeOrders
 
@@ -50,40 +51,37 @@ def logout(ctx=None):
 @user_bp.route('/create_plan/', methods=['GET', 'POST'])
 @login_required(session)
 def create_plan():
-
     form = create_plan_form(session)
 
     if request.method == 'GET':
-        return render_template('plans/create_plan/create_plan_partial.html', form=form, current_date=time_now())
+        return render_template('plans/create_plan/create_plan_partial.html', form=form,
+                               current_date=custom_strftime(SupportedTimeFormats.FMT_SIDE_UI, datetime.now()))
     else:
         if form.validate_on_submit():
             conn = mysql.connect()
             cursor = conn.cursor()
-
-            create_plan_execution(conn, cursor, form)
-            conn.close()
-
-            return short_success(ManipulationType.CREATED)
+            return create_plan_execution(conn, cursor, Forminator(form))
         else:
             return short_error(form)
 
 
-def create_plan_execution(conn, cursor, form):
-    if is_duplicate_plan(mysql, form.planName.data):
-        return short_error(err_list=['This plan is already exists'])
+def create_plan_execution(conn, cursor, fmr: Forminator):
+    if is_duplicate_plan(mysql, fmr.plan_name):
+        return short_error(err_list=['This plan already exists. Go to Manage Plan to learn more.'])
 
-    """
-    if form.allEmployees.data:
-        Get all employees for department
-        for each employee
-            create dictionary of id, name and append to list
-        form.employeesOptional.data = newEmployeeList
-    """
+    if fmr.disbursement_type == fmr.raw_form.DISB_ALL:
+        employees = find_all_employees(cursor, session['manager_dept'])
+
+        if employees is None:
+            return short_error(err_list=['No employees were found in the department'])
+        fmr.employees_list = employees['data']
 
     p = Plan(cursor, conn=conn)
-    p.insert(form)
+    p.insert(fmr)
+    conn.close()
 
     executeOrders()
+    return short_success(ManipulationType.CREATED)
 
 
 @user_bp.route('/manage_plan/', methods=['GET', 'POST'])
@@ -93,7 +91,8 @@ def manage_plan():
     form = get_plan_form(session)
 
     if request.method == 'GET':
-        return render_template('plans/manage_plan/manage_plan_partial.html', form=form, current_date=time_now())
+        return render_template('plans/manage_plan/manage_plan_partial.html', form=form,
+                               current_date=custom_strftime(SupportedTimeFormats.FMT_SIDE_UI, datetime.now()))
     else:
         plan_fmt = session.get('MANAGE_FORM')
 
@@ -105,46 +104,35 @@ def manage_plan():
         if form.validate_on_submit():
             conn = mysql.connect()
             cursor = conn.cursor()
-
-            manipulate_plan(conn, cursor, form, plan_fmt)
-
-            conn.commit()
-            conn.close()
-
-            return short_success(ManipulationType.UPDATED)
+            return manipulate_plan(conn, cursor, Forminator(form), plan_fmt)
         else:
             return short_error(form=form)
 
 
-def manipulate_plan(conn, cursor, form, plan_fmt):
+def manipulate_plan(conn, cursor, fmr, plan_fmt):
 
-    if plan_fmt['plan_name'] != form.planName.data:
-        if is_duplicate_plan(mysql, form.planName.data):
+    if plan_fmt['plan_name'] != fmr.plan_name:
+        if is_duplicate_plan(mysql, fmr.plan_name):
             return short_error(err_list=['This plan is already exists'])
 
     if plan_fmt['is_active']:
         return short_error(err_list=['This plan is currently active'])
 
     p = Plan(cursor, conn=conn)
-    p.update(form, plan_fmt['id'])
+    p.update(fmr, plan_fmt['id'])
 
     q_del = """DELETE FROM employee_plan WHERE ep_employee_FK = %s AND ep_plan_FK = %s"""
     q_ins = """INSERT INTO employee_plan(ep_employee_FK, ep_plan_FK) VALUES (%s, %s)"""
-    uq = get_unique_employees(plan_fmt['employees_list'], form.employeesOptional.data)
+    uq = get_unique_employees(plan_fmt['employees_list'], fmr.employees_list)
 
     if uq['operation'] == OperationType.DELETE_EMPLOYEE:
         [cursor.execute(q_del, (record['id'], plan_fmt['id'])) for record in uq['diff_list']]
     else:
         [cursor.execute(q_ins, (record['id'], plan_fmt['id'])) for record in uq['diff_list']]
 
-
-def time_now() -> str:
-    """
-    Get the current date
-    :return: The current date as a formatted string
-    """
-    current_date = date.today()
-    return current_date.strftime("%m/%d/%Y")
+    conn.commit()
+    conn.close()
+    return short_success(ManipulationType.UPDATED)
 
 
 def get_unique_employees(old_list, new_list: List[EmployeeInfoTextAreaField]) -> Dict[str, Union[List[dict],
