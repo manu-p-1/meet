@@ -1,5 +1,8 @@
+import sys
 from abc import ABC, abstractmethod
 from datetime import datetime
+
+from modules.routes.user.forms import Forminator
 
 
 class Model(ABC):
@@ -44,56 +47,52 @@ class Plan(Model):
 
     def __init__(self, cursor, conn, immediate_commit=True):
 
-        insert = '''INSERT INTO plan (plan_name,funding_amount,plan_justification,memo,start_date,end_date,
-                    source_fund_FK, dest_fund_FK,fund_individuals,control_name, control_window,amount_limit,usage_limit,priority,complete) VALUES 
-                    (%s,%s,%s,%s,%s,%s,
+        insert = '''INSERT INTO plan (plan_name, funding_amount, plan_justification, memo, start_date, end_date,
+                    source_fund_FK, dest_fund_FK, fund_individuals, fund_all_employees, control_name, control_window,
+                    amount_limit, usage_limit, priority, complete) 
+                    VALUES (%s, %s, %s, %s, %s, %s,
                     (SELECT id FROM department_lookup WHERE department = %s),
                     (SELECT id FROM department_lookup WHERE department = %s),
-                    %s,%s,%s,%s,%s,%s, %s)'''
+                    %s, %s, %s, %s, %s, %s, %s, %s)'''
         select = """SELECT * FROM plan"""
         select_where = "SELECT * FROM plan WHERE %s = %s"
 
         super().__init__(cursor, conn, insert, select, select_where, immediate_commit)
 
-    def insert(self, form):
+    def insert(self, fmr: Forminator):
 
-        for field in form:
-            if field.data == '':
-                field.data = None
+        self._cursor.execute(self._generic_insert, (fmr.plan_name, fmr.funding_amount,
+                                                    fmr.plan_justification, fmr.memo,
+                                                    fmr.start_date,
+                                                    fmr.end_date, fmr.source_fund, fmr.dest_fund,
+                                                    fmr.has_fund_individuals,
+                                                    fmr.is_disbursed_all(),
+                                                    fmr.vel_control_name, fmr.vel_control_window,
+                                                    fmr.vel_amt_limit,
+                                                    fmr.vel_usage_limit, fmr.priority, False))
 
-        self._cursor.execute(self._generic_insert, (form.planName.data, form.fundingAmount.data,
-                                                    form.planJustification.data, form.memo.data,
-                                                    form.startDate.data,
-                                                    form.endDate.data, form.sourceFund.data, form.destFund.data,
-                                                    form.fundIndivEmployeesToggle.data,
-                                                    form.controlName.data, form.controlWindow.data,
-                                                    form.amountLimit.data,
-                                                    form.usageLimit.data, form.priority.data, False))
-
-        if len(form.employeesOptional.data) != 0 and form.employeesOptional.data[0] != '':
-            for employeeField in form.employeesOptional.data:
-                ep = EmployeePlan(self.get_cursor, self.get_conn, True)
-                ep.insert_with_id(employeeField['id'], form.planName.data)
+        for e_field in fmr.employees_list:
+            ep = EmployeePlan(self.get_cursor, self.get_conn, True)
+            ep.insert_with_id(e_field.eid, fmr.plan_name)
 
         if self.is_immediate_commit:
             self._conn.commit()
 
-    def update(self, form, plan_id):
-        for field in form:
-            if field.data == '':
-                field.data = None
+    def update(self, fmr: Forminator, plan_id):
 
-        update_query = '''UPDATE plan SET plan_name = %s,plan_justification = %s,memo = %s,end_date = %s,
-                    fund_individuals = %s,control_name = %s, control_window = %s,amount_limit = %s,usage_limit = %s,
-                    priority = %s
+        update_query = '''UPDATE plan SET plan_name = %s, plan_justification = %s, memo = %s, end_date = %s,
+                    fund_individuals = %s, fund_all_employees = %s, control_name = %s, control_window = %s,
+                    amount_limit = %s, usage_limit = %s, priority = %s
                     WHERE id = %s'''
-        self._cursor.execute(update_query, (form.planName.data,
-                                            form.planJustification.data, form.memo.data,
-                                            form.endDate.data,
-                                            form.fundIndivEmployeesToggle.data,
-                                            form.controlName.data, form.controlWindow.data,
-                                            form.amountLimit.data,
-                                            form.usageLimit.data, form.priority.data, plan_id))
+
+        self._cursor.execute(update_query, (fmr.plan_name,
+                                            fmr.plan_justification, fmr.memo,
+                                            fmr.end_date,
+                                            fmr.has_fund_individuals,
+                                            fmr.is_disbursed_all(),
+                                            fmr.vel_control_name, fmr.vel_control_window,
+                                            fmr.vel_amt_limit,
+                                            fmr.vel_usage_limit, fmr.priority, plan_id))
         if self.is_immediate_commit:
             self._conn.commit()
 
@@ -101,8 +100,11 @@ class Plan(Model):
 class Manager(Model):
 
     def __init__(self, cursor, conn, immediate_commit=True):
-        insert = '''INSERT INTO manager(email, pass, first_name, last_name, title, description, manager_dept_FK, gender) VALUES 
-                    (%s,%s,%s,%s,%s,%s,%s, %s)'''
+        insert = '''
+        INSERT INTO manager(email, pass, first_name, last_name, title, description, manager_dept_FK, gender) 
+        VALUES 
+         (%s, %s, %s, %s, %s, %s, %s, %s)
+        '''
         select = """SELECT * FROM manager"""
         select_where = """SELECT * FROM manager where %s = %s"""
 
