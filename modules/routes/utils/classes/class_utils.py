@@ -15,3 +15,4 @@ class OperationType(enum.Enum):
 class SupportedTimeFormats:
     FMT_UTC = "%Y-%m-%d %H:%M:%S"
     FMT_UI = "%m/%d/%Y %I:%M %p"
+    FMT_SIDE_UI = "%b {S}, %Y"
