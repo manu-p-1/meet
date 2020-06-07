@@ -17,27 +17,33 @@ searchForm.on("submit", function (evt) {
 
                 let resp = data['response'];
 
-                $("#planName").val(resp['plan_name']);
-                $("#fundingAmount").val(resp['funding_amount']);
-                $("#planJustification").val(resp['justification']);
+                $("#plan_name").val(resp['plan_name']);
+                $("#funding_amount").val(resp['funding_amount']).trigger("input");
+                $("#plan_justification").val(resp['justification']);
                 $("#memo").val(resp['memo']).trigger("input");
-                $("#startDate").val(resp['start_date']);
-                $("#destFund").val(resp['dest_fund']).change();
+                $("#start_date").val(resp['start_date']);
+                $("#dest_fund").val(resp['dest_fund']).change();
 
                 if (resp['has_employee_specific']) {
-                    $("#fundIndivEmployeesToggle").trigger("click");
-                    loadEmployees(resp['employees_list']);
+                    $("#has_fund_individuals").trigger("click");
+
+                    if (resp['has_all_employees']) {
+                        $("#disbursement_type-0").click();
+                    } else {
+                        $("#disbursement_type-1").click();
+                        loadEmployees(resp['employees_list']);
+                    }
                 }
                 if (resp['has_end_date']) {
-                    $("#endDateToggle").trigger("click");
-                    $("#endDate").val(resp['end_date']);
+                    $("#has_end_date").trigger("click");
+                    $("#end_date").val(resp['end_date']);
                 }
                 if (resp['has_velocity_control']) {
-                    $("#controlToggle").trigger("click");
-                    $("#controlName").val(resp['control_name']);
-                    $("#controlWindow").val(resp['control_window']);
-                    $("#amountLimit").val(resp['amount_limit']);
-                    $("#usageLimit").val(resp['start_date']);
+                    $("#has_velocity_controls").trigger("click");
+                    $("#vel_control_name").val(resp['control_name']);
+                    $("#vel_control_window").val(resp['control_window']);
+                    $("#vel_amt_limit").val(resp['amount_limit']);
+                    $("#vel_usage_limit").val(resp['start_date']);
                 }
 
                 changePriority(PriorityObj[resp['priority']]);
@@ -60,7 +66,7 @@ searchForm.on("submit", function (evt) {
             }
         },
         error: function () {
-            showErrorModal(ERROR);
+            showErrorModal(REQ_ERR);
         }
     });
 });
@@ -73,9 +79,9 @@ form.on("submit", function (evt) {
 });
 
 function ajaxSubmitUpdateForm() {
-    $("#timeZone").val(getTz());
+    $("#time_zone").val(getTz());
     const url = form.attr('action');
-    replaceBtn("#updatePlanButton");
+    replaceBtn("#update_plan_btn");
 
     $.ajax({
         url: url,
@@ -86,15 +92,15 @@ function ajaxSubmitUpdateForm() {
             if (data['response_status']) {
                 resetForm();
             }
-            enableBtn("#updatePlanButton");
+            enableBtn("#update_plan_btn");
         },
         error: function () {
-            showErrorModal(ERROR);
+            showErrorModal(REQ_ERR);
         }
     });
 }
 
-function getTz(){
+function getTz() {
     return Intl.DateTimeFormat().resolvedOptions().timeZone
 }
 
@@ -120,7 +126,7 @@ function ajaxDeletePlan() {
             replaceBtn("#deletePlanButton");
         },
         error: function () {
-            showErrorModal(ERROR);
+            showErrorModal(REQ_ERR);
         }
     });
 }
