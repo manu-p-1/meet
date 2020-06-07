@@ -35,14 +35,13 @@ kill_flask(){
 }
 
 drop_schema(){
-   if [[ "$OSTYPE" == "cygwin" || "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]]
-    then
-      echo "Running DB DROP script...."
-      /c/Program\ Files/MySql/MySQL\ Server\ 8.0/bin/mysql -u "${DB_USER}" -p"${DB_PASS}" < db/MEET_DROP.sql
-    else
-      echo "Running DB DROP script...."
-      mysql -u "$DB_USER" -p"${DB_PASS}" < ./db/MEET_DROP.sql
-    fi
+  echo "Running DB DROP script...."
+  if [[ "$OSTYPE" == "cygwin" || "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]]
+  then
+    /c/Program\ Files/MySql/MySQL\ Server\ 8.0/bin/mysql -u "${DB_USER}" -p"${DB_PASS}" < db/MEET_DROP.sql
+  else
+    mysql -u "$DB_USER" -p"${DB_PASS}" < ./db/MEET_DROP.sql
+  fi
 }
 
 safe_cancel(){
