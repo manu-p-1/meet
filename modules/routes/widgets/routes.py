@@ -26,7 +26,7 @@ def wid_department_utilization():
 @login_required(session)
 def wid_current_business_balance():
     sendable = current_business_balance()
-    locale.setlocale(locale.LC_ALL, '')
+    locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
     for key, val in sendable.items():
         sendable[key] = locale.currency(round(val), grouping=True)
     return jsonify(sendable)
@@ -36,7 +36,7 @@ def wid_current_business_balance():
 @login_required(session)
 def wid_department_balance():
     sendable = department_balance(session['manager_dept'])
-    locale.setlocale(locale.LC_ALL, '')
+    locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
     for key, val in sendable.items():
         sendable[key] = locale.currency(round(val), grouping=True)
     return jsonify(sendable)
@@ -64,9 +64,9 @@ def wid_active_plans():
 @login_required(session)
 def wid_department_employee__monthly_spending():
     sendable = department_employee__monthly_spending(session['manager_dept'])
-    locale.setlocale(locale.LC_ALL, '')
+    locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
     for key, value in sendable.items():
-        value['gpa_bal'] = locale.currency(value['gpa_bal'])
+        value['gpa_bal'] = locale.currency(value['gpa_bal'], grouping=True)
         value['monthly_spending'] = locale.currency(value['monthly_spending'], grouping=True)
     return jsonify(sendable)
 
