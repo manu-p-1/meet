@@ -209,7 +209,6 @@ def current_outgoing_transactions(dept_code):
             amounts.append(cf[0][0])
 
     cursor.execute(q, (token, twenty_four_ago, start_date))
-    
 
     cf = cursor.fetchall()
     if len(cf) != 0:
@@ -230,7 +229,8 @@ def active_plans():
     now = time_now()
     now_time = now.strftime("%Y-%m-%d %H:%M:%S")
 
-    q = """SELECT COUNT(id) FROM plan WHERE start_date >= %s AND end_date <= %s"""
+    q = """SELECT COUNT(id) FROM plan 
+    WHERE (start_date >= %s AND end_date <= %s) OR (end_date is NULL)"""
     cursor.execute(q, (now_time, now_time))
     data = cursor.fetchall()[0][0]
     conn.close()
