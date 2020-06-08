@@ -1,31 +1,17 @@
-from marqeta import Client
+import os
 from server import mysql, client
 from models import EmployeeCard, Transaction
-import os
 from modules.simulation.logic import simulate_employee_plan
 from apscheduler.schedulers.background import BackgroundScheduler
 import atexit
 
 
-# open Client connection
-def openClient():
-    # Marqeta Client
-    client_payload = {
-        'base_url': "https://sandbox-api.marqeta.com/v3/",
-        'application_token': os.environ['MY_APP'],
-        'access_token': os.environ['MY_ACCESS'],
-        'timeout': 60
-    }
-    client = Client(client_payload['base_url'], client_payload['application_token'],
-                    client_payload['access_token'], client_payload['timeout'])
-    return client
-
-
-def createBackgroundScheduler():
+def create_background_scheduler():
     scheduler = BackgroundScheduler(daemon=True)
-    scheduler.add_job(func=executeOrders, trigger="interval", seconds=10)
+    scheduler.add_job(func=execute_orders, trigger="interval", seconds=10)
     scheduler.start()
-    print("!!!@@@               Running Backgroun Scheduler @@@                 !!!")
+    print("@@@@@ Running Background Scheduler @@@@@")
+
     # Shut down the scheduler when exiting the app
     atexit.register(lambda: scheduler.shutdown())
 
@@ -34,7 +20,7 @@ def createBackgroundScheduler():
 # the plan_ids should be a list of plan ids, as stored in the db
 # This will come from some func that queries the db for all
 # past due and store them as a list
-def executeOrders():
+def execute_orders():
     # print("Executing Orders")
     conn = mysql.connect()
     cursor = conn.cursor()
@@ -58,35 +44,24 @@ def executeOrders():
 
 
 def dept_to_dept(plan_id):
-    '''
+
+    """
     for department to department transfers,
     gathers info from plan in db and
     enters it into Marqet API
 
      param: plan_id - the id of the plan in db to submit
      returns: 1 on success 0 on faliure
-    '''
+    """
+
     conn = mysql.connect()
     cursor = conn.cursor()
     query = 'SELECT * FROM plan WHERE id = %s'
     cursor.execute(query, plan_id)
     records = cursor.fetchall()
-
-    id = records[0][0]
-    plan_name = records[0][1]
     funding_amount = records[0][2]
-    plan_justification = records[0][3]
-    memo = records[0][4]
-    start_date = records[0][5]
-    end_date = records[0][6]
     source_fund_FK = records[0][7]
     dest_fund_FK = records[0][8]
-    fund_individuals = records[0][9]
-    control_name = records[0][10]
-    control_window = records[0][11]
-    amount_limit = records[0][12]
-    usage_limit = records[0][13]
-    complete = records[0][15]
 
     query = 'SELECT token FROM department_lookup WHERE id = %s'
     cursor.execute(query, source_fund_FK)
@@ -114,22 +89,8 @@ def dept_to_emp(plan_id):
     query = 'SELECT * FROM plan WHERE id = %s'
     cursor.execute(query, plan_id)
     records = cursor.fetchall()
-
-    id = records[0][0]
-    plan_name = records[0][1]
     funding_amount = records[0][2]
-    plan_justification = records[0][3]
-    memo = records[0][4]
-    start_date = records[0][5]
-    end_date = records[0][6]
     source_fund_FK = records[0][7]
-    dest_fund_FK = records[0][8]
-    fund_individuals = records[0][9]
-    control_name = records[0][10]
-    control_window = records[0][11]
-    amount_limit = records[0][12]
-    usage_limit = records[0][13]
-    complete = records[0][15]
 
     query = 'SELECT token FROM department_lookup WHERE id = %s'
     cursor.execute(query, source_fund_FK)
@@ -173,11 +134,6 @@ def complete_employee_plan(plan_id):
     # end date
     end_date = records[0][1]
 
-    # get the days between
-    if end_date:
-        delta = end_date - start_date
-        days = delta.days
-
     query = 'SELECT token FROM employee WHERE id = %s'
     employee_tokens = []
     for eid in employee_ids:
@@ -191,6 +147,9 @@ def complete_employee_plan(plan_id):
         }
 
         if end_date:
+            delta = end_date - start_date
+            days = delta.days
+
             payload['expiration_offset'] = {
                 "unit": "DAYS",
                 "value": days
