@@ -10,6 +10,7 @@ from marqeta_setup import MarqetaClient
 import secrets
 import platform
 
+
 mysql = MySQL()
 csrf = CSRFProtect()
 client = MarqetaClient()
@@ -47,10 +48,18 @@ def create_server():
         from modules.routes.user import routes as user_routes
         from modules.routes.utils import routes as util_routes
         from modules.routes.widgets import routes as widget_routes
+        from modules.routes.errors import routes as error_routes
 
         app.register_blueprint(common_routes.common_bp)
         app.register_blueprint(user_routes.user_bp, url_prefix="/user")
         app.register_blueprint(util_routes.util_bp, url_prefix="/util")
         app.register_blueprint(widget_routes.widgets_bp, url_prefix="/user/widgets")
+        app.register_blueprint(error_routes.errors_bp)
+
+        app.register_error_handler(400, error_routes.bad_request)
+        app.register_error_handler(403, error_routes.forbidden)
+        app.register_error_handler(404, error_routes.page_not_found)
+        app.register_error_handler(410, error_routes.gone)
+        app.register_error_handler(500, error_routes.internal_server_error)
 
     return app

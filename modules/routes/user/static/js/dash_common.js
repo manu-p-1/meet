@@ -8,13 +8,13 @@ function showErrorModal(message, callback) {
 
 function displayModal(modalref, message, callback) {
     modalref.find(".modal-body").html(`<p>${message}</p>`);
-    modalref.modal('show');
-    modalref.find(".modal-footer .btn-modal-proceed").on("click", function (e) {
+    modalref.unbind().modal('show');
+    modalref.find(".modal-footer .btn-modal-proceed").unbind().on("click", function (e) {
         if(!(callback === null || callback === undefined)) {
             callback();
         }
     });
-    $('body').removeClass('modal-open');
+    // $('body').removeClass('modal-open');
 }
 
 $('[data-toggle="tooltip"]').tooltip();
@@ -30,18 +30,28 @@ const readerOptions = {
     sepia: 10
 };
 
-$("#darkModeSelector").on("click", handler1);
-const dmst = $("#darkModeSelectorText");
+const dmst = $("#darkModeSelector");
+const dmst_txt = $("#darkModeSelectorText");
+dmst.on("click", handler1);
+
+
+if (window.localStorage.getItem("MEET_DARK") === "1"){
+    dmst.trigger("click");
+}
+
 
 function handler1() {
     $(this).one("click", handler2);
+    DarkReader.setFetchMethod(window.fetch);
     DarkReader.enable(readerOptions);
-    dmst.html("Disable Dark Mode");
+    dmst_txt.html("Disable Dark Mode");
+    window.localStorage.setItem("MEET_DARK", "1");
 }
 function handler2() {
     $(this).one("click", handler1);
     DarkReader.disable();
-    dmst.html("Enable Dark Mode");
+    dmst_txt.html("Enable Dark Mode");
+    window.localStorage.removeItem("MEET_DARK");
 }
 
 const currency_formatter = Intl.NumberFormat('en-US', {

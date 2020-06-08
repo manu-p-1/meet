@@ -63,4 +63,5 @@ bundles = {
                                   'user_bp/js/manage_plan/*.js',
                                   filters=closure,
                                   output=f'dist/dash/manage_plan/{gen_uuid()}.js')
+
 }

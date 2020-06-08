@@ -19,12 +19,10 @@
                 <h3 class="page-title">Company Overview</h3>
             </div>
         </div>
-        <!-- End Page Header -->
-        <!-- Small Stats Blocks -->
         <div class="row">
             <div class="col-lg col-md-6 col-sm-6 mb-4">
                 <div class="stats-small stats-small--1 card card-small balance-card" data-toggle="tooltip"
-                     data-placement="top" title="ℹ This is the business balance">
+                     data-placement="top" title="ℹ This is the main business unit balance">
                     <div class="card-body p-0 d-flex loader-content">
                         <div class="d-flex flex-column m-auto">
                             <div class="stats-small__data text-center">
@@ -35,19 +33,14 @@
                                 <span class="mt-2 text-white" id="businessBalanceLoadingText">Loading... <i
                                         class="fas fa-spinner fa-pulse mb-2"></i></span>
                             </div>
-                            {#<div class="stats-small__data">#}
-                            {#   <span class="stats-small__percentage stats-small__percentage--increase">4.7%</span>#}
-                            {#</div>#}
                         </div>
-
-
                         <canvas height="120" class="blog-overview-stats-small-1"></canvas>
                     </div>
                 </div>
             </div>
             <div class="col-lg col-md-6 col-sm-6 mb-4">
                 <div class="stats-small stats-small--1 card card-small balance-card" data-toggle="tooltip"
-                     data-placement="top" title="ℹ This is the business balance">
+                     data-placement="top" title="ℹ This is the department balance">
                     <div class="card-body p-0 d-flex">
                         <div class="d-flex flex-column m-auto">
                             <div class="stats-small__data text-center">
@@ -65,7 +58,7 @@
             </div>
             <div class="col-lg col-md-6 col-sm-6 mb-4">
                 <div class="stats-small stats-small--1 card card-small number-card" data-toggle="tooltip"
-                     data-placement="top" title="ℹ This is the business balance">
+                     data-placement="top" title="ℹ This is the number of employees in your department">
                     <div class="card-body p-0 d-flex">
                         <div class="d-flex flex-column m-auto">
                             <div class="stats-small__data text-center">
@@ -83,7 +76,8 @@
             </div>
             <div class="col-lg col-md-6 col-sm-6 mb-4">
                 <div class="stats-small stats-small--1 card card-small number-card" data-toggle="tooltip"
-                     data-placement="top" title="ℹ This is the business balance">
+                     data-placement="top" title="ℹ This is the number of outgoing virtual card transactions taking
+                      place in this department between now and 24 hours ago.">
                     <div class="card-body p-0 d-flex">
                         <div class="d-flex flex-column m-auto">
                             <div class="stats-small__data text-center">
@@ -101,7 +95,8 @@
             </div>
             <div class="col-lg col-md-6 col-sm-6 mb-4">
                 <div class="stats-small stats-small--1 card card-small number-card" data-toggle="tooltip"
-                     data-placement="top" title="ℹ This is the business balance">
+                     data-placement="top"
+                     title="ℹ This is the number of active plans (including those without an end date)">
                     <div class="card-body p-0 d-flex">
                         <div class="d-flex flex-column m-auto">
                             <div class="stats-small__data text-center">
@@ -120,13 +115,16 @@
         </div>
 
 
-
         <!-- End Small Stats Blocks -->
         <div class="row">
             <!-- Users Stats -->
             <div class="col-lg-8 col-md-12 col-sm-12 mb-4">
                 <div class="card card-small">
-                    <div class="card-header border-bottom">
+
+                    <div class="card-header border-bottom" data-toggle="tooltip"
+                         data-placement="top"
+                         title="ℹ An overview of the average funding amount of all plans per month, for the last six months">
+
                         <h6 class="m-0">Plan Fund Average <span class="font-italic text-muted font-small">6 month overview</span>
                         </h6>
                     </div>
@@ -144,7 +142,8 @@
             <!--DEPARMENT FUND ALLOC PIE CHART-->
             <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
                 <div class="card card-small h-100">
-                    <div class="card-header border-bottom">
+                    <div class="card-header border-bottom" data-toggle="tooltip"
+                         data-placement="top" title="ℹ An overview of how main business unit funds are distributed per department">
                         <h6 class="m-0">Per Department Fund Allocation</h6>
                     </div>
                     <div class="card-body d-flex py-0 loader-content">
@@ -164,7 +163,11 @@
 
             <div class="col-lg-8 col-md-6 col-sm-12 mb-4">
                 <div class="card h-100">
-                    <div class="card-header border-bottom">
+
+                    <div class="card-header border-bottom" data-toggle="tooltip"
+                     data-placement="top" title="ℹ Monthly spending data for every employee in your department.
+                     Click Export Data to export to Excel, CSV, and others">
+
                         <h6 class="m-0 d-inline-block">Monthly Spending</h6>
                         <div class="dropdown d-inline-block float-right">
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="exportOptions"
@@ -199,7 +202,8 @@
             <!--PER DEPT UTILIZATION PIE CHART-->
             <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
                 <div class="card card-small h-100">
-                    <div class="card-header border-bottom">
+                    <div class="card-header border-bottom" data-toggle="tooltip"
+                     data-placement="top" title="ℹ An overview on how funds are being utilized for every department">
                         <h6 class="m-0">Per Department Utilization</h6>
                     </div>
                     <div class="card-body d-flex py-0 loader-content">
@@ -218,7 +222,9 @@
 
             <div class="col-lg-12 col-md-12 col-sm-12 mb-4">
                 <div class="card card-small">
-                    <div class="card-header border-bottom">
+                    <div class="card-header border-bottom" data-toggle="tooltip"
+                     data-placement="top" title="ℹ An overview on how employee funds are being used in your department
+                     for every day of the month">
                         <h6 class="m-0">Monthly Overall Employee Spending</h6>
                     </div>
                     <div class="card-body pt-0 loader-content">

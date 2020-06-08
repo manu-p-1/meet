@@ -5,13 +5,13 @@ from models import Plan
 from modules.routes.user.custom_fields import EmployeeInfoTextAreaField, ISimpleEmployee
 from modules.routes.utils.classes.class_utils import ManipulationType, OperationType, SupportedTimeFormats
 from modules.routes.utils.functions.function_utils import is_duplicate_plan, short_error, short_success, \
-    find_all_employees, custom_strftime
+    find_all_employees, custom_strftime, is_expired_plan
 from server import mysql
 from datetime import datetime
 from flask import Blueprint, render_template, request, jsonify, redirect, flash, session, url_for
 from modules.routes.user.forms import create_plan_form, get_plan_form, Forminator
 from modules.decorators.utils import login_required
-from modules.middleware.logic import executeOrders
+from modules.middleware.logic import execute_orders
 
 user_bp = Blueprint('user_bp', __name__,
                     template_folder='templates', static_folder='static')
@@ -80,7 +80,7 @@ def create_plan_execution(conn, cursor, fmr: Forminator):
     p.insert(fmr)
     conn.close()
 
-    executeOrders()
+    execute_orders()
     return short_success(ManipulationType.CREATED)
 
 
@@ -117,6 +117,9 @@ def manipulate_plan(conn, cursor, fmr, plan_fmt):
 
     if plan_fmt['is_active']:
         return short_error(err_list=['This plan is currently active'])
+
+    if is_expired_plan(mysql, fmr.plan_name):
+        return short_error(err_list=['This plan is expired and is read-only.'])
 
     p = Plan(cursor, conn=conn)
     p.update(fmr, plan_fmt['id'])

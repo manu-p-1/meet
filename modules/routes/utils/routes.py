@@ -7,7 +7,7 @@ from flask import Blueprint, render_template, request, jsonify, session
 from modules.decorators.utils import login_required
 from modules.routes.user.forms import Forminator
 from modules.routes.utils.classes.class_utils import ManipulationType, SupportedTimeFormats
-from modules.routes.utils.functions.function_utils import is_active_plan, short_error, short_success
+from modules.routes.utils.functions.function_utils import is_active_plan, short_error, short_success, is_expired_plan
 from server import mysql
 
 util_bp = Blueprint('util_bp', __name__,
@@ -119,7 +119,8 @@ def manage_plan():
 
     plan_fmt['fund_individuals'] = True if int.from_bytes(plan_fmt['fund_individuals'], 'big') else False
     plan_fmt['fund_all_employees'] = True if int.from_bytes(plan_fmt['fund_all_employees'], 'big') else False
-    plan_fmt['is_active'] = True if is_active_plan(mysql, plan_fmt['plan_name']) else False
+    plan_fmt['is_expired'] = is_expired_plan(mysql, plan_fmt['plan_name'])
+    plan_fmt['is_active'] = is_active_plan(mysql, plan_fmt['plan_name'])
 
     employees_list = []
     if plan_fmt['fund_individuals']:
@@ -144,15 +145,20 @@ def manage_plan():
 
     return jsonify(
         response_status="success",
-        active_status={
-            "status": plan_fmt['is_active'],
-            "info": None if not plan_fmt['is_active'] else render_template("plans/plan_info_partial.html",
-                                                                           info_message="This plan is already "
-                                                                                        "active "
-                                                                                        "and cannot be modified. "
-                                                                                        "It "
-                                                                                        "can only "
-                                                                                        "be deleted.")
+        status={
+            "active": {
+                "info": None if not plan_fmt['is_active'] else render_template("plans/plan_info_partial.html",
+                                                                               info_message="This plan is already "
+                                                                                            "active "
+                                                                                            "and cannot be modified. "
+                                                                                            "It "
+                                                                                            "can only "
+                                                                                            "be deleted.")
+            },
+            "expired": {
+                "info": None if not plan_fmt['is_expired'] else short_error(err_list=['This plan is expired and is'
+                                                                                      'read-only'])
+            }
         },
         response={
             "plan_name": plan_fmt['plan_name'],

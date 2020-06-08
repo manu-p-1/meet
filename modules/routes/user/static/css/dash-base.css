@@ -1,9 +1,14 @@
-#darkModeSelector{
+#darkModeSelector {
     cursor: pointer !important;
 }
 
-@media (min-width: 992px) {
-    #pageWrap {
-        position: relative;
-    }
+
+.tooltip .arrow::before {
+    border-top-color: rgba(90, 90, 90, 0.95) !important;
 }
+
+.tooltip-inner {
+    color: #ffffff !important;
+    background-color: rgba(90, 90, 90, 0.95) !important;
+}
+

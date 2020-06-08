@@ -54,10 +54,18 @@ searchForm.on("submit", function (evt) {
                     }
                 }
 
-                if (data['active_status']['status']) { // Active Plan
+                let active = data['status']['active']['info'];
+                let expired = data['status']['expired']['info'];
+
+                if (active) { // Active Plan
                     readonlyProp(true);
-                    alertTop(".main-content-container", data['active_status']['info']);
+                    alertTop(".main-content-container", active);
                     deletePlanButton.prop('disabled', false);
+                    $("#editPriority").attr("style", "pointer-events:none;");
+                }
+                else if (expired){
+                    readonlyProp(true);
+                    alertTop(".main-content-container", expired['response']);
                     $("#editPriority").attr("style", "pointer-events:none;");
                 }
 

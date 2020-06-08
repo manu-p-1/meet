@@ -4,7 +4,7 @@ from models import Employee, Manager, Transaction
 from server import client, mysql
 from sys import stderr
 
-from modules.middleware.logic import createBackgroundScheduler
+from modules.middleware.logic import create_background_scheduler
 from modules.simulation.logic import simulate_startup
 
 
@@ -62,4 +62,4 @@ def load_values():
     simulate_startup()
     session['db_init'] = True
 
-    createBackgroundScheduler()
+    create_background_scheduler()
