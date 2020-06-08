@@ -1,4 +1,3 @@
-import sys
 import pytz
 from datetime import datetime, timedelta
 from wtforms import FieldList, StringField, RadioField
@@ -124,7 +123,8 @@ class StartDateProper:
     def __call__(self, form, field):
         dp = DateProper(field, form.time_zone.data, self.message)
         dtobj = dp.check_and_convert(field.data)
-        field.data = dp.normalize_start(dtobj)
+        start_obj = dp.normalize_start(dtobj)
+        field.data = start_obj.strftime(SupportedTimeFormats.FMT_UTC)
 
 
 class EndDateProper:
@@ -136,14 +136,15 @@ class EndDateProper:
     def __call__(self, form, field):
         dp = DateProper(field, form.time_zone.data, self.message)
         dtobj = dp.check_and_convert(field.data)
+        end_obj: datetime = dp.normalize_end(dtobj)
 
         # 1 Hour from Start date - Do this in UTC because start date is processed first
         start_plus_one = datetime.strptime(form.start_date.data, SupportedTimeFormats.FMT_UTC) + timedelta(hours=1)
 
-        if dtobj < start_plus_one:
+        if end_obj.replace(tzinfo=None) < start_plus_one:
             raise ValidationError(f'End date must be at least 1 hour ahead of the start date')
 
-        field.data = dp.normalize_end(dtobj)
+        field.data = end_obj.strftime(SupportedTimeFormats.FMT_UTC)
 
 
 class DateProper(object):
@@ -190,7 +191,7 @@ class DateProper(object):
         if utc_dt <= one_hour_back:
             raise ValidationError("The request timed out.")
 
-        return utc_dt.strftime(SupportedTimeFormats.FMT_UTC)
+        return utc_dt
 
     def normalize_end(self, dtobj):
         """
@@ -206,7 +207,7 @@ class DateProper(object):
         if utc_dt > five_years_fw:
             raise ValidationError("A plan can only extend for a maximum of 5 years.")
 
-        return utc_dt.strftime(SupportedTimeFormats.FMT_UTC)
+        return utc_dt
 
     def normalize(self, dtobj):
         """
