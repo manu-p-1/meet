@@ -224,34 +224,49 @@ class DateProper(object):
 
 
 class DeptBalance(object):
-    def __init__(self, message=None, client=None, sn=None, employee_field=False):
+    def __init__(self, client, sn, message=None):
         if not message:
             message = f'Funding amount is greater than the current department balance.'
         self.message = message
         self.client = client
         self.sn = sn
-        self.employee_field = employee_field
 
     def __call__(self, form, field):
-        if self.employee_field:
-            if not valid_balance(client=self.client, sn=self.sn, field=field, field_len=len(field)):
-                pass
-        elif not valid_balance(client=self.client, sn=self.sn, field=field):
+        self.valid_balance(form=form, field=field)
+
+    def valid_balance(self, form, field):
+        dept_balance = float(self.client.retrieve_balance(
+            self.client.DEPARTMENT_TOKEN_TO_OBJECTS[self.sn['manager_dept']].token).gpa.available_balance) * .8
+
+        if dept_balance < 500:
+            raise ValidationError(message="Department balance too low")
+
+        if form.disbursement_type.data == form.DISB_INDIV:
+            num_employees = len(form.employees_list)
+            total = field.data * num_employees
+
+            if total > dept_balance:
+                raise ValidationError(self.message)
+
+        elif form.disbursement_type.data == form.DISB_ALL:
+
+            # Hard coded because this is a hackathon
+            num_employees = 12
+            total = field.data * num_employees
+
+            if total > dept_balance:
+                raise ValidationError(self.message)
+        else:
+            if field.data > dept_balance:
+                raise ValidationError(self.message)
+
+
+class VelocityUsageLimit:
+    def __init__(self, message=None):
+        if not message:
+            message = f'The velocity control usage limit must be less than the plan funding amount.'
+        self.message = message
+
+    def __call__(self, form, field):
+        if field.data > form.funding_amount.data:
             raise ValidationError(self.message)
-
-
-def valid_balance(client, sn, field, field_len=None) -> bool:
-    dept_balance = client.retrieve_balance(
-        client.DEPARTMENT_TOKEN_TO_OBJECTS[sn['manager_dept']]).gpa.available_balance * .8
-
-    if field_len:
-        if (field_len * sn['form_balance']) > dept_balance:
-            return False
-        else:
-            return True
-    else:
-        sn['form_balance'] = field.data
-        if field.data > dept_balance:
-            return False
-        else:
-            return True
