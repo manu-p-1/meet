@@ -103,3 +103,9 @@
     border-bottom-left-radius: 5px !important;
     border-bottom-right-radius: 5px !important;
 }
+
+@media (min-width: 992px) {
+    #pageWrap {
+        position: relative;
+    }
+}
