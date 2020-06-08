@@ -18,5 +18,3 @@ class LoginForm(FlaskForm):
     ], render_kw={"class": "form-control"})
 
     loginBtn = InlineSubmitField("Login", btn_text="Login", render_kw={"class": "btn btn-block btn-sm grey lighten-2"})
-
-    rememberMe = BooleanField("Remember Me", render_kw={"class":"custom-control-input"})
