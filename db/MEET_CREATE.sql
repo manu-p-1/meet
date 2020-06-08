@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS `meetdb`.`department_lookup`
     UNIQUE INDEX `token_UNIQUE` (`token` ASC) VISIBLE
 )
     ENGINE = InnoDB
+    AUTO_INCREMENT = 1
     DEFAULT CHARACTER SET = utf8mb4
     COLLATE = utf8mb4_0900_ai_ci;
 
@@ -51,6 +52,7 @@ CREATE TABLE `meetdb`.`employee`
     KEY `employee_dept_FK_idx` (`employee_dept_FK`),
     CONSTRAINT `employee_dept_FK` FOREIGN KEY (`employee_dept_FK`) REFERENCES `department_lookup` (`token`)
 ) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
@@ -83,7 +85,7 @@ CREATE TABLE `meetdb`.`plan`
     CONSTRAINT `dest_fund_FK` FOREIGN KEY (`dest_fund_FK`) REFERENCES `department_lookup` (`id`),
     CONSTRAINT `source_fund_FK` FOREIGN KEY (`source_fund_FK`) REFERENCES `department_lookup` (`id`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 23
+  AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
@@ -126,6 +128,7 @@ CREATE TABLE IF NOT EXISTS `meetdb`.`manager`
         FOREIGN KEY (`manager_dept_FK`)
             REFERENCES `meetdb`.`department_lookup` (`id`)
 ) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
   DEFAULT CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
@@ -168,7 +171,7 @@ VALUES ('Travel To China', 1600, 'Travel', 'This is a travel plan', "2019-11-21 
 
 
 INSERT INTO plan(plan_name, funding_amount, plan_justification, memo, start_date, end_date, source_fund_FK,
-                 dest_fund_FK, fund_individuals, fund_all_employees,  priority, complete)
+                 dest_fund_FK, fund_individuals, fund_all_employees, priority, complete)
 VALUES ('Travel To Taiwan', 2250, 'Travel', 'This is a travel plan', "2019-12-25 23:20:20", "2019-12-29 23:20:20", 1, 1,
         1, 0, "Medium", 1);
 
