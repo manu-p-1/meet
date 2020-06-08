@@ -1,3 +1,5 @@
+import sys
+
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, TextAreaField, SelectField, BooleanField, DecimalField, HiddenField, \
     RadioField, FieldList
@@ -6,7 +8,7 @@ from wtforms.widgets.html5 import NumberInput
 
 from modules.routes.user.custom_fields import EmployeeInfoTextAreaField
 from modules.routes.user.custom_validators import RequiredIf, EmployeeUnique, EndDateProper, \
-    StartDateProper, RequiredIfRadioField, DeptBalance
+    StartDateProper, RequiredIfRadioField
 from modules.routes.utils.custom_fields import InlineSubmitField
 
 from server import client
@@ -56,8 +58,6 @@ def get_plan_base(sn: dict):
     class Plan(FlaskForm):
         DISB_ALL = "DISB_ALL"
         DISB_INDIV = "DISB_INDIV"
-        MINIMUM_FUND_AMT = 15.00
-        MINIMUM_CONTROL_AMT = 1.00
 
         plan_name = StringField("Plan Name",
                                 validators=[
@@ -70,10 +70,8 @@ def get_plan_base(sn: dict):
         funding_amount = DecimalField('Per-Employee Funding Amount',
                                       validators=[
                                           InputRequired(message="Enter a funding amount."),
-                                          DeptBalance(client=client,sn=sn),
-                                          NumberRange(min=MINIMUM_FUND_AMT,
-                                                      message=f"The minimum funding amount must be at "
-                                                              f"least ${MINIMUM_FUND_AMT}.")
+                                          NumberRange(min=15.00,
+                                                      message="The minimum funding amount must be at least $15.00.")
                                       ],
                                       render_kw={"placeholder": "Funding Amount",
                                                  "class": "form-control"},
@@ -107,11 +105,7 @@ def get_plan_base(sn: dict):
                                             "class": "form-control"})
 
         source_fund = SelectField('Fund Source',
-                                  validators=[
-                                      InputRequired(message="A funding source department is required."),
-                                      AnyOf([sn['manager_dept']], message="The funding source department must be"
-                                                                          "from your own department")
-                                  ],
+                                  validators=[InputRequired(message="A funding source department is required.")],
                                   choices=[
                                       (
                                           sn['manager_dept'],
@@ -121,11 +115,7 @@ def get_plan_base(sn: dict):
                                   render_kw={"class": "form-control"})
 
         dest_fund = SelectField('Fund Destination',
-                                validators=[
-                                    InputRequired(message="A funding destination department is required."),
-                                    AnyOf([x[0] for x in DEPT_MAPPINGS if x[0] != ''],
-                                          message="Please select a valid department option")
-                                ],
+                                validators=[InputRequired(message="A funding destination department is required.")],
                                 choices=DEPT_MAPPINGS,
                                 render_kw={"class": "form-control"})
 
@@ -166,11 +156,11 @@ def get_plan_base(sn: dict):
         has_velocity_controls = BooleanField('Add Velocity Controls',
                                              render_kw={"class": "custom-control-input"})
 
-        vel_control_name = StringField('Control Name (min 3 chars, max 50 chars.)',
+        vel_control_name = StringField('Control Name',
                                        validators=[
                                            RequiredIf('has_velocity_controls',
                                                       message="The velocity control, control name is required."),
-                                           Length(min=3, max=50)
+                                           Length(max=50)
                                        ],
                                        render_kw={"class": "form-control",
                                                   "placeholder": "Enter a Control Name"})
@@ -179,8 +169,7 @@ def get_plan_base(sn: dict):
                                          validators=[
                                              RequiredIf('has_velocity_controls',
                                                         message="The velocity control, control window is required."),
-                                             AnyOf(values=["day", "week", "month", "lifetime", "transaction"],
-                                                   message="Please select a valid velocity control window option")
+                                             Length(max=30)
                                          ],
                                          choices=[
                                              ('', 'Select a Control Time Period'),
@@ -196,21 +185,21 @@ def get_plan_base(sn: dict):
                                      validators=[
                                          RequiredIf('has_velocity_controls',
                                                     message="The velocity control amount limit is required."),
-                                         NumberRange(min=MINIMUM_CONTROL_AMT,
-                                                     message=f"The minimum velocity control amount limit must be at "
-                                                             f"least ${MINIMUM_CONTROL_AMT}.")
+                                         NumberRange(min=15.00,
+                                                     message="The minimum velocity control amount limit must be at "
+                                                             "least $15.00.")
                                      ],
                                      render_kw={"placeholder": "Amount Limit",
                                                 "class": "form-control"},
                                      widget=NumberInput())
 
-        vel_usage_limit = IntegerField('Usage Limit (1 - 100)',
+        vel_usage_limit = IntegerField('Usage Limit (0 - 100)',
                                        validators=[
                                            RequiredIf('has_velocity_controls',
                                                       message="The velocity control usage limit is required."),
-                                           NumberRange(min=1, max=100,
+                                           NumberRange(min=0, max=100,
                                                        message="The velocity control usage limit should be between "
-                                                               "1 and 100, inclusive.")
+                                                               "0 and 100, inclusive.")
                                        ],
                                        render_kw={"placeholder": "Usage Limit",
                                                   "class": "form-control"},
@@ -220,8 +209,7 @@ def get_plan_base(sn: dict):
 
         priority = HiddenField(validators=[
             InputRequired(message="Priority is a required field"),
-            AnyOf(values=["Low", "Medium", "High", "Urgent"],
-                  message="Please select a priority option")
+            AnyOf(values=["Low", "Medium", "High", "Urgent"], message="Priority must be Low, Medium, High, or Urgent")
         ], default="Low")
 
     return Plan  # Return a reference to the class and not an object!
