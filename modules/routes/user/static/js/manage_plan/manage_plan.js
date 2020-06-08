@@ -50,7 +50,7 @@ searchForm.on("submit", function (evt) {
 
                 function loadEmployees(employeeList) {
                     for (let val of employeeList) {
-                        addNewEmployee(val['name'], val['id'])
+                        addNewEmployee(val['name'], val['id']);
                     }
                 }
 

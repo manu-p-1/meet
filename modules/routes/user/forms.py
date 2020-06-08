@@ -8,7 +8,7 @@ from wtforms.widgets.html5 import NumberInput
 
 from modules.routes.user.custom_fields import EmployeeInfoTextAreaField
 from modules.routes.user.custom_validators import RequiredIf, EmployeeUnique, EndDateProper, \
-    StartDateProper, RequiredIfRadioField
+    StartDateProper, RequiredIfRadioField, VelocityUsageLimit, DeptBalance
 from modules.routes.utils.custom_fields import InlineSubmitField
 
 from server import client
@@ -70,8 +70,10 @@ def get_plan_base(sn: dict):
         funding_amount = DecimalField('Per-Employee Funding Amount',
                                       validators=[
                                           InputRequired(message="Enter a funding amount."),
-                                          NumberRange(min=15.00,
-                                                      message="The minimum funding amount must be at least $15.00.")
+                                          NumberRange(min=MINIMUM_FUND_AMT,
+                                                      message=f"The minimum funding amount must be at "
+                                                              f"least ${MINIMUM_FUND_AMT}."),
+                                          DeptBalance(client=client, sn=sn)
                                       ],
                                       render_kw={"placeholder": "Funding Amount",
                                                  "class": "form-control"},
@@ -185,9 +187,10 @@ def get_plan_base(sn: dict):
                                      validators=[
                                          RequiredIf('has_velocity_controls',
                                                     message="The velocity control amount limit is required."),
-                                         NumberRange(min=15.00,
-                                                     message="The minimum velocity control amount limit must be at "
-                                                             "least $15.00.")
+                                         NumberRange(min=MINIMUM_CONTROL_AMT,
+                                                     message=f"The minimum velocity control amount limit must be at "
+                                                             f"least ${MINIMUM_CONTROL_AMT}."),
+                                         VelocityUsageLimit()
                                      ],
                                      render_kw={"placeholder": "Amount Limit",
                                                 "class": "form-control"},

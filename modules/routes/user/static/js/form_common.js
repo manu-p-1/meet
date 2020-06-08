@@ -387,7 +387,7 @@ const UpdateTotalModule = (function () {
                             departmentSizeCache[optVal] = data['size'];
                             res(data['size']);
                         }).fail(function () {
-                            alert(ERROR);
+                            alert(REQ_ERR);
                             res(0);
                         });
                     });
@@ -423,7 +423,7 @@ const UpdateTotalModule = (function () {
         }
     }
 
-    $("#funding_amount").on("change input", function () {
+    $("#funding_amount").on("input", function () {
         fundingInput = $(this).val();
         adjustFundsIfEmployeeSpecific();
     });
@@ -436,8 +436,7 @@ const UpdateTotalModule = (function () {
         if ($(this).is(":checked")) {
             adjustFundsWithDepartment();
         } else {
-            fundingAmount = fundingInput;
-            adjustSidebarTotal();
+            adjustFundsWithInput();
         }
     });
 
