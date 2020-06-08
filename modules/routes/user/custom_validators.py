@@ -243,6 +243,8 @@ def valid_balance(client, sn, field, field_len=None) -> bool:
     dept_balance = client.retrieve_balance(
         client.DEPARTMENT_TOKEN_TO_OBJECTS[sn['manager_dept']]).gpa.available_balance * .8
 
+    if dept_balance < 100:
+        raise ValidationError("Deptartment balance is too small.")
     if field_len:
         if (field_len * sn['form_balance']) > dept_balance:
             return False
