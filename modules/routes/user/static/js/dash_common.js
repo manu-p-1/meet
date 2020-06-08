@@ -32,11 +32,8 @@ const readerOptions = {
 
 const dmst = $("#darkModeSelector");
 
-if (!window.localStorage.getItem("MEET_DARK")){
+if (window.localStorage.getItem("MEET_DARK")){
     dmst.trigger("click")
-} else{
-    window.localStorage.setItem("MEET_DARK", "1");
-    dmst.trigger("click");
 }
 
 dmst.on("click", handler1);
@@ -47,6 +44,7 @@ function handler1() {
     $(this).one("click", handler2);
     DarkReader.enable(readerOptions);
     dmst_txt.html("Disable Dark Mode");
+    window.localStorage.setItem("MEET_DARK", "1");
 }
 function handler2() {
     $(this).one("click", handler1);
