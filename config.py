@@ -9,20 +9,10 @@ class Config:
     MYSQL_DATABASE_HOST = os.getenv('DB_HOST')
 
 
-'''
-Configuration settings to be used on localhost.
-'''
-
-
 class DevelopmentConfig(Config):
     # SERVER RELOAD ON CODE CHANGE
     DEBUG = False
     TEMPLATES_AUTO_RELOAD = True
-
-
-'''
-Configuration settings to be used on PythonAnywhere.
-'''
 
 
 class ProductionConfig(Config):
