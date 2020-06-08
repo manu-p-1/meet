@@ -62,6 +62,6 @@ bundles = {
     "dash_manage_plan_js": Bundle('user_bp/js/form_common.js',
                                   'user_bp/js/manage_plan/*.js',
                                   filters=closure,
-                                  output=f'dist/dash/manage_plan/{gen_uuid()}.js'),
+                                  output=f'dist/dash/manage_plan/{gen_uuid()}.js')
 
 }
